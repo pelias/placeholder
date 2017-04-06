@@ -28,7 +28,7 @@ try the following paths:
 
 ### run the interactive shell
 
-```javascript
+```bash
 $ npm run repl
 
 > pelias-placeholder@1.0.0 repl /var/www/pelias/placeholder
