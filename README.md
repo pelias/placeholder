@@ -86,26 +86,6 @@ $ docker-compose up -d
 
 ---
 
-## contributing
-
-### rebuild the image
-
-you can rebuild the image on any system with the following command:
-
-```bash
-$ docker build -t mapzen/pelias-placeholder .
-```
-
-### push image
-
-if you have push access you can upload your new image to dockerhub:
-
-```bash
-$ docker push mapzen/pelias-placeholder
-```
-
----
-
 ## building the database
 
 the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.mapzen.com/) project.
@@ -122,4 +102,24 @@ Move the database to `/data/wof.sqlite3` or edit `package.json` with your prefer
 
 ```bash
 $ npm run build
+```
+
+---
+
+## publishing
+
+### rebuild the image
+
+you can rebuild the image on any system with the following command:
+
+```bash
+$ docker build -t mapzen/pelias-placeholder .
+```
+
+### push image
+
+if you have push access you can upload your new image to dockerhub:
+
+```bash
+$ docker push mapzen/pelias-placeholder
 ```
