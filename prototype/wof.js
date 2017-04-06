@@ -78,7 +78,7 @@ module.exports.insertWofRecord = function( wof ){
   for( var attr in wof ){
     // https://github.com/whosonfirst/whosonfirst-names
     // names: preferred|colloquial|variant|unknown
-    var match = attr.match(/^name:(.*)_x_(preferred|colloquial)$/);
+    var match = attr.match(/^name:(.*)_x_(preferred|colloquial|variant)$/);
     if( match ){
       for( var n in wof[ attr ] ){
         keys = analysis.normalize( wof[ attr ][ n ] );
@@ -86,8 +86,10 @@ module.exports.insertWofRecord = function( wof ){
           this.graph.addToken( id, keys[k] );
         }
       }
-      // doc
-      // doc.names[ match[1] + '_x_' + match[2] ] = wof[ attr ];
+      // doc - only store 'preferred' strings
+      if( match[2] === 'preferred' ){
+        doc.names[ match[1] ] = wof[ attr ];
+      }
     }
   }
 
