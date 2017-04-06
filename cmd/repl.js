@@ -18,6 +18,11 @@ var cmd = {
     });
     console.timeEnd('took');
   },
+  tokenize: function( input ){
+    console.time('took');
+    console.log( ph.tokenize( input ) );
+    console.timeEnd('took');
+  },
   token: function( body ){
     console.time('took');
     console.log( ph.graph.nodes[ body ] );
@@ -35,5 +40,6 @@ var prompt = repl.start({ prompt: 'placeholder > ' });
 
 // attach my modules to the repl context
 prompt.context.search = cmd.search;
+prompt.context.tokenize = cmd.tokenize;
 prompt.context.token = cmd.token;
 prompt.context.id = cmd.id;

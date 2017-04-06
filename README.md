@@ -43,6 +43,9 @@ try the following commands:
 placeholder > search('london on')
  - 101735809	locality 	London
 
+placeholder > tokenize('sydney new south wales')
+ [ [ 'sydney', 'new south wales' ] ]
+
 placeholder > token('kelburn')
  [ 85772991 ]
 
@@ -58,7 +61,6 @@ placeholder > token('kelburn')
       region_id: 85687233 },
    names: { eng: [ 'Kelburn' ] } }
 ```
-
 
 ### run the test suite
 
