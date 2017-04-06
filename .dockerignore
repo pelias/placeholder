@@ -1,8 +1,7 @@
 .git
-db
-dev
-server/node_modules
+node_modules
 .dockerignore
 .gitignore
+.gitattributes
 Dockerfile
 README.md
