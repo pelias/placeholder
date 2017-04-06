@@ -19,16 +19,16 @@ http://localhost:6100/demo
 
 try the following paths:
 
-```
+```javascript
 /demo
 /parser/findbyid?ids=101748479
 /parser/search?text=london
 /parser/tokenize?text=sydney new south wales
 ```
 
-### run the interactive sheell
+### run the interactive shell
 
-```
+```javascript
 $ npm run repl
 
 > pelias-placeholder@1.0.0 repl /var/www/pelias/placeholder
@@ -39,7 +39,7 @@ placeholder >
 
 try the following commands:
 
-```
+```javascript
 placeholder > search('london on')
  - 101735809	locality 	London
 
@@ -62,7 +62,7 @@ placeholder > token('kelburn')
 
 ### run the test suite
 
-```
+```bash
 $ npm test
 ```
 
