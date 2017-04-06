@@ -49,7 +49,7 @@ placeholder > tokenize('sydney new south wales')
 placeholder > token('kelburn')
  [ 85772991 ]
 
- placeholder > id(85772991)
+placeholder > id(85772991)
  { name: 'Kelburn',
    placetype: 'neighbourhood',
    lineage:
