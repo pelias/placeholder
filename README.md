@@ -70,6 +70,16 @@ $ npm test
 
 ---
 
+## docker
+
+### run the service in the background
+
+```bash
+$ docker-compose up -d
+```
+
+---
+
 ## contributing
 
 ### rebuild the image
