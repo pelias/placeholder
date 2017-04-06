@@ -72,6 +72,12 @@ $ npm test
 
 ## docker
 
+### build the service image
+
+```bash
+$ docker-compose build
+```
+
 ### run the service in the background
 
 ```bash
