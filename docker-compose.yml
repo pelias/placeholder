@@ -1,0 +1,8 @@
+version: '2'
+services:
+  placeholder:
+    image: mapzen/pelias-placeholder
+    build: .
+    restart: always
+    environment: [ "PORT=3000" ]
+    ports: [ "6100:3000" ]

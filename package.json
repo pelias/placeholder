@@ -1,0 +1,30 @@
+{
+  "name": "pelias-placeholder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "node test/run.js | tap-spec",
+    "start": "node server/http.js",
+    "build": "sqlite3 /data/wof.sqlite3 'select blob from properties;' | node cmd/load.js",
+    "repl": "node cmd/repl.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelias/placeholder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pelias/placeholder/issues"
+  },
+  "homepage": "https://github.com/pelias/placeholder#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "lodash": "^4.17.4",
+    "lower-case": "^1.1.4",
+    "remove-accents": "^0.4.0",
+    "sorted-intersect": "^0.1.4",
+    "split2": "^2.1.1"
+  }
+}

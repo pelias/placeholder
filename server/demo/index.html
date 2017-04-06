@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" ng-app="demo">
+  <head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/async/2.1.4/async.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+    <style>
+      .wofinfo {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+      }
+      #tokens {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+      }
+      .wofinfo a {
+        font-size:9px;
+        padding: 2px;
+        padding-left: 0px;
+      }
+      .wofinfo em {
+        font-size:9px;
+        padding: 2px;
+        /*padding-right: 0px;*/
+        font-style: normal;
+      }
+    </style>
+
+    <script>
+      function query( text ){
+
+        var documents = {};
+        console.info( 'search', text );
+
+        search( text, function( ids ){
+          console.log( 'ids', ids );
+
+          findbyid( ids, function( docs ){
+
+            // console.log( docs );
+            var parentIds = {};
+
+            _.mapObject( docs, function( doc, id ){
+
+              if( !doc.lineage ){
+                doc.lineage = {};
+              }
+
+              // console.info( 'set doc', id, doc );
+              documents[ id ] = doc;
+
+              _.mapObject( doc.lineage, function( val, key ){
+                parentIds[ val ] = true;
+              });
+
+            });
+
+            // @todo remove findids from parentIds
+
+            findbyid( Object.keys( parentIds ), function( docs2 ){
+
+              _.mapObject( docs2, function( val, key ){
+                documents[ key ] = val;
+              });
+
+              tokenize( text, function( groups ){
+                render( documents, ids, groups );
+              });
+            });
+          });
+        });
+      }
+
+      function render( documents, ids, tokens ){
+
+        $('#results li').remove();
+        $('#tokens li').remove();
+
+        // display token groups
+        tokens[0].forEach( function( token ){
+          $("#tokens").append('<li type="button" class="btn btn-default"><span>' + token + '</span></li>');
+        });
+
+        ids.forEach( function( id ){
+
+          var doc = documents[ id ];
+          if( !doc ){
+            console.error( 'DOC NOT FOUND!', 'ANSWER', id );
+          }
+          var view = [];
+          // view.push( JSON.stringify( ans ) );
+
+          var order = [
+            'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'burough', 'postalcode',
+            'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'country', 'empire', 'continent', 'ocean', 'planet'
+          ];
+
+          var parentids = [];
+          order.forEach( function( o ){
+            var k = o + '_id';
+            if( doc.lineage.hasOwnProperty( k ) ){
+              parentids.push( doc.lineage[k] );
+            }
+          });
+
+          // console.log( 'parentids', parentids );
+
+          view = view.concat( parentids.map( function( parentid, i ){
+
+            var parent = documents[ parentid ];
+            if( !parent ){
+              console.error( 'DOC NOT FOUND!', 'PARENT', parentid );
+              console.error( 'skip', parentid );
+              return;
+            }
+            if( !parent.names ){
+              parent.names = {};
+            }
+
+            var v = Array(i).join('&nbsp;&nbsp;&nbsp;');
+            if( i > 0 ){ v += '└ '; }
+            v += '<strong>' + ( parent.name || '??' ) + '</strong>';
+            v += '<div class="wofinfo">';
+            v += '<em>' + ( parent.placetype || '??' ) + '</em>';
+            v += '<a href="https://whosonfirst.mapzen.com/spelunker/id/' + ( parentid || '??' ) + '">' + ( parentid || '??' ) + '</a>';
+            v += '</div>';
+            return v;
+          }).filter(function( val ){
+            return !!val;
+          }));
+
+          // console.log( lins[i] );
+          $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
+        });
+      }
+
+      function request( url, params, cb ){
+        $.ajax({
+            url: url ,
+            method: 'GET',
+            data: params,
+            headers: { 'Accept': 'application/json' }
+          })
+          .done(cb);
+      };
+
+      function search( text, cb ){
+        console.info( 'search', text );
+        request( '/parser/search', { text: text }, cb );
+      }
+
+      function findbyid( ids, cb ){
+        console.info( 'findbyid', ids );
+        request( '/parser/findbyid', { ids: ids.join(',') }, cb );
+      }
+
+      function tokenize( text, cb ){
+        console.info( 'tokenize', text );
+        request( '/parser/tokenize', { text: text }, cb );
+      }
+
+      $(document).ready(function() {
+
+        $('#search').on( 'submit', function( e ){
+          query( $('#text').val() );
+          return false;
+        });
+
+        $('#go').on( 'click', function( e ){
+          $('#search').submit();
+          return false;
+        });
+
+        $('#text').val( 'Augustiner Bräustuben Landsberger Str. 19, 80339 München DE' );
+        $('#search').submit();
+      });
+    </script>
+
+  </head>
+  <body>
+
+    <div style="margin:20px;">
+
+      <form id="search" action="">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <input id="text" type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button id="go" class="btn btn-default" type="button">Parse!</button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+      </form>
+
+      <ul id="tokens" class="btn-group" role="group" style="margin-top:10px;"></ul>
+      <ul id="results" class="list-group" style="margin-top:10px;"></ul>
+
+    </div>
+
+  </body>
+</html>
