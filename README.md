@@ -31,7 +31,7 @@ try the following paths:
 ```bash
 $ npm run repl
 
-> pelias-placeholder@1.0.0 repl /var/www/pelias/placeholder
+> pelias-placeholder@1.0.0 repl
 > node cmd/repl.js
 
 placeholder >
