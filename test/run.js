@@ -8,6 +8,7 @@ var tests = [
   './prototype/tokenize',
   './prototype/query',
   './functional',
+  './generated',
 ];
 
 // test runner
