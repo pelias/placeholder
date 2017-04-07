@@ -49,6 +49,9 @@
 
       function query( text ){
 
+        $('#results li').remove();
+        $('#tokens li').remove();
+
         var documents = {};
         console.info( 'search', text );
 
@@ -91,9 +94,6 @@
       }
 
       function render( documents, ids, tokens ){
-
-        $('#results li').remove();
-        $('#tokens li').remove();
 
         // display token groups
         tokens[0].forEach( function( token ){
