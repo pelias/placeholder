@@ -6,13 +6,13 @@ var split = require('split2'),
     ph = new Placeholder();
 
 // run import pipeline
+console.error('importing...');
 process.stdin.pipe( split() )
              .pipe( parse() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row );
                next();
              }, function flush( next ){
-               console.error('importing...');
                ph.printStatistics();
                console.error('sorting...');
                ph.graph.sort(); // sort all arrays

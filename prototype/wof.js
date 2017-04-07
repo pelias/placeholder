@@ -1,6 +1,7 @@
 
 // plugin for whosonfirst
-var analysis = require('../lib/analysis');
+var _ = require('lodash'),
+    analysis = require('../lib/analysis');
 
 // insert a wof record in to index
 module.exports.insertWofRecord = function( wof ){
@@ -10,6 +11,24 @@ module.exports.insertWofRecord = function( wof ){
 
   // sanity check; because WOF
   if( id <= 0 ) { return; }
+
+  // skip deprecated records
+  var deprecated = _.trim( wof['edtf:deprecated'] );
+  if( !_.isEmpty( deprecated ) && deprecated !== 'uuuu' ){
+    return;
+  }
+
+  // skip superseded records
+  var superseded = wof['wof:superseded_by'];
+  if( Array.isArray( superseded ) && superseded.length > 0 ){
+    return;
+  }
+
+  // skip non-current records
+  var isCurrent = wof['mz:is_current'];
+  if( isCurrent === '0' || isCurrent === 0 ){
+    return;
+  }
 
   // --- store ---
   // add doc to store
