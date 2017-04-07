@@ -57,7 +57,7 @@
 
           $('#results li').remove();
           $('#tokens li').remove();
-          updateMap([]);
+          clearMap();
 
           findbyid( ids, function( docs ){
 
@@ -188,9 +188,13 @@
         request( '/parser/tokenize', { text: text }, cb );
       }
 
+      function clearMap(){
+        document.layer.clearLayers()
+      }
+
       function updateMap( bboxes ){
 
-        document.layer.clearLayers()
+        clearMap()
 
         bboxes.forEach( function( bbox ){
           var split = bbox.split(',');
