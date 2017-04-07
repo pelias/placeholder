@@ -24,3 +24,6 @@ app.use('/', function( req, res ){ res.redirect('/demo'); });
 app.listen( PORT, function() {
   console.log( 'server listening on port', PORT );
 });
+
+// handle SIGTERM (required for fast docker restarts)
+process.on('SIGTERM', function(){ app.close(); });
