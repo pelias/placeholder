@@ -7,11 +7,13 @@ var split = require('split2'),
 
 // run import pipeline
 console.error('importing...');
+ph.load({ reset: true });
+
+// run import
 process.stdin.pipe( split() )
              .pipe( parse() )
              .pipe( through.obj( function insert( row, _, next ){
-               ph.insertWofRecord( row );
-               next();
+               ph.insertWofRecord( row, next );
              }, function flush( next ){
                ph.printStatistics();
                console.error('sorting...');

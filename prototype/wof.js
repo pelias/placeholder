@@ -4,35 +4,36 @@ var _ = require('lodash'),
     analysis = require('../lib/analysis');
 
 // insert a wof record in to index
-module.exports.insertWofRecord = function( wof ){
+module.exports.insertWofRecord = function( wof, next ){
 
   var id = wof['wof:id'];
   if( 'string' == typeof id ){ id = parseInt( id, 10 ); }
 
   // sanity check; because WOF
-  if( id <= 0 ) { return; }
+  if( id <= 0 ) { return next(); }
 
   // skip deprecated records
   var deprecated = _.trim( wof['edtf:deprecated'] );
   if( !_.isEmpty( deprecated ) && deprecated !== 'uuuu' ){
-    return;
+    return next();
   }
 
   // skip superseded records
   var superseded = wof['wof:superseded_by'];
   if( Array.isArray( superseded ) && superseded.length > 0 ){
-    return;
+    return next();
   }
 
   // skip non-current records
   var isCurrent = wof['mz:is_current'];
   if( isCurrent === '0' || isCurrent === 0 ){
-    return;
+    return next();
   }
 
   // --- store ---
   // add doc to store
   var doc = {
+    id: id,
     name: wof['wof:name'],
     placetype: wof['wof:placetype'],
     lineage: wof['wof:hierarchy'][0],
@@ -121,10 +122,6 @@ module.exports.insertWofRecord = function( wof ){
     }
   }
 
-  // --- store ---
-  // add doc to store
-  this.store.set( id, doc );
-
   // --- graph ---
   for( var h in wof['wof:hierarchy'] ){
    for( var i in wof['wof:hierarchy'][h] ){
@@ -135,5 +132,9 @@ module.exports.insertWofRecord = function( wof ){
      this.graph.setEdge( pid, id ); // is child of
    }
   }
+
+  // --- store ---
+  // add doc to store
+  this.store.set( id, doc, next );
 
 };

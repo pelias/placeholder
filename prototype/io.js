@@ -4,24 +4,24 @@ var fs = require('fs'),
     path = require('path');
 
 var graphPath = path.join( __dirname, '../data/graph.json' );
-var storePath = path.join( __dirname, '../data/store.json' );
+var storePath = path.join( __dirname, '../data/store.sqlite3' );
 
 // load data from disk
-module.exports.load = function( path ){
-  var data = {
-    graph: require( graphPath ),
-    store: require( storePath )
-  };
-
-  this.graph.nodes = data.graph.nodes;
-  this.graph.edges = data.graph.edges;
-  this.store.docs  = data.store.docs;
+module.exports.load = function( opts ){
+  this.store.open( storePath );
+  if( opts && opts.reset === true ){
+    this.store.reset();
+  } else {
+    var graph = require( graphPath );
+    this.graph.nodes = graph.nodes;
+    this.graph.edges = graph.edges;
+  }
 };
 
 // load data from disk
 module.exports.save = function( path ){
   fs.writeFileSync( graphPath, JSON.stringify( this.graph ) );
-  fs.writeFileSync( storePath, JSON.stringify( this.store ) );
+  this.store.close();
 };
 
 // deserialize data

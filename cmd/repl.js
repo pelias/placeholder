@@ -7,39 +7,51 @@ var repl = require('repl'),
 ph.load();
 
 // commands
-var cmd = {
-  search: function( input ){
+var commands = {
+  search: function( input, cb ){
     console.time('took');
     var tokens = ph.tokenize( input );
     var results = ph.query( tokens );
-    results.forEach( function( resultId ){
-      var doc = ph.store.get( resultId );
-      console.log( ' -', [ resultId, doc.placetype + ' ', doc.name ].join('\t') );
+    ph.store.getMany( results, function( err, docs ){
+      if( err ){ return console.error( err ); }
+      docs.forEach( function( doc ){
+        console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+      });
+      console.timeEnd('took');
+      cb();
     });
-    console.timeEnd('took');
   },
-  tokenize: function( input ){
+  tokenize: function( input, cb ){
     console.time('took');
     console.log( ph.tokenize( input ) );
     console.timeEnd('took');
+    cb();
   },
-  token: function( body ){
+  token: function( body, cb ){
+    console.log( 'token', '"' + body + '"' );
     console.time('took');
     console.log( ph.graph.nodes[ body ] );
     console.timeEnd('took');
+    cb();
   },
-  id: function( id ){
+  id: function( id, cb ){
     console.time('took');
-    console.log( ph.store.get( id ) );
-    console.timeEnd('took');
+    ph.store.get( id, function( err, doc ){
+      if( err ){ return console.error( err ); }
+      console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+      console.timeEnd('took');
+      cb();
+    });
   }
 };
 
-// open the repl session
-var prompt = repl.start({ prompt: 'placeholder > ' });
+function myEval(cmd, context, filename, cb) {
+  var split = cmd.trim().split(/\s+/g);
+  if( commands.hasOwnProperty( split[0] ) ){
+    return commands[ split[0] ].call( null, split.splice(1).join(' '), cb );
+  }
+  commands.search( split.join(' '), cb );
+}
 
-// attach my modules to the repl context
-prompt.context.search = cmd.search;
-prompt.context.tokenize = cmd.tokenize;
-prompt.context.token = cmd.token;
-prompt.context.id = cmd.id;
+// open the repl session
+var prompt = repl.start({ prompt: 'placeholder > ', eval: myEval });

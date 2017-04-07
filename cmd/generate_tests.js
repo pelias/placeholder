@@ -24,6 +24,14 @@ process.stdin.pipe( split() )
 
                 var line = [ id, wof['wof:name'] ];
 
+                var addParent = function( err, parent ){
+                  if( err || !parent ){
+                    console.error( 'parent record of %s not found: %s', id, pid );
+                    return;
+                  }
+                  line.push( parent.name );
+                };
+
                 // collect all parent ids for this hierarchy
                 var parentIds = [];
                 for( var o=0; o<order.length; o++ ){
@@ -31,13 +39,7 @@ process.stdin.pipe( split() )
                   var pid = wof['wof:hierarchy'][h][placetype_id];
                   if( pid && pid !== id && pid > 0 ){
                     if( 'string' == typeof pid ){ pid = parseInt( pid, 10 ); }
-
-                    var parent = ph.store.get( pid );
-                    if( !parent ){
-                      console.error( 'parent record of %s not found: %s', id, pid );
-                      continue;
-                    }
-                    line.push( parent.name );
+                    ph.store.get( pid, addParent );
                   }
                 }
 

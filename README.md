@@ -51,16 +51,19 @@ placeholder >
 try the following commands:
 
 ```javascript
-placeholder > search('london on')
+placeholder > london on
  - 101735809	locality 	London
 
-placeholder > tokenize('sydney new south wales')
+placeholder > search london on
+ - 101735809	locality 	London
+
+placeholder > tokenize sydney new south wales
  [ [ 'sydney', 'new south wales' ] ]
 
-placeholder > token('kelburn')
+placeholder > token kelburn
  [ 85772991 ]
 
-placeholder > id(85772991)
+placeholder > id 85772991
  { name: 'Kelburn',
    placetype: 'neighbourhood',
    lineage:

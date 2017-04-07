@@ -11,11 +11,16 @@ module.exports = function( req, res ){
   });
 
   // load docs
-  var docs = {};
-  ids.forEach( function( id ){
-    var doc = ph.store.get( id );
-    if( doc ){ docs[ id ] = doc; }
-  });
+  ph.store.getMany( ids, function( err, results ){
+    if( err ){ return res.status(500).send({}); }
+    if( !results || !results.length ){ return res.status(404).send({}); }
 
-  res.status(200).json(docs);
+    var docs = {};
+    for( var i=0; i<results.length; i++ ){
+      var result = results[i];
+      docs[ result.id ] = result;
+    }
+
+    res.status(200).json(docs);
+  });
 };
