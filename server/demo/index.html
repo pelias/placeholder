@@ -49,14 +49,14 @@
 
       function query( text ){
 
-        $('#results li').remove();
-        $('#tokens li').remove();
-
         var documents = {};
         console.info( 'search', text );
 
         search( text, function( ids ){
           console.log( 'ids', ids );
+
+          $('#results li').remove();
+          $('#tokens li').remove();
 
           findbyid( ids, function( docs ){
 
