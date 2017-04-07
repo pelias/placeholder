@@ -9,6 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/async/2.1.4/async.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+
     <style>
       .wofinfo {
         margin: 0;
@@ -34,6 +37,16 @@
     </style>
 
     <script>
+      var style = {
+        stroke: true,
+        color: 'blue',
+        opacity: 0.5,
+        dashArray: '8, 5',
+        fillColor: 'blue',
+        fillOpacity: 0.0,
+        weight: 2
+      };
+
       function query( text ){
 
         var documents = {};
@@ -63,7 +76,6 @@
             });
 
             // @todo remove findids from parentIds
-
             findbyid( Object.keys( parentIds ), function( docs2 ){
 
               _.mapObject( docs2, function( val, key ){
@@ -88,6 +100,8 @@
           $("#tokens").append('<li type="button" class="btn btn-default"><span>' + token + '</span></li>');
         });
 
+        var bboxes = [];
+
         ids.forEach( function( id ){
 
           var doc = documents[ id ];
@@ -96,6 +110,11 @@
           }
           var view = [];
           // view.push( JSON.stringify( ans ) );
+
+          // aggregate the bboxes
+          if( doc.geom && doc.geom.bbox ){
+            bboxes.push( doc.geom.bbox );
+          }
 
           var order = [
             'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'burough', 'postalcode',
@@ -139,6 +158,8 @@
           // console.log( lins[i] );
           $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
         });
+
+        updateMap( bboxes );
       }
 
       function request( url, params, cb ){
@@ -166,6 +187,20 @@
         request( '/parser/tokenize', { text: text }, cb );
       }
 
+      function updateMap( bboxes ){
+
+        document.layer.clearLayers()
+
+        bboxes.forEach( function( bbox ){
+          var split = bbox.split(',');
+          var bounds = [[split[1], split[0]], [split[3], split[2]]];
+          var rect = L.rectangle(bounds, style);
+          rect.addTo(document.layer);
+        });
+
+        document.map.fitBounds( document.layer.getBounds() );
+      }
+
       $(document).ready(function() {
 
         $('#search').on( 'submit', function( e ){
@@ -180,6 +215,24 @@
 
         $('#text').val( 'Example Street Neutral Bay North Sydney New South Wales 9999 AU' );
         $('#search').submit();
+
+        // create map
+        var map = L.map('map');
+        var tiles = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+        L.tileLayer( tiles, {
+          scrollWheelZoom: true,
+          zoomControl: true,
+          attributionControl: false,
+        }).addTo(map);
+
+        map.setView( new L.LatLng( 52.52, 13.40 ), 14 );
+
+        var bboxLayer = L.geoJson();
+        bboxLayer.addTo(map);
+
+        document.map = map;
+        document.layer = bboxLayer;
       });
     </script>
 
@@ -191,18 +244,23 @@
       <form id="search" action="">
         <div class="row">
           <div class="col-lg-6">
+
             <div class="input-group">
               <input id="text" type="text" class="form-control" placeholder="Search for...">
               <span class="input-group-btn">
                 <button id="go" class="btn btn-default" type="button">Parse!</button>
               </span>
             </div><!-- /input-group -->
+
+            <ul id="tokens" class="btn-group" role="group" style="margin-top:10px;"></ul>
+            <ul id="results" class="list-group" style="margin-top:10px;"></ul>
+          </div><!-- /.col-lg-6 -->
+
+          <div class="col-lg-6" style="">
+            <div id="map" style="width:100%; height:100%; height: 90vh;" />
           </div><!-- /.col-lg-6 -->
         </div><!-- /.row -->
       </form>
-
-      <ul id="tokens" class="btn-group" role="group" style="margin-top:10px;"></ul>
-      <ul id="results" class="list-group" style="margin-top:10px;"></ul>
 
     </div>
 
