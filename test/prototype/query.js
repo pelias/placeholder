@@ -1,12 +1,11 @@
 
-var path = require('path'),
-    Placeholder = require('../../Placeholder');
+var Placeholder = require('../../Placeholder');
 
 module.exports.query = function(test, util) {
 
   // load data
   var ph = new Placeholder();
-  ph.load( path.join( __dirname, '../../graph/graph.json' ) );
+  ph.load();
 
   var assert = runner.bind(null, test, ph);
 

@@ -1,6 +1,5 @@
 
-var path = require('path'),
-    permutations = require('../../lib/permutations');
+var permutations = require('../../lib/permutations');
 
 module.exports.permutations = function(test, common) {
   test('permutations', function(t) {
