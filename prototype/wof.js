@@ -8,12 +8,21 @@ module.exports.insertWofRecord = function( wof ){
   var id = wof['wof:id'];
   if( 'string' == typeof id ){ id = parseInt( id, 10 ); }
 
+  // sanity check; because WOF
+  if( id <= 0 ) { return; }
+
   // --- store ---
   // add doc to store
   var doc = {
     name: wof['wof:name'],
     placetype: wof['wof:placetype'],
     lineage: wof['wof:hierarchy'][0],
+    geom: {
+      area: wof['geom:area'],
+      bbox: wof['geom:bbox'],
+      lat: wof['geom:latitude'],
+      lon: wof['geom:longitude']
+    },
     names: {}
   };
 
@@ -102,7 +111,7 @@ module.exports.insertWofRecord = function( wof ){
    for( var i in wof['wof:hierarchy'][h] ){
      pid = wof['wof:hierarchy'][h][i];
      if( 'string' == typeof pid ){ pid = parseInt( pid, 10 ); }
-     if( pid === id ){ continue; }
+     if( pid === id || pid <= 0 ){ continue; }
      //  this.graph.setEdge( id, pid, 'p' ); // has parent
      this.graph.setEdge( pid, id ); // is child of
    }
