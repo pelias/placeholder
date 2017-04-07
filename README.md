@@ -1,6 +1,17 @@
 
 natural language parser for geographic text
 
+--
+
+## install
+
+the data files are stored in this repository using [Git FLS](https://git-lfs.github.com/), please ensure that `LFS` is installed before continuing.
+
+```bash
+$ git clone git@github.com:pelias/placeholder.git && cd placeholder
+$ npm install
+```
+
 ---
 
 ## run server
