@@ -73,11 +73,25 @@ placeholder > id(85772991)
    names: { eng: [ 'Kelburn' ] } }
 ```
 
+---
+
+## tests
+
 ### run the test suite
 
 ```bash
 $ npm test
 ```
+
+### generate a ~500,000 line test file
+
+this command requires the `data/wof.extract` file mentioned below in the 'building the database' section.
+
+```bash
+$ npm run gentests
+```
+
+once complete you can find the generated test cases in `test/generated.txt`.
 
 ---
 
@@ -101,15 +115,19 @@ $ docker-compose up -d
 
 the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.mapzen.com/) project.
 
-the whosonfirst project is distributed as geojson files, so in order to speed up development we use an interim database which already has whosonfirst imported in to sqlite3.
+the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
 
-the code to create the `wof.sqlite3` database can be found here: https://github.com/missinglink/wof-spatialite.
+the following command will iterate over all the `geojson` files under the `WOF_DIR` path, extracting the relevant properties in to the file `data/wof.extract`.
 
-or you can download a prebuild image from http://missinglink.geo.s3.amazonaws.com/wof.sqlite3.gz, note that this file may become out-of-date over time.
+this process takes about 7 minutes and consumes ~650MB of disk space, you will only need to run this command once, or when your local `whosonfirst-data` files are updated.
 
-### regenerating the data files
+```bash
+$ WOF_DIR=/data/whosonfirst-data/data npm run extract
+```
 
-Move the database to `/data/wof.sqlite3` or edit `package.json` with your preferred location.
+now you can rebuild the `data/graph.json` and `data/store.json` files with the following command:
+
+this should take less that 1 minutes to run:
 
 ```bash
 $ npm run build
