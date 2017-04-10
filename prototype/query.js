@@ -1,7 +1,6 @@
 
 // plugin for query
-var intersect = require('sorted-intersect');
-var _ = require('lodash');
+var sorted = require('../lib/sorted');
 
 module.exports.queryOne = function( tokens ){
 
@@ -21,11 +20,11 @@ module.exports.queryOne = function( tokens ){
         validMatches = found.matches;
       } else {
         // console.log( 'intersect' );
-        var t = intersect([ found.matches, workingSet ]);
+        var t = sorted.intersect([ found.matches, workingSet ]);
 
         if( t.length ){
           validMatches = t;
-          workingSet = intersect([ found.children, workingSet ]);
+          workingSet = sorted.intersect([ found.children, workingSet ]);
         } else {
           // console.error( 'skip', token );
         }
@@ -51,5 +50,9 @@ module.exports.queryOne = function( tokens ){
 };
 
 module.exports.query = function( permutations ){
-  return _.sortedUniq( _.sortBy( _.flatten( permutations.map( module.exports.queryOne, this ) ) ) );
+  var matches = [];
+  for( var p=0; p<permutations.length; p++ ){
+    matches = sorted.merge( matches, this.queryOne( permutations[p] ) );
+  }
+  return matches;
 };

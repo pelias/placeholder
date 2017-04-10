@@ -8,8 +8,11 @@ var app = express();
 
 // init placeholder
 console.error( 'loading data' );
-app.locals.ph = new Placeholder();
-app.locals.ph.load();
+var ph = new Placeholder();
+ph.load();
+
+// store $ph on app
+app.locals.ph = ph;
 
 // routes
 app.get( '/parser/findbyid', require( './routes/findbyid' ) );
@@ -26,4 +29,7 @@ app.listen( PORT, function() {
 });
 
 // handle SIGTERM (required for fast docker restarts)
-process.on('SIGTERM', function(){ app.close(); });
+process.on('SIGTERM', function(){
+  ph.close();
+  app.close();
+});
