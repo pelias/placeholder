@@ -3,6 +3,8 @@
 var intersect = require('sorted-intersect');
 var _ = require('lodash');
 
+var autocompleteEnabled = true;
+
 module.exports.queryOne = function( tokens ){
 
   var workingSet = [];
@@ -12,7 +14,7 @@ module.exports.queryOne = function( tokens ){
   var firstToken = true;
 
   while( token ){
-    var found = this.findToken( token );
+    var found = this.findToken( token, ( autocompleteEnabled && tokens.length === 0 ) );
 
     if( found.matches.length ){
       if( firstToken ){

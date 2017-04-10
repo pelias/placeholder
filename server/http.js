@@ -11,6 +11,10 @@ console.error( 'loading data' );
 app.locals.ph = new Placeholder();
 app.locals.ph.load();
 
+console.time('build prefix index');
+app.locals.ph.graph.buildPrefixIndex();
+console.timeEnd('build prefix index');
+
 // routes
 app.get( '/parser/findbyid', require( './routes/findbyid' ) );
 app.get( '/parser/search', require( './routes/search' ) );
