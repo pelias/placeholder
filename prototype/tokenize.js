@@ -19,9 +19,7 @@ module.exports.tokenize = function( input ){
     // valid tokens are those which exist in the index
     var validTokens = _.uniq( perms.map( function( perm ){
       return perm.join(' ');
-    }).filter( function( perm ){
-      return !!this.graph.nodes[ perm ];
-    }, this) );
+    }).filter( this.graph.hasToken, this.graph ) );
     // console.log( 'validTokens', validTokens );
 
     // sort the largest matches first

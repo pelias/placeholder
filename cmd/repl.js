@@ -30,7 +30,7 @@ var commands = {
   token: function( body, cb ){
     console.log( 'token', '"' + body + '"' );
     console.time('took');
-    console.log( ph.graph.nodes[ body ] );
+    console.log( ph.graph.getToken( body ) );
     console.timeEnd('took');
     cb();
   },
