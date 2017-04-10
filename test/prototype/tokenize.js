@@ -10,15 +10,40 @@ module.exports.tokenize = function(test, util) {
   var assert = runner.bind(null, test, ph);
 
   assert('Kelburn Wellington New Zealand', [['kelburn', 'wellington', 'new zealand']]);
-  assert('North Sydney', [['north sydney']]);
   assert('Sydney New South Wales Australia', [['sydney', 'new south wales', 'australia']]);
   assert('ケープタウン 南アフリカ', [['ケープタウン', '南アフリカ']]);
-  assert('neutral bay north sydney', [['neutral bay', 'north sydney']]);
 
   // duplicates
-  assert('bay ave neutral bay north sydney', [['bay', 'neutral bay', 'north sydney']]);
-  assert('mitte mitte berlin de', [['mitte', 'mitte berlin', 'de']]);
   assert('lancaster lancaster pa', [['lancaster', 'lancaster', 'pa']]);
+
+  // ambiguous parses
+  // @note: these are the glorious future:
+
+  // assert('Heritage East San Jose', [
+  //   [ 'heritage east', 'san jose' ],
+  //   [ 'heritage', 'east san jose' ]
+  // ]);
+  //
+  // assert('bay ave neutral bay north sydney', [
+  //   [ 'bay', 'neutral bay', 'north sydney' ],
+  //   [ 'bay', 'neutral bay', 'north', 'sydney' ]
+  // ]);
+  //
+  // assert('mitte mitte berlin de', [
+  //   [ 'mitte berlin', 'de' ],
+  //   [ 'mitte', 'mitte berlin', 'de' ],
+  //   [ 'mitte', 'mitte', 'berlin', 'de' ]
+  // ]);
+  //
+  // assert('North Sydney', [
+  //   [ 'north sydney' ],
+  //   [ 'north', 'sydney' ]
+  // ]);
+  //
+  // assert('neutral bay north sydney', [
+  //   [ 'neutral bay', 'north sydney' ],
+  //   [ 'neutral bay', 'north', 'sydney' ]
+  // ]);
 };
 
 // convenience function for writing quick 'n easy test cases

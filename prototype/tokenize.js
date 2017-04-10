@@ -67,3 +67,13 @@ module.exports.tokenize = function( input ){
   // console.log( '[', queries.join( ', ' ), ']' );
   return queries;
 };
+
+// function cartesianProductOf( arr ) {
+//     return _.reduce(arr, function(a, b) {
+//         return _.flatten(_.map(a, function(x) {
+//             return _.map(b, function(y) {
+//                 return x.concat([y]);
+//             });
+//         }), true);
+//     }, [ [] ]);
+// }
