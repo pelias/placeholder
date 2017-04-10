@@ -1,0 +1,22 @@
+
+#tokens {
+  display: block;
+  margin: 0;
+  padding: 0;
+  /*border: solid 1px red;*/
+}
+
+.tokens {
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  margin-top: 10px;
+  border-bottom: solid 1px red;
+}
+
+.tokens li {
+  margin-right: 5px;
+}

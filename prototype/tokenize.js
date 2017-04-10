@@ -24,7 +24,7 @@ module.exports.tokenize = function( input ){
     }, this) );
     // console.log( 'validTokens', validTokens );
 
-    // sort the largest matches first
+    // sort the longest matches first
     validTokens.sort( function( a, b ){
       return b.length - a.length;
     });
@@ -39,33 +39,94 @@ module.exports.tokenize = function( input ){
       }
       matches[ word ].push( row );
     });
-
     // console.log( 'matches', matches );
 
-    var window = [];
-    for( var t=0; t<tokens.length; t++ ){
-      var token = tokens[t];
-      if( matches.hasOwnProperty( token ) ){
+    // var windows = [];
 
-        for( var z=0; z<matches[token].length; z++ ){
-          var match = matches[token][z];
-          var split = match.split(/\s+/);
+    var makeWindow = function( tokens, matches ){
 
-          if( tokens.slice( t, t + split.length ).join(' ') === match ){
-            window.push( match );
-            t += split.length -1;
-            break;
+      // console.log( '-------' );
+      // console.log( tokens );
+      // console.log( JSON.stringify( matches ) );
+
+      var window = [];
+      for( var t=0; t<tokens.length; t++ ){
+        var token = tokens[t];
+        // console.log( token );
+        if( matches.hasOwnProperty( token ) ){
+
+          for( var z=0; z<matches[token].length; z++ ){
+            var match = matches[token][z];
+            var split = match.split(/\s+/);
+
+            if( tokens.slice( t, t + split.length ).join(' ') === match ){
+              window.push( match );
+              t += split.length -1;
+              break;
+            }
           }
         }
       }
+      return window;
+    };
+
+    var windows = [];
+
+    for( var word in matches ){
+      // console.log( 'word', word );
+
+      var potentialTokens = matches[ word ];
+      if( 1 === potentialTokens.length ){
+        windows.push( makeWindow( tokens, matches ) );
+      } else {
+        potentialTokens.forEach( function( potToken ){
+          var tmp = _.cloneDeep( matches );
+          tmp[ word ] = _.without( tmp[ word ], potToken );
+          windows.push( makeWindow( tokens, tmp ) );
+        });
+      }
+
+
     }
 
+    // remove duplicate windows
+    windows = _.uniqWith( windows, function( a, b ){
+      return a.join('|') === b.join('|');
+    });
+
+    // find the longest window length
+    var longest = 0;
+    windows.forEach( function( win ){
+      var wordLength = win.reduce( function( acc, cur ){
+        return acc + cur.split(' ').length;
+      }, 0);
+      if( wordLength > longest ){
+        longest = wordLength;
+      }
+    });
+
+    // remove any which are not the longest
+    windows = windows.filter( function( win ){
+      var wordLength = win.reduce( function( acc, cur ){
+        return acc + cur.split(' ').length;
+      }, 0);
+      return wordLength === longest;
+    });
+
+    // makeWindow( tokens, matches );
+
     // console.log( 'window', window );
-    return window;
+    return windows;
   }, this);
 
   // console.log( '[', queries.join( ', ' ), ']' );
-  return queries;
+
+  var flat = [];
+  queries.forEach( function( q ){
+    flat = flat.concat( q );
+  });
+
+  return flat;
 };
 
 // function cartesianProductOf( arr ) {

@@ -56,7 +56,7 @@
           console.log( 'ids', ids );
 
           $('#results li').remove();
-          $('#tokens li').remove();
+          $('#tokens').empty();
           clearMap();
 
           findbyid( ids, function( docs ){
@@ -97,9 +97,14 @@
       function render( documents, ids, tokens ){
 
         // display token groups
-        tokens[0].forEach( function( token ){
-          $("#tokens").append('<li type="button" class="btn btn-default"><span>' + token + '</span></li>');
-        });
+        tokens.forEach( function( win ){
+
+          var buttons = win.map( function( token ){
+            return '<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token + '</span></li>';
+          });
+
+          $("#tokens").append('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
+        })
 
         var bboxes = [];
 
@@ -125,7 +130,7 @@
           var parentids = [];
           order.forEach( function( o ){
             var k = o + '_id';
-            if( doc.lineage.hasOwnProperty( k ) ){
+            if( doc && doc.lineage && doc.lineage.hasOwnProperty( k ) ){
               parentids.push( doc.lineage[k] );
             }
           });
@@ -257,7 +262,7 @@
               </span>
             </div><!-- /input-group -->
 
-            <ul id="tokens" class="btn-group" role="group" style="margin-top:10px;"></ul>
+            <ul id="tokens" class="btn-group" role="group" style="margin-top:10px; list-style: none;"></ul>
             <ul id="results" class="list-group" style="margin-top:10px;"></ul>
           </div><!-- /.col-lg-6 -->
 
