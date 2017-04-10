@@ -10,25 +10,7 @@ module.exports.insertWofRecord = function( wof, next ){
   if( 'string' == typeof id ){ id = parseInt( id, 10 ); }
 
   // sanity check; because WOF
-  if( id <= 0 ) { return next(); }
-
-  // skip deprecated records
-  var deprecated = _.trim( wof['edtf:deprecated'] );
-  if( !_.isEmpty( deprecated ) && deprecated !== 'uuuu' ){
-    return next();
-  }
-
-  // skip superseded records
-  var superseded = wof['wof:superseded_by'];
-  if( Array.isArray( superseded ) && superseded.length > 0 ){
-    return next();
-  }
-
-  // skip non-current records
-  var isCurrent = wof['mz:is_current'];
-  if( isCurrent === '0' || isCurrent === 0 ){
-    return next();
-  }
+  if( !this.isValidWofRecord( id, wof ) ) { return next(); }
 
   // --- store ---
   // add doc to store
@@ -137,4 +119,30 @@ module.exports.insertWofRecord = function( wof, next ){
   // add doc to store
   this.store.set( id, doc, next );
 
+};
+
+module.exports.isValidWofRecord = function( id, wof ){
+
+  // sanity check; because WOF
+  if( id <= 0 ) { return false; }
+
+  // skip deprecated records
+  var deprecated = _.trim( wof['edtf:deprecated'] );
+  if( !_.isEmpty( deprecated ) && deprecated !== 'uuuu' ){
+    return false;
+  }
+
+  // skip superseded records
+  var superseded = wof['wof:superseded_by'];
+  if( Array.isArray( superseded ) && superseded.length > 0 ){
+    return false;
+  }
+
+  // skip non-current records
+  var isCurrent = wof['mz:is_current'];
+  if( isCurrent === '0' || isCurrent === 0 ){
+    return false;
+  }
+
+  return true;
 };
