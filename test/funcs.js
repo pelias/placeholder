@@ -3,11 +3,6 @@ var path = require('path');
 var util = require('pelias-analysis').lib.util;
 
 var tests = [
-  './analyzer/search',
-  './lib/permutations',
-  './prototype/tokenize',
-  './prototype/query',
-  './functional',
   './generated',
 ];
 
