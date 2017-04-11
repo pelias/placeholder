@@ -53,6 +53,11 @@
       ];
 
       function exec( text ){
+
+        $('#results li').remove();
+        $('#tokens').empty();
+        clearMap();
+
         search( text, function( results ){
           results = results || {};
 
@@ -112,10 +117,6 @@
       }
 
       function render( results, groups ){
-
-        $('#results li').remove();
-        $('#tokens').empty();
-        clearMap();
 
         // display token groups
         groups.forEach( function( win ){
@@ -202,9 +203,6 @@
           return false;
         });
 
-        $('#text').val( 'Example Street Neutral Bay North Sydney New South Wales 9999 AU' );
-        $('#search').submit();
-
         // create map
         var map = L.map('map');
         var tiles = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -222,6 +220,9 @@
 
         document.map = map;
         document.layer = bboxLayer;
+
+        $('#text').val( 'Example Street Neutral Bay North Sydney New South Wales 9999 AU' );
+        $('#search').submit();
       });
     </script>
 
