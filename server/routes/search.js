@@ -68,6 +68,12 @@ function mapLineage( ph, lineage, parents, lang ){
 
   for( var attr in lineage ){
     var parent = parents[ lineage[ attr ] ];
+
+    if( !parent ){
+      console.error( 'parent not found!', attr, lineage[ attr ] );
+      continue;
+    }
+
     var name = parent.name;
 
     var languageDefaulted = true;
