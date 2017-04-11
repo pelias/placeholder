@@ -64,18 +64,20 @@
             // console.log( docs );
             var parentIds = {};
 
+            // get all parent ids
             _.mapObject( docs, function( doc, id ){
 
-              if( !doc.lineage ){
-                doc.lineage = {};
-              }
+              doc.lineage.forEach( function( lineage ){
 
-              // console.info( 'set doc', id, doc );
-              documents[ id ] = doc;
+                if( !lineage ){ lineage = {}; }
 
-              _.mapObject( doc.lineage, function( val, key ){
-                parentIds[ val ] = true;
-              });
+                // console.info( 'set doc', id, doc );
+                documents[ id ] = doc;
+
+                _.mapObject( lineage, function( val, key ){
+                  parentIds[ val ] = true;
+                });
+              })
 
             });
 
@@ -130,8 +132,8 @@
           var parentids = [];
           order.forEach( function( o ){
             var k = o + '_id';
-            if( doc && doc.lineage && doc.lineage.hasOwnProperty( k ) ){
-              parentids.push( doc.lineage[k] );
+            if( doc && doc.lineage && doc.lineage[0] && doc.lineage[0].hasOwnProperty( k ) ){
+              parentids.push( doc.lineage[0][k] );
             }
           });
 

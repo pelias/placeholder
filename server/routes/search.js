@@ -35,11 +35,9 @@ module.exports = function( req, res ){
 
       // map dcuments to map using id as key
       var docs = {};
-      for( var i=0; i<results.length; i++ ){
-        var result = results[i];
-        result = mapResult( ph, result, parents, lang );
-        docs[ result.id ] = result;
-      }
+      results.forEach( function( result ){
+        docs[ result.id ] = mapResult( ph, result, parents, lang );
+      });
 
       res.status(200).json( docs );
     });
@@ -59,9 +57,9 @@ function mapResult( ph, result, parents, lang ){
   // delete language properties
   delete result.names;
 
-  result.lineage = [
-    mapLineage( ph, result.lineage, parents, lang )
-  ];
+  result.lineage = result.lineage.map( function( lineage ){
+    return mapLineage( ph, lineage, parents, lang );
+  });
   return result;
 }
 
@@ -103,9 +101,11 @@ function rowsToIdMap( rows ){
 function getParentIds( results ){
   var parentIds = {};
   results.forEach( function( row ){
-    for( var attr in row.lineage ){
-      parentIds[ row.lineage[attr] ] = true;
-    }
+    row.lineage.forEach( function( lineage ){
+      for( var attr in lineage ){
+        parentIds[ lineage[attr] ] = true;
+      }
+    });
   });
   return Object.keys( parentIds );
 }

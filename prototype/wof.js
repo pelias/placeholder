@@ -18,7 +18,7 @@ module.exports.insertWofRecord = function( wof, next ){
     id: id,
     name: wof['wof:name'],
     placetype: wof['wof:placetype'],
-    lineage: wof['wof:hierarchy'][0],
+    lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
       bbox: wof['geom:bbox'],
