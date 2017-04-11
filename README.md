@@ -33,7 +33,7 @@ try the following paths:
 ```javascript
 /demo
 /parser/findbyid?ids=101748479
-/parser/search?text=london
+/parser/query?text=london
 /parser/tokenize?text=sydney new south wales
 ```
 

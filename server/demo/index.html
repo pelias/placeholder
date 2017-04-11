@@ -47,12 +47,12 @@
         weight: 2
       };
 
-      function query( text ){
+      function exec( text ){
 
         var documents = {};
         console.info( 'search', text );
 
-        search( text, function( ids ){
+        query( text, function( ids ){
           console.log( 'ids', ids );
 
           $('#results li').remove();
@@ -178,9 +178,9 @@
           .done(cb);
       };
 
-      function search( text, cb ){
-        console.info( 'search', text );
-        request( '/parser/search', { text: text }, cb );
+      function query( text, cb ){
+        console.info( 'query', text );
+        request( '/parser/query', { text: text }, cb );
       }
 
       function findbyid( ids, cb ){
@@ -214,7 +214,7 @@
       $(document).ready(function() {
 
         $('#search').on( 'submit', function( e ){
-          query( $('#text').val() );
+          exec( $('#text').val() );
           return false;
         });
 
