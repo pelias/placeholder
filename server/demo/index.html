@@ -47,126 +47,90 @@
         weight: 2
       };
 
+      var order = [
+        'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'burough', 'postalcode',
+        'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'country', 'empire', 'continent', 'ocean', 'planet'
+      ];
+
       function exec( text ){
+        search( text, function( results ){
 
-        var documents = {};
-        console.info( 'search', text );
+          // load token groups
+          tokenize( text, function( groups ){
 
-        query( text, function( ids ){
-          console.log( 'ids', ids );
-
-          $('#results li').remove();
-          $('#tokens').empty();
-          clearMap();
-
-          findbyid( ids, function( docs ){
-
-            // console.log( docs );
-            var parentIds = {};
-
-            // get all parent ids
-            _.mapObject( docs, function( doc, id ){
-
-              doc.lineage.forEach( function( lineage ){
-
-                if( !lineage ){ lineage = {}; }
-
-                // console.info( 'set doc', id, doc );
-                documents[ id ] = doc;
-
-                _.mapObject( lineage, function( val, key ){
-                  parentIds[ val ] = true;
-                });
-              })
-
-            });
-
-            // @todo remove findids from parentIds
-            findbyid( Object.keys( parentIds ), function( docs2 ){
-
-              _.mapObject( docs2, function( val, key ){
-                documents[ key ] = val;
-              });
-
-              tokenize( text, function( groups ){
-                render( documents, ids, groups );
-              });
-            });
+            // render results
+            render( results || {}, groups || [] );
           });
         });
       }
 
-      function render( documents, ids, tokens ){
+      function renderResult( result ){
+
+        // the individual parts of the result hierarchy
+        var parts = [];
+
+        // the result document
+        parts.push({
+          id: result.id,
+          type: result.placetype,
+          name: result.name
+        })
+
+        // only render a single lineage
+        if( result.lineage.length ){
+          var lineage = result.lineage[0];
+          order.forEach( function( type ){
+            if( lineage.hasOwnProperty( type ) ){
+              parts.push({
+                id: lineage[type].id,
+                type: type,
+                name: lineage[type].name
+              });
+            }
+          });
+        }
+
+        var view = parts.map( function( part, i ){
+          var v = Array(i).join('&nbsp;&nbsp;&nbsp;');
+          if( i > 0 ){ v += '└ '; }
+          v += '<strong>' + ( part.name || '??' ) + '</strong>';
+          v += '<div class="wofinfo">';
+          v += '<em>' + ( part.type || '??' ) + '</em>';
+          v += '<a href="https://whosonfirst.mapzen.com/spelunker/id/' + ( part.id || '??' ) + '">' + ( part.id || '??' ) + '</a>';
+          v += '</div>';
+          return v;
+        })
+
+        // console.log( lins[i] );
+        $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
+      }
+
+      function render( results, groups ){
+
+        $('#results li').remove();
+        $('#tokens').empty();
+        clearMap();
 
         // display token groups
-        tokens.forEach( function( win ){
-
+        groups.forEach( function( win ){
           var buttons = win.map( function( token ){
             return '<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token + '</span></li>';
           });
-
           $("#tokens").append('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
         })
 
+        // render each result
+        _.each( results, renderResult );
+
+        // aggregate the bboxes
         var bboxes = [];
-
-        ids.forEach( function( id ){
-
-          var doc = documents[ id ];
-          if( !doc ){
-            console.error( 'DOC NOT FOUND!', 'ANSWER', id );
+        _.each( results, function( result ){
+          if( result.geom && result.geom.bbox ){
+            bboxes.push( result.geom.bbox );
           }
-          var view = [];
-          // view.push( JSON.stringify( ans ) );
-
-          // aggregate the bboxes
-          if( doc.geom && doc.geom.bbox ){
-            bboxes.push( doc.geom.bbox );
-          }
-
-          var order = [
-            'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'burough', 'postalcode',
-            'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'country', 'empire', 'continent', 'ocean', 'planet'
-          ];
-
-          var parentids = [];
-          order.forEach( function( o ){
-            var k = o + '_id';
-            if( doc && doc.lineage && doc.lineage[0] && doc.lineage[0].hasOwnProperty( k ) ){
-              parentids.push( doc.lineage[0][k] );
-            }
-          });
-
-          // console.log( 'parentids', parentids );
-
-          view = view.concat( parentids.map( function( parentid, i ){
-
-            var parent = documents[ parentid ];
-            if( !parent ){
-              console.error( 'DOC NOT FOUND!', 'PARENT', parentid );
-              console.error( 'skip', parentid );
-              return;
-            }
-            if( !parent.names ){
-              parent.names = {};
-            }
-
-            var v = Array(i).join('&nbsp;&nbsp;&nbsp;');
-            if( i > 0 ){ v += '└ '; }
-            v += '<strong>' + ( parent.name || '??' ) + '</strong>';
-            v += '<div class="wofinfo">';
-            v += '<em>' + ( parent.placetype || '??' ) + '</em>';
-            v += '<a href="https://whosonfirst.mapzen.com/spelunker/id/' + ( parentid || '??' ) + '">' + ( parentid || '??' ) + '</a>';
-            v += '</div>';
-            return v;
-          }).filter(function( val ){
-            return !!val;
-          }));
-
-          // console.log( lins[i] );
-          $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
         });
 
+        // change map location
         updateMap( bboxes );
       }
 
@@ -179,6 +143,11 @@
           })
           .done(cb);
       };
+
+      function search( text, cb ){
+        console.info( 'search', text );
+        request( '/parser/search', { text: text }, cb );
+      }
 
       function query( text, cb ){
         console.info( 'query', text );
