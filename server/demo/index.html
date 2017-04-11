@@ -81,6 +81,10 @@
           var lineage = result.lineage[0];
           order.forEach( function( type ){
             if( lineage.hasOwnProperty( type ) ){
+
+              // skip adding the result twice
+              if( lineage[type].id === result.id ){ return; }
+
               parts.push({
                 id: lineage[type].id,
                 type: type,
