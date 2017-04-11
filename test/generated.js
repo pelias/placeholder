@@ -5,6 +5,8 @@ var fs = require('fs'),
     through = require('through2'),
     Placeholder = require('../Placeholder');
 
+var assert = require('assert');
+
 /**
   this test reads the 'generated.txt' file (is present) and uses it's lines
   to generate test cases.
@@ -41,10 +43,22 @@ module.exports.generated = function(test, util) {
 
 // convenience function for writing quick 'n easy test cases
 function runner( test, ph, actual, expected, next ){
-  test( actual, function(t) {
+  // tape( actual, function(t) {
+  try {
+    process.stderr.write('.');
+    // console.time('took');
     var resultIds = ph.query( ph.tokenize( actual ) );
-    t.true( -1 !== resultIds.indexOf( expected ), 'id found in results' );
-    t.end();
+    // console.timeEnd('took');
+    assert.ok( -1 !== resultIds.indexOf( expected ), 'id found in results' );
+  } catch( e ){
+    console.log( '\n------------------------' );
+    console.log( 'input', actual );
+    console.log( 'expected', expected );
+    console.log( ph.tokenize( actual ) );
+    console.log( resultIds );
+    console.log( e );
+  }
+    // t.end();
     next();
-  });
+  // });
 }

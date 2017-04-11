@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run units",
     "units": "node test/units.js | tap-spec",
-    "funcs": "node test/funcs.js | tap-spec",
+    "funcs": "node test/funcs.js",
     "start": "node server/http.js",
     "extract": "bash cmd/wof_extract.sh > data/wof.extract",
     "build": "cat data/wof.extract | node cmd/load.js",
