@@ -54,12 +54,14 @@
 
       function exec( text ){
         search( text, function( results ){
+          results = results || {};
 
           // load token groups
           tokenize( text, function( groups ){
+            groups = groups || [];
 
             // render results
-            render( results || {}, groups || [] );
+            render( results, groups );
           });
         });
       }
@@ -123,8 +125,10 @@
           $("#tokens").append('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
         })
 
-        // render each result
-        _.each( results, renderResult );
+        // render each result (in sorted order by geom.area)
+        _.map( results, function( v ){ return v; }).sort( function( a, b ){
+          return b.geom.area - a.geom.area
+        }).forEach( renderResult );
 
         // aggregate the bboxes
         var bboxes = [];
