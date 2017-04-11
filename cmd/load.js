@@ -18,6 +18,8 @@ process.stdin.pipe( split() )
                ph.printStatistics();
                console.error('sorting...');
                ph.graph.sort(); // sort all arrays
+               console.error('vacuuming sqlite db...');
+               ph.store.db.run('VACUUM;');
                console.error('saving...');
                ph.save();
                next();

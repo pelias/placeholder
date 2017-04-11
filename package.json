@@ -9,7 +9,7 @@
     "funcs": "node test/funcs.js",
     "start": "node server/http.js",
     "extract": "bash cmd/wof_extract.sh > data/wof.extract",
-    "build": "cat data/wof.extract | node cmd/load.js",
+    "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/generated.txt",
     "repl": "node cmd/repl.js"
   },
