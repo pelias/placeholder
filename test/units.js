@@ -4,7 +4,10 @@ var util = require('pelias-analysis').lib.util;
 
 var tests = [
   './analyzer/search',
+  './lib/analysis',
   './lib/permutations',
+  './lib/sorted',
+  './lib/TokenGraph',
   './prototype/tokenize',
   './prototype/query',
   './functional',
