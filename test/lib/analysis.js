@@ -18,14 +18,15 @@ module.exports.tokenize = function(test, common) {
   // delimiters
   assert( 'Foo  Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo,,Bar', [[ 'foo', 'bar' ]] );
-  assert( 'Foo..Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo\'\'Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
   assert( 'Foo""Bar', [[ 'foo', 'bar' ]] );
 
   // not a delimeter
-  assert( 'Foo-Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
+  assert( 'Foo..Bar', [[ 'foobar' ]] );
+  assert( 'West L.A.', [[ 'west', 'la' ]] );
 
   // synonymous punctuation
+  assert( 'Foo-Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
   assert( 'Tol\'yatti', [[ 'tolyatti' ], [ 'tol', 'yatti' ]] );
   assert( 'Sendai-shi', [[ 'sendaishi' ], [ 'sendai', 'shi' ]] );
 };
