@@ -68,11 +68,11 @@ try the following paths:
 
 the `/parser/search` endpoint accepts a `?lang=xxx` property which can be used to vary the language of data returned.
 
-for example, the following url will return strings in Japanese where available:
+for example, the following urls will return strings in Japanese / Russian where available:
 
 ```javascript
 /parser/search?text=germany&lang=jpn
-/parser/search?text=germany&lang=chi
+/parser/search?text=germany&lang=rus
 ```
 
 documents returned by `/parser/search` contain a boolean property named `languageDefaulted` which indicates if the service was able to find a translation in the language you request (false) or whether it returned the default language (true).
