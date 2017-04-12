@@ -6,10 +6,10 @@ module.exports.normalize = function(test, common) {
 
   // Germanic substitutions
   assert( 'Schöneberg', [ 'schoneberg', 'schoeneberg' ] );
-  assert( 'Straße', [ 'strasse' ] );
 
   // Punctuation substitutions
-  assert( '&', [ 'and' ] );
+  assert( 'Straße', [ 'strasse' ] );
+  assert( 'Trinidad & Tobago', [ 'trinidad and tobago' ] );
 };
 
 module.exports.tokenize = function(test, common) {
