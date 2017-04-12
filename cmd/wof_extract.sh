@@ -15,7 +15,7 @@ if [[ ! -f "$JQ_BIN" || ! -x "$JQ_BIN" ]]; then
   exit 1;
 fi
 
-# extract only the json properies from each file (excluding zs:blockids)
+# extract only the json properies from each file (eg: excluding zs:*)
 find "$WOF_DIR" -type f -name '*.geojson' -print0 | while IFS= read -r -d $'\0' file; do
-  $JQ_BIN -c -M '.properties | del(.["zs:blockids"])' $file;
+  $JQ_BIN -c -M '.properties | with_entries(select(.key|test("^(zs|misc|wk|src|mps|qs):")|not))' $file;
 done
