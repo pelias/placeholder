@@ -17,6 +17,7 @@ module.exports.insertWofRecord = function( wof, next ){
   var doc = {
     id: id,
     name: wof['wof:name'],
+    abbr: undefined,
     placetype: wof['wof:placetype'],
     lineage: wof['wof:hierarchy'],
     geom: {
@@ -27,6 +28,14 @@ module.exports.insertWofRecord = function( wof, next ){
     },
     names: {}
   };
+
+  // --- abbreviations and ISO codes ---
+
+  if( -1 !== ['dependency','country'].indexOf( doc.placetype ) ) {
+    doc.abbr = wof['wof:country_alpha3'];
+  } else if( wof['wof:abbreviation'] ) {
+    doc.abbr = wof['wof:abbreviation'];
+  }
 
   // --- tokens ---
 

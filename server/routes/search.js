@@ -74,8 +74,6 @@ function mapLineage( ph, lineage, parents, lang ){
       continue;
     }
 
-    var name = parent.name;
-
     var languageDefaulted = true;
 
     // swap languages
@@ -86,7 +84,8 @@ function mapLineage( ph, lineage, parents, lang ){
 
     res[ parent.placetype ] = {
       id: parent.id,
-      name: name,
+      name: parent.name,
+      abbr: parent.abbr,
       languageDefaulted: languageDefaulted
     };
   }
