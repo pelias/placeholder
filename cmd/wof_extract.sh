@@ -1,12 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
+# directory of this file
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd );
+
 # location of whosonfirst data dir
 # note: set WOF_DIR env var to override
 WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data/data'};
 
 # requires command: jq - Command-line JSON processor
 # on ubuntu: sudo apt-get install jq
+
+# requires version jq 1.5 or later, for older versions of ubunutu:
+# sudo apt-get remove jq
+# sudo apt-get install libonig2
+# wget http://de.archive.ubuntu.com/ubuntu/pool/universe/j/jq/jq_1.5+dfsg-1_amd64.deb
+# sudo dpkg -i jq_1.5+dfsg-1_amd64.deb
 
 # ensure jq exists and is executable
 JQ_BIN=$(which jq)
@@ -17,5 +26,5 @@ fi
 
 # extract only the json properies from each file (eg: excluding zs:*)
 find "$WOF_DIR" -type f -name '*.geojson' -print0 | while IFS= read -r -d $'\0' file; do
-  $JQ_BIN -c -M '.properties | with_entries(select(.key|test("^(zs|misc|wk|src|mps|qs):")|not))' $file;
+  $JQ_BIN -c -M -f "$DIR/jq.filter" "$file";
 done
