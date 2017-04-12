@@ -138,6 +138,16 @@ placeholder > id 85772991
 $ npm test
 ```
 
+### run the functional cases
+
+there are more exhaustive test cases included in `test/cases/`.
+
+to run all the test cases:
+
+```bash
+$ npm run funcs
+```
+
 ### generate a ~500,000 line test file
 
 this command requires the `data/wof.extract` file mentioned below in the 'building the database' section.
@@ -146,7 +156,7 @@ this command requires the `data/wof.extract` file mentioned below in the 'buildi
 $ npm run gentests
 ```
 
-once complete you can find the generated test cases in `test/generated.txt`.
+once complete you can find the generated test cases in `test/cases/generated.txt`.
 
 ---
 
