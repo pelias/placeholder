@@ -182,7 +182,7 @@ $ WOF_DIR=/data/whosonfirst-data/data npm run extract
 
 now you can rebuild the `data/graph.json` and `data/store.json` files with the following command:
 
-this should take less that 1 minutes to run:
+this should take 2-3 minutes to run:
 
 ```bash
 $ npm run build
