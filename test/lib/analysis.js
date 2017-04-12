@@ -4,8 +4,12 @@ var analysis = require('../../lib/analysis');
 module.exports.normalize = function(test, common) {
   var assert = runner.bind(null, test, 'normalize');
 
-  // German umlaut multiple expansion
-  // assert( 'Schöneberg', [ 'schoneberg', 'schoeneberg' ] );
+  // Germanic substitutions
+  assert( 'Schöneberg', [ 'schoneberg', 'schoeneberg' ] );
+  assert( 'Straße', [ 'strasse' ] );
+
+  // Punctuation substitutions
+  assert( '&', [ 'and' ] );
 };
 
 module.exports.tokenize = function(test, common) {
