@@ -51,7 +51,7 @@ $ PORT=6100 npm start;
 the server should now be running and you should be able to access the http API:
 
 ```bash
-http://localhost:6100/demo
+http://localhost:6100/
 ```
 
 try the following paths:
@@ -64,7 +64,32 @@ try the following paths:
 /parser/tokenize?text=sydney new south wales
 ```
 
-### run the interactive shell
+### changing languages
+
+the `/parser/search` endpoint accepts a `?lang=xxx` property which can be used to vary the language of data returned.
+
+for example, the following url will return strings in Japanese where available:
+
+```javascript
+/parser/search?text=germany&lang=jpn
+/parser/search?text=germany&lang=chi
+```
+
+documents returned by `/parser/search` contain a boolean property named `languageDefaulted` which indicates if the service was able to find a translation in the language you request (false) or whether it returned the default language (true).
+
+the demo is also able to serve responses in different languages by providing the language code in the URL anchor:
+
+```bash
+/demo#jpn
+/demo#chi
+/demo#eng
+/demo#fra
+... etc.
+```
+
+---
+
+## run the interactive shell
 
 ```bash
 $ npm run repl
