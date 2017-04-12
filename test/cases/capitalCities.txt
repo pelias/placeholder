@@ -1,0 +1,113 @@
+101877135 Andorra la Vella, Andorra
+421168799 Kabul, Afghanistan
+890445621 St. John's, Antigua and Barbuda
+890441875 The Valley, Anguilla
+421182367 Yerevan, Armenia
+890432155 Luanda, Angola
+890449627 Pago Pago, American Samoa
+890432017 Oranjestad, Aruba
+85667871 Mariehamn, Aland Islands
+890518775 Sarajevo, Bosnia and Herzegovina
+890452811 Bridgetown, Barbados
+890440103 Manama, Bahrain
+421204487 Bujumbura, Burundi
+421168997 Porto-Novo, Benin
+890442097 Hamilton, Bermuda
+421188863 Bandar Seri Begawan, Brunei
+101964877 Brasilia, Brazil
+421174929 Gaborone, Botswana
+890442105 Belmopan, Belize
+101735873 Ottawa, Canada
+890417321 West Island, Cocos Islands
+421181445 Bangui, Central African Republic
+85670067 Brazzaville, Republic of the Congo
+101748453 Bern, Switzerland
+421168957 Yamoussoukro, Ivory Coast
+102016915 Santiago, Chile
+85670331 Praia, Cape Verde
+890442073 Willemstad, Curacao
+101748799 Berlin, Germany
+101749159 Copenhagen, Denmark
+890442101 Roseau, Dominica
+101748153 Tallinn, Estonia
+421199769 Asmara, Eritrea
+101748283 Madrid, Spain
+101748417 Helsinki, Finland
+101750367 London, United Kingdom
+85632335 St. George's, Grenada
+1091680781 Cayenne, French Guiana
+85681223 St Peter Port, Guernsey
+421168965 Accra, Ghana
+101753853 Gibraltar, Gibraltar
+101870623 Nuuk, Greenland
+421167921 Banjul, Gambia
+890444429 Conakry, Guinea
+890442797 Basse-Terre, Guadeloupe
+421178347 Malabo, Equatorial Guinea
+421197943 Bissau, Guinea-Bissau
+890437279 Hong Kong, Hong Kong
+101751659 Zagreb, Croatia
+101751703 Budapest, Hungary
+101751737 Dublin, Ireland
+85632641 Diego Garcia, British Indian Ocean Territory
+101751753 Reykjavik, Iceland
+85632593 Saint Helier, Jersey
+421186515 Kingston, Jamaica
+85672817 Tokyo, Japan
+890440079 Basseterre, Saint Kitts and Nevis
+102026327 Seoul, South Korea
+890434949 George Town, Cayman Islands
+421191125 Astana, Kazakhstan
+85673679 Castries, Saint Lucia
+101828603 Vaduz, Liechtenstein
+421195189 Maseru, Lesotho
+101753031 Vilnius, Lithuania
+101751765 Luxembourg, Luxembourg
+890444507 Rabat, Morocco
+101831917 Monaco, Monaco
+421181453 Antananarivo, Madagascar
+890451463 Majuro, Marshall Islands
+890491957 Skopje, Macedonia
+85681291 Macao, Macao
+101750297 Plymouth, Montserrat
+101752423 Valletta, Malta
+85674093 Male, Maldives
+421168781 Lilongwe, Malawi
+102023407 Kuala Lumpur, Malaysia
+421172081 Windhoek, Namibia
+890413117 Noumea, New Caledonia
+890440179 Kingston, Norfolk Island
+101751893 Amsterdam, Netherlands
+101751917 Oslo, Norway
+85675677 Yaren, Nauru
+85632493 Alofi, Niue
+85632179 Panama City, Panama
+890435983 Saint-Pierre, Saint Pierre and Miquelon
+85676471 Melekeok, Palau
+890441607 Doha, Qatar
+102003033 Moscow, Russia
+890444217 Honiara, Solomon Islands
+421202159 Victoria, Seychelles
+101752307 Stockholm, Sweden
+102032341 Singapore, Singapore
+101752073 Ljubljana, Slovenia
+101913495 Bratislava, Slovakia
+890452049 Freetown, Sierra Leone
+85677205 San Marino, San Marino
+890449737 Mogadishu, Somalia
+85677301 Sao Tome, Sao Tome and Principe
+890434823 Philipsburg, Sint Maarten
+102025263 Bangkok, Thailand
+421196557 Dili, East Timor
+421167889 Ashgabat, Turkmenistan
+85679123 Tunis, Tunisia
+85679409 Ankara, Turkey
+85679705 Dodoma, Tanzania
+421168855 Tashkent, Uzbekistan
+890434937 Road Town, British Virgin Islands
+421177479 Hanoi, Vietnam
+890416453 Port Vila, Vanuatu
+890452045 Mata Utu, Wallis and Futuna
+890416609 Apia, Samoa
+421178937 Lusaka, Zambia
+421201479 Harare, Zimbabwe

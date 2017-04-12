@@ -1,0 +1,1290 @@
+101748621 Aachen
+101749169 Aalborg
+101750639 Aberdeen
+101724139 Abilene
+890434609 Abobo
+85667981 Abu Dhabi
+101991509 Acapulco de Juarez
+421168965 Accra
+85679443 Adana
+102077365 Aguascalientes
+101748935 Aix-en-Provence
+85672825 Akita
+102031999 Akita Shi
+101713359 Akron
+85935183 Alafaya
+85921923 Alameda
+85977967 Albany, NY
+85976715 Albuquerque
+101750349 Aldershot
+85802699 Alhambra
+85802731 Allapattah
+85872885 Allen
+404485941 Allentown
+421176003 Almaty
+101751877 Almere Stad
+85937153 Alpharetta
+85883945 Alvaro Obregon
+101752081 Amadora
+102031845 Amagasaki
+101724103 Amarillo
+101751821 Amersfoort
+85803019 Ames
+404522321 Amherst
+101901021 Amiens
+890508847 Amritsar
+101751893 Amsterdam
+85923167 Anaheim
+85915707 Anchorage
+85885341 Anderson
+101749017 Angers
+85679409 Ankara
+404506537 Ann Arbor
+102027961 Anshan
+85922201 Antioch
+101751853 Apeldoorn
+85880877 Apple Valley
+101732417 Appleton
+85878445 Arcadia
+85926841 Arden-Arcade
+85675839 Arequipa
+101749163 Arhus
+890481335 Arkhangel'sk
+85803509 Arlington
+85865807 Arlington Heights
+101751857 Arnhem
+85929333 Arvada
+102032071 Asahikawa
+85981171 Asheville
+101750339 Ashford
+102011509 Astrakhan
+101727509 Atascocita
+85936429 Atlanta
+85771201 Auburn
+85929235 Aurora
+102087275 Austin
+85804073 Avondale
+101750423 Aylesbury
+890535755 Azcapotzalco
+85923307 Bakersfield
+85923721 Baldwin Park
+85949461 Baltimore
+102021015 Bandung
+102030819 Bangalore
+102025263 Bangkok
+101751935 Bangor
+85669655 Bangui
+102027953 Baotou
+101748323 Barcelona
+101752571 Bari
+85680469 Barinas
+85785469 Barking
+102013349 Barnaul
+101722655 Bartlett
+101748459 Basel
+101750407 Basildon
+101750351 Basingstoke
+101750387 Bath
+85948205 Baton Rouge
+85785537 Battersea
+85873325 Battle Creek
+85975307 Bayonne
+101724811 Baytown
+85794187 Beaumont
+101715809 Beaverton
+85785551 Beckenham
+85785559 Becontree
+101750441 Bedford
+101942553 Belem
+101751931 Belfast
+102006205 Belgorod
+85805529 Bellevue
+85923713 Bellflower
+101730153 Bellingham
+102053515 Belo Horizonte
+101716033 Bend
+85673635 Benghazi
+85805771 Bensonhurst
+85871261 Berkeley
+101748799 Berlin
+101748453 Bern
+85940903 Berwyn
+101749003 Besancon
+85950247 Bethesda
+101748767 Bielefeld
+101748385 Bilbao
+85972929 Billings
+101750549 Birkenhead
+85914465 Birmingham, AL
+101750467 Birmingham, England
+404478811 Bismarck
+85775223 Blackburn
+101913927 Blackpool
+85939457 Bloomington, IL
+85969239 Bloomington, MN
+85971453 Blue Springs
+85932083 Boca Raton
+101748707 Bochum
+101750317 Bognor Regis
+85940209 Bolingbrook
+101752665 Bologna
+101913943 Bolton
+101748595 Bonn
+85947997 Bossier City
+85950361 Boston
+101914211 Bottrop
+421174667 Bouake
+85929877 Boulder
+101750305 Bournemouth
+85949339 Bowie
+85806865 Bowling Green
+85806935 Boyle Heights
+85932077 Boynton Beach
+101750375 Bracknell
+101914015 Bradford
+101752097 Braga
+101735903 Brampton
+85933691 Brandon
+85670067 Brazzaville
+101751811 Breda
+85682561 Bremen
+101748845 Bremerhaven
+85922195 Brentwood, CA
+85979867 Brentwood, NY
+85669287 Brest
+85865729 Bridgeport
+85807537 Brighton
+85866805 Bristol
+85786023 Brixton
+85950319 Brockton
+101714277 Broken Arrow
+85807877 Brookline
+421205765 Brooklyn
+85969229 Brooklyn Park
+85929855 Broomfield
+85808127 Brownsville
+101725999 Bryan
+102004413 Bryansk
+85917547 Buckeye
+101751703 Budapest
+85923163 Buena Park
+85668015 Buenos Aires
+404522329 Buffalo
+421168015 Bulawayo
+85878043 Burbank
+101741055 Burnaby
+101750587 Burnley
+85968497 Burnsville
+85679231 Bursa
+101750567 Bury
+101752243 Bydgoszcz
+101912525 Cacak
+101750149 Caen
+890458845 Calgary
+85675853 Callao
+85923249 Camarillo
+890435969 Camayenne
+101750465 Cambridge, England
+85950329 Cambridge, MA
+102061235 Campinas
+102001471 Cancun
+101750497 Cannock
+85809293 Canoga Park
+101713301 Canton, OH
+85932617 Cape Coral
+101750397 Cardiff
+101750619 Carlisle
+85922291 Carlsbad
+85926847 Carmichael
+101724379 Carrollton
+85923683 Carson
+85974793 Carson City
+85980827 Cary
+85918135 Casas Adobes
+101734031 Casper
+85924511 Castro Valley
+85918125 Catalina Foothills
+85923421 Cathedral City
+85944253 Cedar Rapids
+85893447 Centennial
+85938301 Champaign
+85917533 Chandler
+102027947 Changchun
+102027715 Changsha
+102026495 Changwon
+85810391 Chapel Hill
+101720747 Charleston
+85981333 Charlotte
+101750327 Chatham
+101723043 Chattanooga
+102008989 Cheboksary
+404522333 Cheektowaga
+101750411 Chelmsford
+85810589 Chelsea
+85771465 Cheltenham
+102012335 Chelyabinsk
+101748601 Chemnitz
+102027703 Chengdu
+890505403 Chennai
+85810655 Cherry Hill
+101750511 Chester
+101750539 Chesterfield
+101734121 Cheyenne
+85678619 Chiang Mai
+85672797 Chiba
+85810813 Chicago
+85923179 Chico
+85810831 Chicopee
+404476347 Chicopee
+102075217 Chihuahua
+102026481 Chinju
+85923885 Chino
+85923889 Chino Hills
+102014609 Chita
+85669023 Chittagong
+421174425 Chitungwiza
+85678795 Chon Buri
+102027689 Chongqing
+101915501 Christchurch
+85922285 Chula Vista
+85940877 Cicero
+101712203 Cincinnati
+85922873 Citrus Heights
+101993137 Ciudad Lopez Mateos
+101992489 Ciudad Nezahualcoyotl
+101722759 Clarksville
+85931903 Clearwater
+101749467 Clermont-Ferrand
+85811397 Clifton
+85923015 Clovis
+101752019 Cluj-Napoca
+85669395 Cochabamba
+85932425 Coconut Creek
+101752091 Coimbra
+101726003 College Station
+85929457 Colorado Springs
+85923895 Colton
+85950033 Columbia, MD
+85970425 Columbia, MO
+101720793 Columbia, SC
+85936243 Columbus, GA
+101712381 Columbus, OH
+85923663 Compton
+890444429 Conakry
+102017759 Concepcion
+85922187 Concord, CA
+85981159 Concord, NC
+85975075 Concord, NH
+85812061 Coney Island
+101725633 Conroe
+890439959 Constantine
+85889293 Conway
+404511281 Coon Rapids
+101749159 Copenhagen
+85932415 Coral Springs
+85668031 Cordoba
+101751727 Cork
+85812357 Corona
+101724325 Corpus Christi
+101715853 Corvallis
+85923161 Costa Mesa
+85944293 Council Bluffs
+890535773 Coyoacan
+101751943 Craiova
+404488357 Cranston
+85884475 Cuauhtemoc
+101991533 Cuautitlan Izcalli
+85922393 Cupertino
+102057617 Curitiba
+85675843 Cusco
+85673207 Daejeon
+102027669 Dalian
+101724385 Dallas
+421175891 Daloa
+85922529 Daly City
+101748563 Darmstadt
+102027935 Datong
+101751781 Daugavpils
+85676309 Davao
+85944193 Davenport
+85932407 Davie
+85922419 Davis
+404524075 Dayton
+85932697 Daytona Beach
+404508577 Dearborn
+404508579 Dearborn Heights
+101751717 Debrecen
+85913589 Decatur, AL
+85940083 Decatur, IL
+85932401 Deerfield Beach
+85923299 Delano
+85672123 Delhi
+85932059 Delray Beach
+85932677 Deltona
+85814345 Denton
+85928879 Denver
+102020581 Depok
+85944061 Des Moines
+85940869 Des Plaines
+404506393 Detroit
+85669009 Dhaka
+85923645 Diamond Bar
+85632319 Djibouti
+101752861 Dnipropetrovsk
+890441607 Doha
+85904051 Dombivli
+102027633 Dongguan
+101751841 Dordrecht
+101748719 Dortmund
+85899531 Dothan
+85923637 Downey
+101751925 Drammen
+85667983 Dubai
+101751737 Dublin
+85943829 Dubuque
+101748713 Duisburg
+404513247 Duluth
+85950181 Dundalk
+101914509 Dunedin
+890456493 Durham
+404512099 Eagan
+101732375 Eau Claire
+85969211 Eden Prairie
+101723563 Edinburg
+85871919 Edison
+85817597 Edmond
+890458485 Edmonton
+101751819 Eindhoven
+85922273 El Cajon
+85923629 El Monte
+101724863 El Paso
+85939801 Elgin
+85817771 Elizabeth
+85922869 Elk Grove
+85942259 Elkhart
+85950037 Ellicott City
+101712947 Elyria
+85922267 Encinitas
+101751871 Enschede
+85818197 Enterprise
+404486673 Erie
+101749155 Esbjerg
+85922263 Escondido
+101748709 Essen
+101716261 Eugene
+101723683 Euless
+85818323 Evanston
+85818327 Evansville
+85867883 Everett
+85818511 Fairfield
+404476177 Fall River
+404478877 Fargo
+102030289 Faridabad
+85951999 Farmington Hills
+85981411 Fayetteville
+101730439 Federal Way
+890454333 Fes
+85819549 Flagami
+85917421 Flagstaff
+404506599 Flint
+85819643 Florence
+85928335 Florence-Graham
+85972219 Florissant
+101724409 Flower Mound
+85922863 Folsom
+85923901 Fontana
+85929679 Fort Collins
+85932397 Fort Lauderdale
+85932609 Fort Myers
+85921431 Fort Smith
+85942149 Fort Wayne
+101724443 Fort Worth
+102027615 Foshan
+85923149 Fountain Valley
+85935887 Fountainebleau
+85950629 Framingham
+85820523 Framingham Center
+85820557 Franklin
+85949385 Frederick
+890452049 Freetown
+85820671 Fremont
+85922995 Fresno
+101724387 Frisco
+102031801 Fujisawa
+102031795 Fukuoka-shi
+102031791 Fukuyama
+85923145 Fullerton
+102031789 Funabashi
+101752075 Funchal
+102027929 Fushun
+102027611 Fuzhou
+85932213 Gainesville
+85949491 Gaithersburg
+85923141 Garden Grove
+85923619 Gardena
+101724045 Garland
+85941813 Gary
+85981127 Gastonia
+101738041 Gatineau
+85679437 Gaziantep
+101752271 Gdansk
+101748723 Gelsenkirchen
+85682291 Geneve
+101748611 Gera
+85821411 Germantown
+85917513 Gilbert
+85949717 Glen Burnie
+85821899 Glendale
+85923611 Glendora
+85669291 Gomel
+85822279 Goodyear
+890511207 Gorakhpur
+85982323 Grand Forks
+85929587 Grand Junction
+101724555 Grand Prairie
+404507947 Grand Rapids
+85879783 Great Falls
+85929071 Greeley
+101732365 Green Bay
+404523359 Greenburgh
+85980391 Greensboro
+85823089 Greenville
+101749307 Grenoble
+101716277 Gresham
+101751909 Groningen
+101997865 Guadalajara
+102000723 Guadalupe
+102027597 Guangzhou
+85670425 Guantanamo
+102061469 Guarulhos
+102027585 Guiyang
+85969867 Gulfport
+890535763 Gustavo A. Madero
+85673199 Gwangju
+101751711 Gyor
+101751897 Haarlem
+85823417 Hacienda Heights
+101748679 Hagen
+85672535 Haifa
+890456547 Halifax
+102031761 Hamamatsu
+101748841 Hamburg
+85899245 Hamburg-Mitte
+85899247 Hamburg-Nord
+101735515 Hamilton, Canada
+101914771 Hamilton, NZ
+101712657 Hamilton, OH
+101748739 Hamm
+85823723 Hammond
+85823807 Hanford
+102027571 Hangzhou
+101748819 Hannover
+421177479 Hanoi
+85681097 Harare
+102027921 Harbin
+101724171 Harlingen
+85950417 Haverhill
+85877341 Hawthorne
+85921895 Hayward
+102027561 Hefei
+101748529 Heilbronn
+101748417 Helsinki
+85923401 Hemet
+404521473 Hempstead
+85974803 Henderson
+85824599 Hendersonville
+101993983 Hermosillo
+101748711 Herne
+102000961 Heroica Matamoros
+85923911 Hesperia
+85933653 Hialeah
+85869331 High Point
+85871881 Highland
+85930163 Highlands Ranch
+101748791 Hildesheim
+101715839 Hillsboro
+102031735 Hiroshima-shi
+85680809 Ho Chi Minh City
+85801273 Hoboken
+85939799 Hoffman Estates
+85670435 Holguin
+85826037 Hollywood
+85826093 Homestead
+890437279 Hong Kong
+101751899 Hoofddorp
+85871905 Hoover
+101749165 Horsens
+101725629 Houston
+102027531 Huainan
+102026715 Hualian
+85826545 Huntington Beach
+85923587 Huntington Park
+85913601 Huntsville
+101752041 Iasi
+85937963 Idaho Falls
+85673177 Incheon
+85942569 Indianapolis
+85923393 Indio
+890507433 Indore
+85923577 Inglewood
+85944185 Iowa City
+102017581 Iquique
+85979035 Irondequoit
+85923131 Irvine, CA
+404227469 Irvine, England
+101725697 Irving
+85827089 Irvington
+85866373 Islington
+85679237 Istanbul
+102002763 Ivanovo
+102031971 Iwaki
+1108696237 Jabalpur
+85932547 Jacksonville
+890510869 Jaipur
+85827297 Jamaica
+101732837 Janesville
+890473039 Jeju-si
+85975295 Jersey City
+85672551 Jerusalem
+102027203 Jieyang
+85669843 Jilin
+102027459 Jinan
+85937169 Johns Creek
+101722757 Johnson City
+85920203 Jonesboro
+101752287 Jonkoping
+85970893 Joplin
+85932095 Jupiter
+85667603 Kabul
+85675405 Kaduna
+102031675 Kagoshima-shi
+85950985 Kalamazoo
+102002441 Kaliningrad
+102003767 Kaluga
+102029887 Kalyan
+102031655 Kanazawa-shi
+85675425 Kano
+85945801 Kansas City
+102031643 Kashiwa
+101748659 Kassel
+101752127 Katowice
+101752745 Kaunas
+102031633 Kawagoe
+102031631 Kawaguchi
+102031627 Kawasaki
+102009145 Kazan
+101751685 Kecskemet
+102012877 Kemerovo
+85935903 Kendale Lakes
+85935905 Kendall
+85948293 Kenner
+101729987 Kennewick
+101732567 Kenosha
+101712169 Kettering
+85676889 Khartoum
+85669015 Khulna
+101748869 Kiel
+102026429 Kimhae
+85828479 Kingswood
+102008291 Kirov
+85932595 Kissimmee
+102031615 Kitakyushu
+101735989 Kitchener
+421174121 Kitwe
+101722865 Knoxville
+102031611 Kochi-shi
+101749157 Kolding
+102030585 Kolkata
+102031955 Koriyama
+102023655 Kota Bharu
+101752117 Krakow
+102015579 Krasnodar
+102013953 Krasnoyarsk
+101748683 Krefeld
+85784291 Kuala Lumpur
+85672703 Kumamoto
+421168961 Kumasi
+102027417 Kunming
+102012245 Kurgan
+102005349 Kursk
+85672777 Kyoto
+102081301 La Crosse
+85669409 La Paz
+102018025 La Pintana
+85675343 Lagos
+85948165 Lake Charles
+85917415 Lake Havasu City
+85829285 Lakeland
+85968479 Lakeville
+85866149 Lakewood
+85923547 Lancaster
+85951849 Lansing
+102027397 Lanzhou
+85931873 Largo
+85976635 Las Cruces
+85670439 Las Tunas
+85974801 Las Vegas
+85932341 Lauderhill
+101748449 Lausanne
+890457693 Laval
+85945709 Lawrence, KS
+85950415 Lawrence, MA
+101714821 Lawton
+85830049 Layton
+101750183 Le Havre
+101749611 Le Mans
+101750579 Leeds
+85934577 Lehigh Acres
+101750485 Leicester
+101751833 Leiden
+85675489 Leon
+101748641 Leverkusen
+101719127 Levittown
+85894325 Lexington
+85947137 Lexington-Fayette
+101750277 Lille
+85675925 Lima
+101749501 Limoges
+85830585 Lincoln
+101752291 Linkoping
+102004735 Lipetsk
+101751933 Lisburn
+85921265 Little Rock
+85951073 Livonia
+85923265 Lodi
+101913783 Lodz
+101750367 London
+85793403 Londonderry County Borough
+85923525 Long Beach
+85831331 Longmont
+101738793 Longueuil
+404525315 Lorain
+85923517 Los Angeles
+85929677 Loveland
+85950327 Lowell
+101916199 Lower Hutt
+101750443 Lowestoft
+85667669 Luanda
+101725261 Lubbock
+101752199 Lublin
+102029557 Lucknow
+890503583 Ludhiana
+101748547 Ludwigshafen am Rhein
+102027341 Luoyang
+421178937 Lusaka
+85633275 Luxembourg
+101748451 Luzern
+404476207 Lynn
+85923511 Lynwood
+101751803 Maastricht
+102031565 Machida
+85936517 Macon
+85922543 Madera
+101732721 Madison
+101748283 Madrid
+101748781 Magdeburg
+102010515 Magnitogorsk
+101750341 Maidstone
+102018665 Makassar
+102016749 Makhachkala
+101748185 Malaga
+85950349 Malden
+85675495 Managua
+102050371 Manaus
+101913963 Manchester, England
+85975081 Manchester, NH
+85674559 Mandalay
+421205771 Manhattan
+101748549 Mannheim
+85832167 Mansfield
+85923263 Manteca
+85969187 Maple Grove
+101750335 Margate
+85936135 Marietta
+101736035 Markham
+101729897 Marysville
+420784273 Marzahn
+102031555 Matsudo
+102018433 Medan
+421205069 Medellin
+85950347 Medford, MA
+101715947 Medford, OR
+890508817 Meerut
+101933229 Melbourne
+101722645 Memphis
+85668007 Mendoza
+85923327 Menifee
+85921827 Merced
+85680473 Merida
+85833811 Meridian
+85917491 Mesa
+85948743 Metairie
+101750105 Metz
+102074507 Mexicali
+85933669 Miami
+85933671 Miami Beach
+85933675 Miami Gardens
+101750599 Middlesbrough
+85834037 Midland
+101714437 Midwest City
+101752703 Milano
+101728257 Millcreek
+85922371 Milpitas
+101750433 Milton Keynes
+404492091 Milwaukee
+85969169 Minneapolis
+85834583 Minnetonka Mills
+85834609 Miramar
+101751725 Miskolc
+85923083 Mission Viejo
+101735893 Mississauga
+85972703 Missoula
+102031527 Miyazaki-shi
+85913749 Mobile
+85922777 Modesto
+101748759 Moers
+890449737 Mogadishu
+101748655 Monchengladbach
+85923501 Montebello
+85923499 Monterey Park
+102000679 Monterrey
+85680339 Montevideo
+85913947 Montgomery
+890458661 Montreal
+101714731 Moore
+101997341 Morelia
+85923379 Moreno Valley
+102003033 Moscow
+85835611 Mount Pleasant
+85940777 Mount Prospect
+85835705 Mount Vernon
+85922355 Mountain View
+102025093 Mueang Nonthaburi
+101725681 Muenster
+101749573 Mulhouse
+102030609 Mumbai
+85941463 Muncie
+101723111 Murfreesboro
+102001881 Murmansk
+85923375 Murrieta
+85679655 Mwanza
+102009155 Naberezhnyye Chelny
+102031509 Nagano-shi
+102031505 Nagasaki-shi
+102031499 Nagoya-shi
+102029277 Nagpur
+102031495 Naha-shi
+85672951 Nairobi
+85678841 Nakhon Ratchasima
+85938009 Nampa
+102027295 Nanchang
+102027293 Nanchong
+102027291 Nanjing
+85921993 Napa
+85940205 Naperville
+101752555 Napoli
+85836329 Nashua
+101723183 Nashville
+85922243 National City
+101992673 Naucalpan de Juarez
+421197195 Ndola
+101748665 Neuss
+85950367 New Bedford
+85948111 New Orleans
+404523375 New Rochelle
+85836747 New South Memphis
+404478049 Newark
+101750617 Newcastle upon Tyne
+85878429 Newport
+85923075 Newport Beach
+85836887 Newton
+101751937 Newtownabbey
+102031487 Niigata-shi
+101751859 Nijmegen
+101749287 Nimes
+102027273 Ningbo
+102011591 Nizhniy Tagil
+85941337 Noblesville
+404499259 Normal
+101714727 Norman
+101752289 Norrkoping
+85837449 North Charleston
+85932715 North Port
+85838041 North Shore
+101750459 Northampton
+85838305 Northridge
+85923497 Norwalk
+101750483 Norwich
+101750491 Nottingham
+101953095 Nova Iguacu
+85922017 Novato
+404508281 Novi
+102013243 Novokuznetsk
+102012919 Novosibirsk
+101750471 Nuneaton
+101751721 Nyiregyhaza
+85972035 O'Fallon
+85867229 Oak Lawn
+404497641 Oak Park
+85838951 Oakland
+101748715 Oberhausen
+85932433 Ocala
+85922239 Oceanside
+101749151 Odense
+101728033 Ogden
+85672723 Oita
+101748047 Okanagan
+102031457 Okayama-shi
+101714461 Oklahoma City
+404502685 Olathe
+85839505 Oldham
+404518711 Omaha
+102012389 Omsk
+85682057 Ontario
+85670689 Oran
+85923071 Orange
+102028143 Ordos
+101752301 Orebro
+102004529 Orel
+101727865 Orem
+102011079 Orenburg
+85940535 Orland Park
+85933091 Orlando
+101750945 Orleans
+102031439 Osaka-shi
+101735997 Oshawa
+101733459 Oshkosh
+101751917 Oslo
+101735873 Ottawa
+404502689 Overland Park
+85946723 Owensboro
+101750439 Oxford
+85923231 Oxnard
+85840097 Oxnard Shores
+101752707 Padova
+404497645 Palatine
+102019607 Palembang
+85932925 Palm Bay
+85933013 Palm Coast
+85933967 Palm Harbor
+85923493 Palmdale
+85922351 Palo Alto
+85632179 Panama
+85840429 Paradise
+85868443 Paramount
+101726105 Pasadena
+85675883 Pasco
+85975483 Passaic
+890507945 Patan
+85975481 Paterson
+890504089 Patna
+101720569 Pawtucket
+85950407 Peabody
+101751663 Pecs
+85932299 Pembroke Pines
+85933005 Pensacola
+102004419 Penza
+85917343 Peoria
+102008455 Perm
+85923353 Perris
+101937679 Perth
+85975737 Perth Amboy
+85922701 Petaluma
+101750461 Peterborough
+101905847 Pforzheim
+404483701 Philadelphia
+85673063 Phnom Penh
+85917479 Phoenix
+85923483 Pico Rivera
+85841801 Pine Hills
+404478203 Piscataway
+85922139 Pittsburg
+101718805 Pittsburgh
+85675827 Piura
+85923067 Placentia
+85932293 Plantation
+85921871 Pleasanton
+101750297 Plymouth
+85937925 Pocatello
+85934499 Poinciana
+85842607 Pomona
+85932289 Pompano Beach
+85952003 Pontiac
+101750309 Poole
+85934069 Port Charlotte
+85932629 Port Orange
+85922471 Porterville
+85948877 Portland, ME
+101715829 Portland, OR
+101752093 Porto
+102059767 Porto Alegre
+101913907 Portsmouth
+101752223 Poznan
+85771433 Preston
+85843229 Providence
+101727863 Provo
+85929187 Pueblo
+102017163 Puente Alto
+102028965 Pune
+85789961 Purley
+102027241 Qingdao
+136251273 Quebec
+101758919 Queluz
+85950429 Quincy
+890444507 Rabat
+404494985 Racine
+85843675 Raleigh
+102017057 Rancagua
+85922851 Rancho Cordova
+85923937 Rancho Cucamonga
+101749161 Randers
+101721605 Rapid City
+101914059 Reading, England
+85950649 Reading, MA
+102056781 Recife
+101748751 Recklinghausen
+85923859 Redding
+101750455 Redditch
+85844131 Redlands
+85844149 Redmond
+85923467 Redondo Beach
+85922447 Redwood City
+101751377 Reims
+101748651 Remscheid
+101751181 Rennes
+85974779 Reno
+101730407 Renton
+101748489 Reutlingen
+101751753 Reykjavik
+102000955 Reynosa
+85923947 Rialto
+101728675 Richmond, VA
+85976575 Rio Rancho
+85681991 Rio de Janeiro
+85869951 Riverside
+85845165 Riverview
+101750565 Rochdale
+85977591 Rochester
+85951995 Rochester Hills
+101721103 Rock Hill
+404499349 Rockford
+85921805 Rocklin
+85949471 Rockville
+85888581 Rogers
+85923453 Rosemead
+85846071 Roseville
+101748865 Rostock
+85937163 Roswell
+101750521 Rotherham
+101751843 Rotterdam
+101751447 Rouen
+101750473 Royal Leamington Spa
+85886299 Royal Oak
+101750343 Royal Tunbridge Wells
+101750475 Rugby
+102003709 Ryazan
+101748535 Saarbrucken
+85922845 Sacramento
+404508803 Saginaw
+85873425 Saint Joseph
+101750835 Saint-Etienne
+85672807 Saitama
+102031413 Sakai
+101750555 Salford
+85922603 Salinas
+101728075 Salt Lake City
+102000871 Saltillo
+101950447 Salvador
+102011631 Samara
+85678765 Samut Prakan
+101723961 San Angelo
+85923951 San Bernardino
+102016991 San Bernardo
+85923057 San Clemente
+85922227 San Diego
+85922583 San Francisco
+85670391 San Jose
+85667997 San Juan
+85921867 San Leandro
+85885411 San Luis Potosi
+85922223 San Marcos
+102000653 San Nicolas de los Garza
+85886695 San Ramon
+85677163 San Salvador
+85918227 San Tan Valley
+85937165 Sandy Springs
+85932125 Sanford
+85677195 Santa Ana
+85671905 Santa Barbara
+85923827 Santa Clarita
+85668077 Santa Fe
+85923817 Santa Monica
+85671705 Santa Rosa
+85922219 Santee
+102016915 Santiago
+85670441 Santiago de Cuba
+101996369 Santiago de Queretaro
+85670553 Santo Domingo
+890518775 Sarajevo
+102010031 Saransk
+85932709 Sarasota
+102011123 Saratov
+85936939 Savannah
+404497587 Schaumburg
+85977841 Schenectady
+85917475 Scottsdale
+85847473 Scranton
+101750557 Scunthorpe
+101730401 Seattle
+102019121 Semarang
+102031919 Sendai-shi
+102026327 Seoul
+101748225 Sevilla
+102027181 Shanghai
+102027175 Shantou
+404504403 Shawnee
+101750529 Sheffield
+102027875 Shenyang
+102027165 Shenzhen
+85848285 Sherman Oaks
+102027161 Shijiazhuang
+85931327 Shivaji Nagar
+102027149 Shiyan
+102031373 Shizuoka-shi
+101730399 Shoreline
+85947819 Shreveport
+101750493 Shrewsbury
+101748643 Siegen
+85950277 Silver Spring
+85923215 Simi Valley
+85632605 Singapore
+85943555 Sioux City
+101721785 Sioux Falls
+85940943 Skokie
+101914063 Slough
+85936139 Smyrna
+102016301 Sochi
+101748649 Solingen
+85770251 Somerville
+85923799 South Gate
+85849739 South Hill
+101728055 South Jordan
+85849939 South Peabody
+101750613 South Shields
+102018849 South Tangerang
+85975801 South Vineland
+85850209 South Whittier
+101913905 Southampton
+101750371 Southend-on-Sea
+404508305 Southfield
+85771065 Southport
+85772549 Soweto
+85974781 Sparks
+101730021 Spokane
+101730011 Spokane Valley
+85850567 Spring Hill
+85864297 Spring Valley
+85850679 Springdale
+85950393 Springfield, MA
+85971363 Springfield, MO
+85982959 Springfield, OH
+101716251 Springfield, OR
+85770285 St Albans
+101750559 St Helens
+404518053 St. Louis
+101750501 Stafford
+421205775 Staten Island
+101751915 Stavanger
+102008063 Stavropol
+85896073 Sterling Heights
+101750417 Stevenage
+85688429 Stockholm
+101913969 Stockport
+85923257 Stockton
+101750603 Stockton-on-Tees
+101913981 Stoke-on-Trent
+101751113 Strasbourg
+101912539 Subotica
+102031367 Suita
+85922333 Sunnyvale
+85851509 Sunrise
+85864299 Sunrise Manor
+102018911 Surabaya
+85917473 Surprise
+102027777 Suzhou
+85771099 Sydney
+85977785 Syracuse
+101752779 Szczecin
+101751681 Szeged
+101751699 Szekesfehervar
+101730275 Tacoma
+102026649 Taichung
+102027117 Taiyuan
+102031351 Takamatsu-shi
+102031347 Takatsuki
+102016891 Talcahuano
+85794395 Tallaght
+85933373 Tallahassee
+85932363 Tamarac
+85935937 Tamiami
+85931789 Tampa
+102018849 Tangerang
+102027111 Tangshan
+101751591 Taunton
+101915917 Tauranga
+101728059 Taylorsville
+85670879 Tebessa
+85672313 Tehran
+85672549 Tel Aviv
+85923337 Temecula
+85917469 Tempe
+102016885 Temuco
+102028475 Teni
+85941919 Terre Haute
+890501015 Thane
+101752763 The Hague
+85935941 The Hammocks
+85935397 The Villages
+404497591 Thornton
+85923211 Thousand Oaks
+102027107 Tianjin
+102027103 Tianshui
+102074501 Tijuana
+101751817 Tilburg
+101751973 Timisoara
+85940515 Tinley Park
+101991513 Tlalnepantla
+101997863 Tlaquepaque
+102031311 Tokorozawa
+85672817 Tokyo
+102010441 Tol'yatti
+101712039 Toledo
+404477803 Toms River
+102012671 Tomsk
+101997867 Tonala
+404522265 Tonawanda
+102026983 Tongshan
+404503163 Topeka
+101735835 Toronto
+85923785 Torrance
+102000853 Torreon
+101750657 Toulon
+101750899 Tours
+85933761 Town 'n' Country
+85950227 Towson
+102031295 Toyama-shi
+102031293 Toyohashi
+102031289 Toyota
+85923255 Tracy
+404478265 Trenton
+85951983 Troy, MI
+85978337 Troy, NY
+85917235 Tucson
+102003897 Tula
+85922465 Tulare
+101714287 Tulsa
+85679123 Tunis
+85922727 Turlock
+85914453 Tuscaloosa
+85923035 Tustin
+101994357 Tuxtla Gutierrez
+85678869 Udon Thani
+102009691 Ufa
+101748485 Ulm
+85673231 Ulsan
+85853071 Union
+85921863 Union City, CA
+85975289 Union City, NJ
+85923961 Upland
+85688439 Uppsala
+85978353 Utica
+101751827 Utrecht
+102031261 Utsunomiya-shi
+1108696273 Vadodara
+85936921 Valdosta
+101748241 Valencia, Spain
+102016833 Valparaiso
+101741075 Vancouver
+101736093 Vaughan
+101749153 Vejle
+101998843 Veracruz
+101752711 Verona
+101740879 Victoria
+101994335 Victoria de Durango
+101753031 Vilnius
+102016801 Vina del Mar
+85853921 Vineland
+102002995 Vladimir
+102006827 Volgograd
+102002537 Vologda
+102005377 Voronezh
+101916715 Waitakere
+102031879 Wakayama-shi
+85854171 Wakefield
+85949863 Waldorf
+404476457 Waltham
+85936249 Warner Robins
+404507485 Warren
+101751627 Warrington
+404488313 Warwick
+85886605 Waterford
+101751603 Watford
+85854779 Watsonville
+404499867 Waukegan
+101733483 Waukesha
+404501901 Wayne
+85930885 West Haven
+101728061 West Jordan
+101728063 West Valley City
+85870299 Westland
+85932359 Weston
+101751595 Weston-super-Mare
+85940139 Wheaton
+404523395 White Plains
+85877207 Whittier
+404504929 Wichita
+101748579 Wiesbaden
+890442073 Willemstad
+85931573 Wilmington, DE
+85950663 Wilmington, MA
+85871353 Windsor
+101734959 Winnipeg
+85980715 Winston-Salem
+101748461 Winterthur
+101748697 Witten
+101751589 Woking
+101748803 Wolfsburg
+85878289 Woodbury
+85858687 Woodland
+85858757 Woodland Hills
+101751607 Worcester, England
+85950375 Worcester, MA
+101751581 Worthing
+101752181 Wroclaw
+102027061 Wuhan
+101748657 Wuppertal
+102027049 Wuxi
+85688475 Wyoming
+102027031 Xianyang
+101729963 Yakima
+85674569 Yangon
+421182367 Yerevan
+102031237 Yokosuka
+85978759 Yonkers
+85923021 Yorba Linda
+101712497 Youngstown
+85921941 Yuba City
+85923971 Yucaipa
+102027827 Yueyang
+85917319 Yuma
+102026933 Yunfu
+101751659 Zagreb
+101997877 Zapopan
+101748361 Zaragoza
+101914149 Zemun
+102026899 Zhengzhou
+102027811 Zhongshan
+102026921 Zibo
+101751835 Zoetermeer
+101748463 Zurich
+101751861 Zwolle

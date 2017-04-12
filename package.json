@@ -6,11 +6,11 @@
   "scripts": {
     "test": "npm run units",
     "units": "node test/units.js | tap-spec",
-    "funcs": "node test/funcs.js",
+    "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
     "start": "node server/http.js",
     "extract": "bash cmd/wof_extract.sh > data/wof.extract",
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
-    "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/generated.txt",
+    "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
     "repl": "node cmd/repl.js",
     "cli": "node cmd/cli.js"
   },
