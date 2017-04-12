@@ -63,5 +63,7 @@ module.exports.tokenize = function( input ){
   }, this);
 
   // console.log( '[', queries.join( ', ' ), ']' );
-  return queries;
+  return queries.filter( function( query ){
+    return !!query.length;
+  });
 };

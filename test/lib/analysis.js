@@ -15,11 +15,15 @@ module.exports.tokenize = function(test, common) {
   assert( 'Foo  Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo,,Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo..Bar', [[ 'foo', 'bar' ]] );
-  assert( 'Foo\'\'Bar', [[ 'foo', 'bar' ]] );
+  assert( 'Foo\'\'Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
   assert( 'Foo""Bar', [[ 'foo', 'bar' ]] );
 
   // not a delimeter
-  assert( 'Foo-Bar', [[ 'foo-bar' ]] );
+  assert( 'Foo-Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
+
+  // synonymous punctuation
+  assert( 'Tol\'yatti', [[ 'tolyatti' ], [ 'tol', 'yatti' ]] );
+  assert( 'Sendai-shi', [[ 'sendaishi' ], [ 'sendai', 'shi' ]] );
 };
 
 // convenience function for writing quick 'n easy test cases
