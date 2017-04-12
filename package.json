@@ -11,7 +11,8 @@
     "extract": "bash cmd/wof_extract.sh > data/wof.extract",
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/generated.txt",
-    "repl": "node cmd/repl.js"
+    "repl": "node cmd/repl.js",
+    "cli": "node cmd/cli.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "through2": "^2.0.3"
   },
   "devDependencies": {
+    "require-dir": "^0.3.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
   }

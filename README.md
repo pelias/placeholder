@@ -5,11 +5,37 @@ natural language parser for geographic text
 
 ## install
 
-the data files are stored in this repository using [Git LFS](https://git-lfs.github.com/), please ensure that `LFS` is installed before continuing.
-
 ```bash
 $ git clone git@github.com:pelias/placeholder.git && cd placeholder
 $ npm install
+```
+
+### download and build the database
+
+note: the `npm run build` step can take 2-3 minutes to run, it only needs to be run once.
+
+```bash
+$ mkdir data
+$ curl -s http://missinglink.geo.s3.amazonaws.com/ph.wof.extract.gz | gunzip > data/wof.extract
+$ npm run build
+```
+
+### confirm the build was successful
+
+```bash
+$ npm test
+```
+
+```bash
+$ npm run cli -- san fran
+
+> pelias-placeholder@1.0.0 cli
+> node cmd/cli.js "san" "fran"
+
+san fran
+
+search: 3ms
+ - 85922583	locality 	San Francisco
 ```
 
 ---
@@ -32,6 +58,7 @@ try the following paths:
 
 ```javascript
 /demo
+/parser/search?text=london
 /parser/findbyid?ids=101748479
 /parser/query?text=london
 /parser/tokenize?text=sydney new south wales

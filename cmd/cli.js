@@ -6,8 +6,8 @@ var Placeholder = require('../Placeholder'),
 ph.load();
 
 // -- user input --
-var input = ( process.argv.slice(3) || [] ).join(' ');
-console.log( input );
+var input = ( process.argv.slice(2) || [] ).join(' ');
+console.log( input + '\n' );
 
 // -- search --
 console.time('search');
