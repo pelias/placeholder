@@ -11,11 +11,20 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/1.3/jquery.ba-hashchange.js"></script>
 
     <style>
       .wofinfo {
         margin: 0;
         padding: 0;
+        display: inline-block;
+      }
+      .wofabbr {
+        margin: 0 2px 0 5px;
+        padding: 0 5px;
+        background-color: #AAA;
+        color: #FFF;
+        font-size: 10px;
         display: inline-block;
       }
       #tokens {
@@ -95,7 +104,8 @@
               parts.push({
                 id: lineage[type].id,
                 type: type,
-                name: lineage[type].name
+                name: lineage[type].name,
+                abbr: lineage[type].abbr
               });
             }
           });
@@ -105,6 +115,9 @@
           var v = Array(i).join('&nbsp;&nbsp;&nbsp;');
           if( i > 0 ){ v += '└ '; }
           v += '<strong>' + ( part.name || '??' ) + '</strong>';
+          if( part.abbr ){
+            v += '<div class="wofabbr">' + part.abbr + '</div>';
+          }
           v += '<div class="wofinfo">';
           v += '<em>' + ( part.type || '??' ) + '</em>';
           v += '<a href="https://whosonfirst.mapzen.com/spelunker/id/' + ( part.id || '??' ) + '">' + ( part.id || '??' ) + '</a>';
@@ -155,7 +168,15 @@
 
       function search( text, cb ){
         console.info( 'search', text );
-        request( '/parser/search', { text: text }, cb );
+        var args = { text: text };
+
+        // get language from url hash
+        var hash = window.location.hash.substr(1);
+        if( hash && hash.length === 3 ){
+          args.lang = hash;
+        }
+
+        request( '/parser/search', args, cb );
       }
 
       function query( text, cb ){
@@ -220,6 +241,11 @@
 
         document.map = map;
         document.layer = bboxLayer;
+
+        // trigger search on hash change
+        $(window).hashchange( function(){
+          $('#search').submit();
+        })
 
         $('#text').val( 'Example Street Neutral Bay North Sydney New South Wales 9999 AU' );
         $('#search').submit();

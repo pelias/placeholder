@@ -22,7 +22,7 @@ app.get( '/parser/tokenize', require( './routes/tokenize' ) );
 
 // demo page
 app.use('/demo', express.static( __dirname + '/demo' ));
-app.use('/', function( req, res ){ res.redirect('/demo'); });
+app.use('/', function( req, res ){ res.redirect('/demo#eng'); });
 
 // start server
 app.listen( PORT, function() {
