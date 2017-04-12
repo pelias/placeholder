@@ -48,7 +48,7 @@ function print( ph, line, parentIds ){
   ph.store.getMany( parentIds, function( err, parents ){
 
     if( err || !Array.isArray( parents ) || !parents.length ){
-      console.error( 'and error occurred', err );
+      console.error( 'an error occurred', err, parents );
       return;
     }
 
