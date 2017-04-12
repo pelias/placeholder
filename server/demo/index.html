@@ -176,18 +176,19 @@
           args.lang = hash;
         }
 
+        saveText( text );
         request( '/parser/search', args, cb );
       }
 
-      function query( text, cb ){
-        console.info( 'query', text );
-        request( '/parser/query', { text: text }, cb );
-      }
+      // function query( text, cb ){
+      //   console.info( 'query', text );
+      //   request( '/parser/query', { text: text }, cb );
+      // }
 
-      function findbyid( ids, cb ){
-        console.info( 'findbyid', ids );
-        request( '/parser/findbyid', { ids: ids.join(',') }, cb );
-      }
+      // function findbyid( ids, cb ){
+      //   console.info( 'findbyid', ids );
+      //   request( '/parser/findbyid', { ids: ids.join(',') }, cb );
+      // }
 
       function tokenize( text, cb ){
         console.info( 'tokenize', text );
@@ -196,6 +197,22 @@
 
       function clearMap(){
         document.layer.clearLayers()
+      }
+
+      function saveText( text ){
+        if( window.localStorage ){
+          window.localStorage.setItem( 'text', text );
+        }
+      }
+
+      function loadText(){
+        if( window.localStorage ){
+          var text = window.localStorage.getItem('text');
+          if( text ){ return text; }
+        }
+
+        // default text
+        return 'Example Street Neutral Bay North Sydney New South Wales 9999 AU';
       }
 
       function updateMap( bboxes ){
@@ -247,7 +264,7 @@
           $('#search').submit();
         })
 
-        $('#text').val( 'Example Street Neutral Bay North Sydney New South Wales 9999 AU' );
+        $('#text').val( loadText() );
         $('#search').submit();
       });
     </script>
