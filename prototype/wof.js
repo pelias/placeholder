@@ -22,9 +22,9 @@ module.exports.insertWofRecord = function( wof, next ){
     lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
-      bbox: wof['geom:bbox'],
-      lat: wof['geom:latitude'],
-      lon: wof['geom:longitude']
+      bbox: wof['lbl:bbox'] || wof['geom:bbox'],
+      lat: wof['lbl:latitude'] || wof['geom:latitude'],
+      lon: wof['lbl:longitude'] ||wof['geom:longitude']
     },
     names: {}
   };
