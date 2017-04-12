@@ -3,6 +3,8 @@ natural language parser for geographic text
 
 ---
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
+
 ## install
 
 the data files are stored in this repository using [Git LFS](https://git-lfs.github.com/), please ensure that `LFS` is installed before continuing.
