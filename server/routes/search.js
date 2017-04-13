@@ -33,16 +33,39 @@ module.exports = function( req, res ){
       // create a map of parents
       var parents = rowsToIdMap( parentResults );
 
-      // map dcuments to map using id as key
-      var docs = {};
-      results.forEach( function( result ){
-        docs[ result.id ] = mapResult( ph, result, parents, lang );
+      // map documents to dict using id as key
+      var docs = results.map( function( result ){
+        return mapResult( ph, result, parents, lang );
       });
+
+      // sort results according to sorting rules
+      docs.sort( sortingAlgorithm );
 
       res.status(200).json( docs );
     });
   });
 };
+
+/**
+  sort highest 'population' first, using 'geom.area' as a second
+  sorting condition where population data is not available.
+**/
+function sortingAlgorithm( a, b ){
+
+  // condition 1 - population
+  var a1 = a.population || 0;
+  var b1 = b.population || 0;
+
+  // condition 2 - geom.area
+  var a2 = a.geom && a.geom.area || 0;
+  var b2 = b.geom && b.geom.area || 0;
+
+  if( a1 < b1 ){ return +1; }
+  if( a1 > b1 ){ return -1; }
+  if( a2 < b2 ){ return +1; }
+  if( a2 > b2 ){ return -1; }
+  return 0;
+}
 
 function mapResult( ph, result, parents, lang ){
 

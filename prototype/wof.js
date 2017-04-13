@@ -12,13 +12,14 @@ module.exports.insertWofRecord = function( wof, next ){
   // sanity check; because WOF
   if( !this.isValidWofRecord( id, wof ) ) { return next(); }
 
-  // --- store ---
-  // add doc to store
+  // --- document which will be saved in the doc store ---
+
   var doc = {
     id: id,
-    name: wof['wof:name'],
-    abbr: undefined,
+    name: wof['wof:label'] || wof['wof:name'],
+    abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
+    population: getPopulation( wof ),
     lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
@@ -29,68 +30,39 @@ module.exports.insertWofRecord = function( wof, next ){
     names: {}
   };
 
-  // --- abbreviations and ISO codes ---
-
-  if( -1 !== ['dependency','country'].indexOf( doc.placetype ) ) {
-    doc.abbr = wof['wof:country_alpha3'];
-  } else if( wof['wof:abbreviation'] ) {
-    doc.abbr = wof['wof:abbreviation'];
-  }
-
   // --- tokens ---
 
+  // convenience function with $id bound as first argument
+  var addToken = this.graph.addToken.bind( this.graph, id );
+
   // add 'wof:name'
-  var keys = analysis.normalize( wof['wof:name'] );
-  for( var k=0; k<keys.length; k++ ){
-    this.graph.addToken( id, keys[k] );
-  }
+  analysis.normalize( wof['wof:name'] ).forEach( addToken );
 
   // add 'wof:abbreviation'
-  keys = analysis.normalize( wof['wof:abbreviation'] );
-  for( k=0; k<keys.length; k++ ){
-    this.graph.addToken( id, keys[k] );
-  }
+  analysis.normalize( wof['wof:abbreviation'] ).forEach( addToken );
 
   // add 'ne:abbrev'
-  // keys = analysis.normalize( wof['ne:abbrev'] );
-  // for( k=0; k<keys.length; k++ ){
-  //   this.graph.addToken( id, keys[k] );
-  // }
+  // analysis.normalize( wof['ne:abbrev'] ).forEach( addToken );
 
-  // fields precific to countries
-  if( wof['wof:placetype'] === 'country' ){
+  // fields specific to countries & dependencies
+  if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
     if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
       // add 'ne:iso_a2'
-      keys = analysis.normalize( wof['ne:iso_a2'] );
-      for( k=0; k<keys.length; k++ ){
-        this.graph.addToken( id, keys[k] );
-      }
+      analysis.normalize( wof['ne:iso_a2'] ).forEach( addToken );
 
       // add 'ne:iso_a3'
-      keys = analysis.normalize( wof['ne:iso_a3'] );
-      for( k=0; k<keys.length; k++ ){
-        this.graph.addToken( id, keys[k] );
-      }
+      analysis.normalize( wof['ne:iso_a3'] ).forEach( addToken );
 
       // add 'wof:country'
       // warning: eg. FR for 'French Guiana'
-      // keys = analysis.normalize( wof['wof:country'] );
-      // for( k=0; k<keys.length; k++ ){
-      //   this.graph.addToken( id, keys[k] );
-      // }
+      // analysis.normalize( wof['wof:country'] ).forEach( addToken );
 
       // add 'iso:country'
-      keys = analysis.normalize( wof['iso:country'] );
-      for( k=0; k<keys.length; k++ ){
-        this.graph.addToken( id, keys[k] );
-      }
+      analysis.normalize( wof['iso:country'] ).forEach( addToken );
 
       // add 'wof:country_alpha3'
-      keys = analysis.normalize( wof['wof:country_alpha3'] );
-      for( k=0; k<keys.length; k++ ){
-        this.graph.addToken( id, keys[k] );
-      }
+      analysis.normalize( wof['wof:country_alpha3'] ).forEach( addToken );
     }
   }
 
@@ -101,10 +73,7 @@ module.exports.insertWofRecord = function( wof, next ){
     var match = attr.match(/^name:(.*)_x_(preferred|colloquial|variant)$/);
     if( match ){
       for( var n in wof[ attr ] ){
-        keys = analysis.normalize( wof[ attr ][ n ] );
-        for( k=0; k<keys.length; k++ ){
-          this.graph.addToken( id, keys[k] );
-        }
+        analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
       }
       // doc - only store 'preferred' strings
       if( match[2] === 'preferred' ){
@@ -155,3 +124,22 @@ module.exports.isValidWofRecord = function( id, wof ){
 
   return true;
 };
+
+// this function favors mz:population when available, falling back to other properties.
+// logic copied from: pelias/whosonfirst src/components/extractFields.js
+function getPopulation( wof ) {
+       if( wof['mz:population'] ){ return wof['mz:population']; }
+  else if( wof['gn:population'] ){ return wof['gn:population']; }
+  else if( wof['zs:pop10'] ){      return wof['zs:pop10']; }
+  else if( wof['qs:pop'] ){        return wof['qs:pop']; }
+}
+
+// abbreviations and ISO codes
+// logic copied from: pelias/whosonfirst src/components/extractFields.js
+function getAbbreviation( wof ) {
+  if( 'country' === wof['wof:placetype'] || 'dependency' === wof['wof:placetype'] ) {
+    return wof['wof:country_alpha3'];
+  } else if( wof['wof:abbreviation'] ) {
+    return wof['wof:abbreviation'];
+  }
+}

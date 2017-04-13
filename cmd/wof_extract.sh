@@ -25,6 +25,4 @@ if [[ ! -f "$JQ_BIN" || ! -x "$JQ_BIN" ]]; then
 fi
 
 # extract only the json properies from each file (eg: excluding zs:*)
-find "$WOF_DIR" -type f -name '*.geojson' -print0 | while IFS= read -r -d $'\0' file; do
-  $JQ_BIN -c -M -f "$DIR/jq.filter" "$file";
-done
+find "$WOF_DIR" -type f -name '*.geojson' | xargs $JQ_BIN -c -M -f "$DIR/jq.filter";

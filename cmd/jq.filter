@@ -1,12 +1,15 @@
 .properties | with_entries(
   select( .key |
-    test("^wof:(id|name|placetype|hierarchy|country_alpha3|abbreviation|superseded_by)$"),
+    test("^wof:(id|name|placetype|hierarchy|country_alpha3|abbreviation|superseded_by|label)$"),
     test("^lbl:(bbox|latitude|longitude)$"),
     test("^geom:(area|bbox|latitude|longitude)$"),
     test("^iso:(country)$"),
     test("^ne:(iso_a2|iso_a3)$"),
     test("^edtf:(deprecated)$"),
-    test("^mz:(is_current)$"),
+    test("^mz:(is_current|population)$"),
+    test("^gn:(population)$"),
+    test("^zs:(pop10)$"),
+    test("^qs:(pop)$"),
     test("^name:")
   )
 )
