@@ -16,8 +16,8 @@ module.exports = function( req, res ){
 
   // fetch all result docs by id
   ph.store.getMany( ids, function( err, results ){
-    if( err ){ return res.status(500).send({}); }
-    if( !results || !results.length ){ return res.status(404).send({}); }
+    if( err ){ return res.status(500).send(err); }
+    if( !results || !results.length ){ return res.status(200).send([]); }
 
     // get a list of parent ids
     var parentIds = getParentIds( results );
