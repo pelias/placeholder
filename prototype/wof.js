@@ -126,12 +126,19 @@ module.exports.isValidWofRecord = function( id, wof ){
 };
 
 // this function favors mz:population when available, falling back to other properties.
-// logic copied from: pelias/whosonfirst src/components/extractFields.js
+// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/240#issuecomment-294907374
 function getPopulation( wof ) {
-       if( wof['mz:population'] ){ return wof['mz:population']; }
-  else if( wof['gn:population'] ){ return wof['gn:population']; }
-  else if( wof['zs:pop10'] ){      return wof['zs:pop10']; }
-  else if( wof['qs:pop'] ){        return wof['qs:pop']; }
+       if( wof['mz:population'] ){          return wof['mz:population']; }
+  else if( wof['wof:population'] ){         return wof['wof:population']; }
+  else if( wof['wk:population'] ){          return wof['wk:population']; }
+  else if( wof['gn:population'] ){          return wof['gn:population']; }
+  else if( wof['gn:pop'] ){                 return wof['gn:pop']; }
+  else if( wof['qs:pop'] ){                 return wof['qs:pop']; }
+  else if( wof['qs:gn_pop'] ){              return wof['qs:gn_pop']; }
+  else if( wof['zs:pop10'] ){               return wof['zs:pop10']; }
+  else if( wof['meso:pop'] ){               return wof['meso:pop']; }
+  else if( wof['statoids:population'] ){    return wof['statoids:population']; }
+  else if( wof['ne:pop_est'] ){             return wof['ne:pop_est']; }
 }
 
 // abbreviations and ISO codes
