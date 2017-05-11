@@ -10,13 +10,12 @@ $ git clone git@github.com:pelias/placeholder.git && cd placeholder
 $ npm install
 ```
 
-### download and build the database
-
-note: the `npm run build` step can take 2-3 minutes to run, it only needs to be run once.
+### download the required database files
 
 ```bash
 $ mkdir data
-$ curl -s http://missinglink.geo.s3.amazonaws.com/ph.wof.extract.gz | gunzip > data/wof.extract
+$ curl -s http://pelias-data.s3.amazonaws.com/placeholder/graph.json.gz | gunzip > data/graph.json;
+$ curl -s http://pelias-data.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
 $ npm run build
 ```
 
@@ -188,6 +187,13 @@ this process takes about 7 minutes and consumes ~650MB of disk space, you will o
 
 ```bash
 $ WOF_DIR=/data/whosonfirst-data/data npm run extract
+```
+
+alternatively you can download the extract file from our s3 bucket:
+
+```bash
+$ mkdir data
+$ curl -s http://pelias-data.s3.amazonaws.com/placeholder/wof.extract.gz | gunzip > data/wof.extract
 ```
 
 now you can rebuild the `data/graph.json` and `data/store.json` files with the following command:
