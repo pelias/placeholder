@@ -335,11 +335,11 @@ module.exports.getAbbreviation = function(test, util) {
   test( 'country/dependency', function(t) {
     t.equal( undefined, wof.getAbbreviation({ 'wof:placetype': 'country' }) );
     t.equal( undefined, wof.getAbbreviation({ 'wof:placetype': 'dependency' }) );
-    t.equal( undefined, wof.getAbbreviation({
+    t.equal( 'TEST2', wof.getAbbreviation({
       'wof:placetype': 'country',
       'wof:abbreviation': 'TEST2'
     }));
-    t.equal( undefined, wof.getAbbreviation({
+    t.equal( 'TEST2', wof.getAbbreviation({
       'wof:placetype': 'dependency',
       'wof:abbreviation': 'TEST2'
     }));
