@@ -156,7 +156,7 @@ function getPopulation( wof ) {
 // logic copied from: pelias/whosonfirst src/components/extractFields.js (since modified)
 function getAbbreviation( wof ) {
   if( 'country' === wof['wof:placetype'] || 'dependency' === wof['wof:placetype'] ) {
-    return wof['wof:country_alpha3'] || wof['wof:abbreviation'];
+    return wof['wof:country_alpha3'] || wof['ne:iso_a3'];
   } else if( wof['wof:abbreviation'] ) {
     return wof['wof:abbreviation'];
   }
