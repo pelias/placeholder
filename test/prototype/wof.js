@@ -634,6 +634,77 @@ module.exports.add_names = function(test, util) {
 
 };
 
+// In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
+module.exports.usa_english_name_override_with_label = function(test, util) {
+
+  test( 'override name:eng_x_preferred with wof:label', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 102085121,
+      'wof:country': 'US',
+      'wof:label': 'Lake County',
+      'name:eng_x_preferred': [ 'Lake' ],
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake County' ] } );
+      t.end();
+    });
+  });
+
+  test( 'no country', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 102085121,
+      'wof:label': 'Lake County',
+      'name:eng_x_preferred': [ 'Lake' ],
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
+      t.end();
+    });
+  });
+
+  test( 'no label', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 102085121,
+      'wof:country': 'US',
+      'name:eng_x_preferred': [ 'Lake' ],
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
+      t.end();
+    });
+  });
+
+  test( 'no eng_x_preferred', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 102085121,
+      'wof:country': 'US',
+      'wof:label': 'Lake County'
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake County' ] } );
+      t.end();
+    });
+  });
+
+  test( 'wrong country', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 102085121,
+      'wof:country': 'DE',
+      'wof:label': 'Lake County',
+      'name:eng_x_preferred': [ 'Lake' ],
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
+      t.end();
+    });
+  });
+};
+
 module.exports.set_edges = function(test, util) {
 
   test( 'no hierarchy', function(t) {
