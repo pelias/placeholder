@@ -10,6 +10,7 @@ var tests = [
   './lib/TokenGraph',
   './prototype/tokenize',
   './prototype/query',
+  './prototype/wof',
   './functional',
 ];
 

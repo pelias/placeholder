@@ -4,13 +4,13 @@ var _ = require('lodash'),
     analysis = require('../lib/analysis');
 
 // insert a wof record in to index
-module.exports.insertWofRecord = function( wof, next ){
+function insertWofRecord( wof, next ){
 
   var id = wof['wof:id'];
   if( 'string' == typeof id ){ id = parseInt( id, 10 ); }
 
   // sanity check; because WOF
-  if( !this.isValidWofRecord( id, wof ) ) { return next(); }
+  if( !isValidWofRecord( id, wof ) ) { return next(); }
 
   // --- document which will be saved in the doc store ---
 
@@ -34,6 +34,9 @@ module.exports.insertWofRecord = function( wof, next ){
 
   // convenience function with $id bound as first argument
   var addToken = this.graph.addToken.bind( this.graph, id );
+
+  // add 'wof:label'
+  analysis.normalize( wof['wof:label'] ).forEach( addToken );
 
   // add 'wof:name'
   analysis.normalize( wof['wof:name'] ).forEach( addToken );
@@ -97,9 +100,12 @@ module.exports.insertWofRecord = function( wof, next ){
   // add doc to store
   this.store.set( id, doc, next );
 
-};
+}
 
-module.exports.isValidWofRecord = function( id, wof ){
+function isValidWofRecord( id, wof ){
+
+  // sanity check inputs
+  if( !id || !wof ) { return false; }
 
   // sanity check; because WOF
   if( id <= 0 ) { return false; }
@@ -123,7 +129,7 @@ module.exports.isValidWofRecord = function( id, wof ){
   }
 
   return true;
-};
+}
 
 // this function favors mz:population when available, falling back to other properties.
 // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/240#issuecomment-294907374
@@ -150,3 +156,8 @@ function getAbbreviation( wof ) {
     return wof['wof:abbreviation'];
   }
 }
+
+module.exports.insertWofRecord = insertWofRecord;
+module.exports.isValidWofRecord = isValidWofRecord;
+module.exports.getPopulation = getPopulation;
+module.exports.getAbbreviation = getAbbreviation;
