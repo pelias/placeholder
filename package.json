@@ -13,7 +13,8 @@
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
     "repl": "node cmd/repl.js",
-    "cli": "node cmd/cli.js"
+    "cli": "node cmd/cli.js",
+    "check-dependencies": "node_modules/.bin/npm-check --production"
   },
   "repository": {
     "type": "git",
@@ -40,5 +41,8 @@
     "require-dir": "^0.3.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
-  }
+  },
+  "pre-commit": [
+    "check-dependencies"
+  ]
 }
