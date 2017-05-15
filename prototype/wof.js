@@ -35,6 +35,9 @@ function insertWofRecord( wof, next ){
   // convenience function with $id bound as first argument
   var addToken = this.graph.addToken.bind( this.graph, id );
 
+  // add 'wof:label'
+  analysis.normalize( wof['wof:label'] ).forEach( addToken );
+
   // add 'wof:name'
   analysis.normalize( wof['wof:name'] ).forEach( addToken );
 

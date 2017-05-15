@@ -1,10 +1,14 @@
 
 var wof = require('../../prototype/wof');
 
-// ----
+/**
+  Mock object used for all tests in this file
+
+  The mock stores all function calls in an internal Array for
+  later inspection during tests, this let's us know how many times
+  each function was called and which arguments were provided.
+**/
 var Mock = function(){
-  // store all function calls here for
-  // later inspection during tests
   var calls = { addToken: [], setEdge: [], set: [] };
   this._calls = calls;
 
@@ -21,7 +25,7 @@ var Mock = function(){
   };
 };
 Mock.prototype.insertWofRecord = wof.insertWofRecord;
-// ----
+// End of Mock
 
 module.exports.store_record = function(test, util) {
 
@@ -444,4 +448,277 @@ module.exports.isValidWofRecord = function(test, util) {
     t.true( wof.isValidWofRecord( 1, {} ) );
     t.end();
   });
+};
+
+module.exports.add_token = function(test, util) {
+
+  test( 'empty data', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({}, function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.end();
+    });
+  });
+
+  test( 'wof:abbreviation', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:abbreviation': 'EXAMPLE'
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 1 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
+      t.end();
+    });
+  });
+
+  test( 'index both wof:label and wof:name', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:label': 'EXAMPLE',
+      'wof:name': 'EXAMPLE2'
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 2 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
+      t.deepEqual( mock._calls.addToken[1][3], [ 'example2' ] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - not one', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'ne:iso_a2': 'EX',
+      'ne:iso_a3': 'EXA',
+      'iso:country': 'EP',
+      'wof:country_alpha3': 'EXP'
+    }, function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - is country', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:placetype': 'country',
+      'ne:iso_a2': 'EX',
+      'ne:iso_a3': 'EXA',
+      'iso:country': 'EP',
+      'wof:country_alpha3': 'EXP'
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 4 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
+      t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
+      t.deepEqual( mock._calls.addToken[2][3], [ 'ep' ] );
+      t.deepEqual( mock._calls.addToken[3][3], [ 'exp' ] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - is country - missing iso:country', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:placetype': 'country',
+      'ne:iso_a2': 'EX',
+      'ne:iso_a3': 'EXA',
+      'wof:country_alpha3': 'EXP'
+    }, function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - is dependency', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:placetype': 'dependency',
+      'ne:iso_a2': 'EX',
+      'ne:iso_a3': 'EXA',
+      'iso:country': 'EP',
+      'wof:country_alpha3': 'EXP'
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 4 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
+      t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
+      t.deepEqual( mock._calls.addToken[2][3], [ 'ep' ] );
+      t.deepEqual( mock._calls.addToken[3][3], [ 'exp' ] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - is country - missing iso:country', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:placetype': 'dependency',
+      'ne:iso_a2': 'EX',
+      'ne:iso_a3': 'EXA',
+      'wof:country_alpha3': 'EXP'
+    }, function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.end();
+    });
+  });
+
+  test( 'country/dependency - dont import some problematic fields (see source)', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'wof:placetype': 'dependency',
+      'iso:country': 'EP',
+      'wof:country': 'TEST',
+      'ne:abbrev': 'TEST2'
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 1 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'ep' ] );
+      t.end();
+    });
+  });
+};
+
+module.exports.add_names = function(test, util) {
+
+  test( 'no names', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1'
+    }, function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.end();
+    });
+  });
+
+  test( 'tokens: supported name fields', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'name:foo_x_preferred': [ 'A', 'B' ],
+      'name:foo_x_colloquial': [ 'C', 'D' ],
+      'name:foo_x_variant': [ 'E', 'F' ],
+      'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
+      'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
+    }, function(){
+      t.deepEqual( mock._calls.addToken.length, 6 );
+      t.deepEqual( mock._calls.addToken[0][3], [ 'a' ] );
+      t.deepEqual( mock._calls.addToken[1][3], [ 'b' ] );
+      t.deepEqual( mock._calls.addToken[2][3], [ 'c' ] );
+      t.deepEqual( mock._calls.addToken[3][3], [ 'd' ] );
+      t.deepEqual( mock._calls.addToken[4][3], [ 'e' ] );
+      t.deepEqual( mock._calls.addToken[5][3], [ 'f' ] );
+      t.end();
+    });
+  });
+
+  test( 'store: supported name fields', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'name:foo_x_preferred': [ 'A', 'B' ],
+      'name:foo_x_colloquial': [ 'C', 'D' ],
+      'name:foo_x_variant': [ 'E', 'F' ],
+      'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
+      'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
+      'name:bar_x_preferred': [ 'Y', 'Z' ],
+    }, function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { foo: [ 'A', 'B' ], bar: [ 'Y', 'Z' ] });
+      t.end();
+    });
+  });
+
+};
+
+module.exports.set_edges = function(test, util) {
+
+  test( 'no hierarchy', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1'
+    }, function(){
+      t.deepEqual( mock._calls.setEdge, [] );
+      t.end();
+    });
+  });
+
+  test( 'hierarchy: single lineage', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 100,
+      'wof:hierarchy': [{
+        'continent_id':     101,
+        'country_id':       102,
+        'county_id':        103,
+        'localadmin_id':    104,
+        'locality_id':      105,
+        'macrocounty_id':   106,
+        'macroregion_id':   107,
+        'postalcode_id':    108,
+        'region_id':        109
+      }]
+    }, function(){
+      t.deepEqual( mock._calls.setEdge.length, 9 );
+      mock._calls.setEdge.forEach( function( c, i ){
+        t.deepEqual( c[0], 101+i );
+        t.deepEqual( c[1], 100 );
+      });
+      t.end();
+    });
+  });
+
+  test( 'hierarchy: multiple lineage', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 100,
+      'wof:hierarchy': [{
+        'continent_id':     101,
+        'country_id':       102,
+        'county_id':        103,
+        'localadmin_id':    104,
+        'locality_id':      105,
+        'macrocounty_id':   106,
+        'macroregion_id':   107,
+        'postalcode_id':    108,
+        'region_id':        109
+      },{
+        'continent_id':     110,
+        'country_id':       111,
+        'county_id':        112,
+        'localadmin_id':    113,
+        'locality_id':      114,
+        'macrocounty_id':   115,
+        'macroregion_id':   116,
+        'postalcode_id':    117,
+        'region_id':        118
+      }]
+    }, function(){
+      t.deepEqual( mock._calls.setEdge.length, 18 );
+      mock._calls.setEdge.forEach( function( c, i ){
+        t.deepEqual( c[0], 101+i );
+        t.deepEqual( c[1], 100 );
+      });
+      t.end();
+    });
+  });
+
+  test( 'hierarchy: invalid values', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': 100,
+      'wof:hierarchy': [{
+        'self_id':          100,
+        'null_id':          0,
+        'invalid_id':       -1
+      }]
+    }, function(){
+      t.deepEqual( mock._calls.setEdge.length, 0 );
+      t.end();
+    });
+  });
+
 };
