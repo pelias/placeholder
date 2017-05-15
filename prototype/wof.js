@@ -85,6 +85,11 @@ function insertWofRecord( wof, next ){
     }
   }
 
+  // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
+  if( 'US' === wof['wof:country'] && wof['wof:label'] ){
+    doc.names.eng = [ wof['wof:label'] ];
+  }
+
   // --- graph ---
   for( var h in wof['wof:hierarchy'] ){
    for( var i in wof['wof:hierarchy'][h] ){
