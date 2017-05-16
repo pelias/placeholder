@@ -1,0 +1,32 @@
+sudo: false
+language: node_js
+notifications:
+  email: false
+node_js:
+  - 4
+  - 6
+matrix:
+  fast_finish: true
+env:
+  global:
+    - CXX=g++-4.8
+script: npm run travis
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+before_install:
+  - npm i -g npm@^3.0.0
+before_script:
+  - npm prune
+  - mkdir data
+  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/graph.json.gz | gunzip > data/graph.json;
+  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
+  - npm run build
+after_success:
+  - npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
