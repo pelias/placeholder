@@ -335,6 +335,7 @@ module.exports.getAbbreviation = function(test, util) {
   test( 'country/dependency', function(t) {
     t.equal( undefined, wof.getAbbreviation({ 'wof:placetype': 'country' }) );
     t.equal( undefined, wof.getAbbreviation({ 'wof:placetype': 'dependency' }) );
+
     t.equal( undefined, wof.getAbbreviation({
       'wof:placetype': 'country',
       'wof:abbreviation': 'TEST2'
@@ -343,6 +344,7 @@ module.exports.getAbbreviation = function(test, util) {
       'wof:placetype': 'dependency',
       'wof:abbreviation': 'TEST2'
     }));
+
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'country',
       'wof:country_alpha3': 'TEST',
@@ -352,17 +354,41 @@ module.exports.getAbbreviation = function(test, util) {
       'wof:placetype': 'dependency',
       'wof:country_alpha3': 'TEST',
       'wof:abbreviation': 'TEST2'
+    }));
+
+    t.equal( 'TEST', wof.getAbbreviation({
+      'wof:placetype': 'country',
+      'ne:iso_a3': 'TEST',
+      'wof:abbreviation': 'TEST2'
+    }));
+    t.equal( 'TEST', wof.getAbbreviation({
+      'wof:placetype': 'dependency',
+      'ne:iso_a3': 'TEST',
+      'wof:abbreviation': 'TEST2'
+    }));
+
+    t.equal( 'TEST', wof.getAbbreviation({
+      'wof:placetype': 'country',
+      'wof:country_alpha3': 'TEST',
+      'ne:iso_a3': 'TEST2',
+      'wof:abbreviation': 'TEST3'
+    }));
+    t.equal( 'TEST', wof.getAbbreviation({
+      'wof:placetype': 'dependency',
+      'wof:country_alpha3': 'TEST',
+      'ne:iso_a3': 'TEST2',
+      'wof:abbreviation': 'TEST3'
     }));
     t.end();
   });
 
   test( 'wof:abbreviation', function(t) {
     t.equal( 'TEST2', wof.getAbbreviation({
-      'wof:country_alpha3': 'TEST',
+      'ne:iso_a3': 'TEST',
       'wof:abbreviation': 'TEST2'
     }));
     t.equal( 'TEST2', wof.getAbbreviation({
-      'wof:country_alpha3': 'TEST',
+      'ne:iso_a3': 'TEST',
       'wof:abbreviation': 'TEST2'
     }));
     t.end();
