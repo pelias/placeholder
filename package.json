@@ -16,7 +16,8 @@
     "repl": "node cmd/repl.js",
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "check-dependencies": "node_modules/.bin/npm-check --production --ignore pelias-interpolation"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
     "jshint": "^2.5.6",
+    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
     "semantic-release": "^6.3.2"
   },
@@ -49,5 +51,6 @@
     "lint",
     "validate",
     "test",
+    "check-dependencies"
   ]
 }
