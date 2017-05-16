@@ -29,7 +29,6 @@
     "express": "^4.15.2",
     "lodash": "^4.17.4",
     "lower-case": "^1.1.4",
-    "pelias-analysis": "^1.1.0",
     "remove-accents": "^0.4.0",
     "sorted-intersect": "^0.1.4",
     "split2": "^2.1.1",
