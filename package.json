@@ -1,7 +1,8 @@
 {
   "name": "pelias-placeholder",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0-semantic-release",
+  "author": "mapzen",
+  "license": "MIT",
   "main": "server.js",
   "scripts": {
     "test": "npm run units",
@@ -13,14 +14,14 @@
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
     "repl": "node cmd/repl.js",
-    "cli": "node cmd/cli.js"
+    "cli": "node cmd/cli.js",
+    "lint": "jshint .",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pelias/placeholder.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/pelias/placeholder/issues"
   },
@@ -42,6 +43,7 @@
     "tape": "^4.6.3",
     "jshint": "^2.5.6",
     "precommit-hook": "^3.0.0",
+    "semantic-release": "^6.3.2"
   },
   "pre-commit": [
     "lint",
