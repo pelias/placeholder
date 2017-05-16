@@ -7,7 +7,7 @@ var _ = require('lodash'),
 function insertWofRecord( wof, next ){
 
   var id = wof['wof:id'];
-  if( 'string' == typeof id ){ id = parseInt( id, 10 ); }
+  if( 'string' === typeof id ){ id = parseInt( id, 10 ); }
 
   // sanity check; because WOF
   if( !isValidWofRecord( id, wof ) ) { return next(); }
@@ -93,8 +93,8 @@ function insertWofRecord( wof, next ){
   // --- graph ---
   for( var h in wof['wof:hierarchy'] ){
    for( var i in wof['wof:hierarchy'][h] ){
-     pid = wof['wof:hierarchy'][h][i];
-     if( 'string' == typeof pid ){ pid = parseInt( pid, 10 ); }
+     var pid = wof['wof:hierarchy'][h][i];
+     if( 'string' === typeof pid ){ pid = parseInt( pid, 10 ); }
      if( pid === id || pid <= 0 ){ continue; }
      //  this.graph.setEdge( id, pid, 'p' ); // has parent
      this.graph.setEdge( pid, id ); // is child of
