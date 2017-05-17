@@ -10,6 +10,12 @@ module.exports.normalize = function(test, common) {
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
   assert( 'Trinidad & Tobago', [ 'trinidad and tobago' ] );
+
+  // Synonym contractions
+  assert( 'SainT city sAiNt value saInt', [ 'st city st value st' ] );
+  assert( 'SaintE city sAinTe value saINte', [ 'ste city ste value ste' ] );
+  assert( 'FoRt city fORt value fOrT', [ 'ft city ft value ft' ] );
+  assert( 'MoUNt city mOUNt value mouNT', [ 'mt city mt value mt' ] );
 };
 
 module.exports.tokenize = function(test, common) {
