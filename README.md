@@ -16,7 +16,6 @@ $ npm install
 $ mkdir data
 $ curl -s http://pelias-data.s3.amazonaws.com/placeholder/graph.json.gz | gunzip > data/graph.json;
 $ curl -s http://pelias-data.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
-$ npm test
 ```
 
 ### confirm the build was successful
