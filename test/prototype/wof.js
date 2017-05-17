@@ -177,6 +177,17 @@ module.exports.store_population = function(test, util) {
       t.end();
     });
   });
+
+  test( 'population: calls function - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'mz:population': '999'
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].population, 999);
+      t.end();
+    });
+  });
 };
 
 module.exports.store_popularity = function(test, util) {
@@ -261,6 +272,17 @@ module.exports.store_geom = function(test, util) {
     });
   });
 
+  test( 'geom: area defined - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'geom:area': '999'
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.area, 999);
+      t.end();
+    });
+  });
+
   test( 'geom: no bbox', function(t) {
     var mock = new Mock();
     mock.insertWofRecord({
@@ -316,11 +338,34 @@ module.exports.store_geom = function(test, util) {
     });
   });
 
+  test( 'geom: lat prefer label - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'lbl:latitude': '1',
+      'geom:latitude': 2
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lat, 1);
+      t.end();
+    });
+  });
+
   test( 'geom: lat no label', function(t) {
     var mock = new Mock();
     mock.insertWofRecord({
       'wof:id': '1',
       'geom:latitude': 2
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lat, 2);
+      t.end();
+    });
+  });
+
+  test( 'geom: lat no label - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'geom:latitude': '2'
     }, function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 2);
       t.end();
@@ -349,11 +394,34 @@ module.exports.store_geom = function(test, util) {
     });
   });
 
+  test( 'geom: lon prefer label - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'lbl:longitude': '1',
+      'geom:longitude': 2
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lon, 1);
+      t.end();
+    });
+  });
+
   test( 'geom: lon no label', function(t) {
     var mock = new Mock();
     mock.insertWofRecord({
       'wof:id': '1',
       'geom:longitude': 2
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lon, 2);
+      t.end();
+    });
+  });
+
+  test( 'geom: lon no label - as string', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'geom:longitude': '2'
     }, function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 2);
       t.end();

@@ -20,7 +20,7 @@ function insertWofRecord( wof, next ){
     abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
     population: getPopulation( wof ),
-    popularity: parseInt( wof['misc:photo_sum'], 10 ) || undefined,
+    popularity: wof['misc:photo_sum'],
     lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
@@ -30,6 +30,15 @@ function insertWofRecord( wof, next ){
     },
     names: {}
   };
+
+  // --- cast strings to numeric types ---
+  // note: sometimes numeric properties in WOF can be encoded as strings.
+
+  if( 'string' === typeof doc.population ){ doc.population = parseInt( doc.population, 10 ); }
+  if( 'string' === typeof doc.popularity ){ doc.popularity = parseInt( doc.popularity, 10 ); }
+  if( 'string' === typeof doc.geom.area ){ doc.geom.area = parseFloat( doc.geom.area ); }
+  if( 'string' === typeof doc.geom.lat ){ doc.geom.lat = parseFloat( doc.geom.lat ); }
+  if( 'string' === typeof doc.geom.lon ){ doc.geom.lon = parseFloat( doc.geom.lon ); }
 
   // --- tokens ---
 
