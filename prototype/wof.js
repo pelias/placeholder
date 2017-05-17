@@ -20,6 +20,7 @@ function insertWofRecord( wof, next ){
     abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
     population: getPopulation( wof ),
+    popularity: parseInt( wof['misc:photo_sum'], 10 ) || undefined,
     lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
