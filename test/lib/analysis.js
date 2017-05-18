@@ -37,6 +37,14 @@ module.exports.normalize = function(test, common) {
   assert( 'Foo-Saint-Bar', [ 'foostbar', 'foo st bar' ] );
   assert( 'Foo-Mount-Bar', [ 'foomtbar', 'foo mt bar' ] );
   assert( 'Foo-Fort-Bar', [ 'fooftbar', 'foo ft bar' ] );
+
+  // Synonym - with/without official designation
+  assert( 'County Durham', [ 'county durham', 'durham' ] );
+  assert( 'County of Durham', [ 'county of durham', 'durham' ] );
+  assert( 'Durham County', [ 'durham county', 'durham' ] );
+  assert( 'County Two Words', [ 'county two words', 'two words' ] );
+  assert( 'County of Two Words', [ 'county of two words', 'two words' ] );
+  assert( 'Two Words County', [ 'two words county', 'two words' ] );
 };
 
 module.exports.tokenize = function(test, common) {
