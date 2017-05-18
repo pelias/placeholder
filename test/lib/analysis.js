@@ -8,7 +8,7 @@ module.exports.normalize = function(test, common) {
   assert( 'Schöneberg', [ 'schoneberg', 'schoeneberg' ] );
 
   // apostrophe s
-  assert( 'St. George\'s, Grenada', [ 'st georges grenada', 'st george grenada' ] );
+  assert( 'St. George\'s', [ 'st georges', 'st george' ] );
 
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
