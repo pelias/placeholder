@@ -18,7 +18,7 @@ WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data/data'};
 # sudo dpkg -i jq_1.5+dfsg-1_amd64.deb
 
 # ensure jq exists and is executable
-JQ_BIN=$(which jq)
+JQ_BIN=$(which jq) || true
 if [[ ! -f "$JQ_BIN" || ! -x "$JQ_BIN" ]]; then
   echo "jq binary not found or is not executable";
   exit 1;

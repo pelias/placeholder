@@ -177,6 +177,14 @@ $ docker-compose up -d
 
 ## building the database
 
+### prerequisites
+- jq 1.5+ must be installed
+    - on ubuntu: `sudo apt-get install jq`
+    - on mac: `brew install jq`
+- Who's on First data download with **admin data only** (not tested or recommended to run with postalcodes and venues)
+    - use the download script in [pelias/whosonfirst](https://github.com/pelias/whosonfirst#downloading-the-data)
+
+### steps
 the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.mapzen.com/) project.
 
 the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
