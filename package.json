@@ -17,7 +17,7 @@
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "check-dependencies": "node_modules/.bin/npm-check --production --ignore pelias-interpolation",
+    "check-dependencies": "node_modules/.bin/npm-check --production",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
     "travis": "npm run check-dependencies && npm test"
