@@ -34,11 +34,11 @@ function insertWofRecord( wof, next ){
   // --- cast strings to numeric types ---
   // note: sometimes numeric properties in WOF can be encoded as strings.
 
-  if( 'string' === typeof doc.population ){ doc.population = parseInt( doc.population, 10 ); }
-  if( 'string' === typeof doc.popularity ){ doc.popularity = parseInt( doc.popularity, 10 ); }
-  if( 'string' === typeof doc.geom.area ){ doc.geom.area = parseFloat( doc.geom.area ); }
-  if( 'string' === typeof doc.geom.lat ){ doc.geom.lat = parseFloat( doc.geom.lat ); }
-  if( 'string' === typeof doc.geom.lon ){ doc.geom.lon = parseFloat( doc.geom.lon ); }
+  doc.population = _.toInteger( doc.population ) || undefined;
+  doc.popularity = _.toInteger( doc.popularity ) || undefined;
+  doc.geom.area = _.toFinite( doc.geom.area ) || undefined;
+  doc.geom.lat = _.toFinite( doc.geom.lat ) || undefined;
+  doc.geom.lon = _.toFinite( doc.geom.lon ) || undefined;
 
   // --- tokens ---
 
