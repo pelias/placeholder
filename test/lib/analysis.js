@@ -9,6 +9,7 @@ module.exports.normalize = function(test, common) {
 
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
+  assert( 'Jǿ œ̆', [ 'jo oe' ] );
   assert( 'Trinidad & Tobago', [ 'trinidad and tobago' ] );
 
   // Synonym contractions
@@ -16,6 +17,12 @@ module.exports.normalize = function(test, common) {
   assert( 'SaintE city sAinTe value saINte', [ 'ste city ste value ste' ] );
   assert( 'FoRt city fORt value fOrT', [ 'ft city ft value ft' ] );
   assert( 'MoUNt city mOUNt value mouNT', [ 'mt city mt value mt' ] );
+
+  // Synonym contractions - hyphens
+  assert( 'Foo-Sainte-Bar', [ 'foostebar', 'foo ste bar' ] );
+  assert( 'Foo-Saint-Bar', [ 'foostbar', 'foo st bar' ] );
+  assert( 'Foo-Mount-Bar', [ 'foomtbar', 'foo mt bar' ] );
+  assert( 'Foo-Fort-Bar', [ 'fooftbar', 'foo ft bar' ] );
 };
 
 module.exports.tokenize = function(test, common) {
