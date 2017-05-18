@@ -9,7 +9,6 @@
     "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
     "start": "node server/http.js",
     "extract": "bash cmd/wof_extract.sh > data/wof.extract",
-    "download": "curl http://missinglink.geo.s3.amazonaws.com/ph.wof.extract.gz | gunzip > data/wof.extract",
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
     "repl": "node cmd/repl.js",
