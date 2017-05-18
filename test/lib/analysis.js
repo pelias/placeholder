@@ -9,7 +9,29 @@ module.exports.normalize = function(test, common) {
 
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
+  assert( 'Jǿ œ̆', [ 'jo oe' ] );
   assert( 'Trinidad & Tobago', [ 'trinidad and tobago' ] );
+
+  // Tests to confirm the order of function execution
+  // see: https://github.com/pelias/placeholder/pull/12#issuecomment-302437570
+  test( 'order of execution', function(t) {
+    t.deepEqual( analysis.normalize( 'İnceyol' ), [ 'i̇nceyol' ] );
+    t.equal( analysis.normalize( 'İnceyol' )[0].length, 8 );
+    t.equal( analysis.normalize( 'İ' )[0].length, 2 );
+    t.end();
+  });
+
+  // Synonym contractions
+  assert( 'SainT city sAiNt value saInt', [ 'st city st value st' ] );
+  assert( 'SaintE city sAinTe value saINte', [ 'ste city ste value ste' ] );
+  assert( 'FoRt city fORt value fOrT', [ 'ft city ft value ft' ] );
+  assert( 'MoUNt city mOUNt value mouNT', [ 'mt city mt value mt' ] );
+
+  // Synonym contractions - hyphens
+  assert( 'Foo-Sainte-Bar', [ 'foostebar', 'foo ste bar' ] );
+  assert( 'Foo-Saint-Bar', [ 'foostbar', 'foo st bar' ] );
+  assert( 'Foo-Mount-Bar', [ 'foomtbar', 'foo mt bar' ] );
+  assert( 'Foo-Fort-Bar', [ 'fooftbar', 'foo ft bar' ] );
 };
 
 module.exports.tokenize = function(test, common) {

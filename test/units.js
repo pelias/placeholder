@@ -1,9 +1,7 @@
 var tape = require('tape');
 var path = require('path');
-var util = require('pelias-analysis').lib.util;
 
 var tests = [
-  './analyzer/search',
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
@@ -25,7 +23,7 @@ tests.map( function( testpath ){
 
   for( var testCase in file ){
     if( 'function' === typeof file[testCase] ){
-      file[testCase]( test , util );
+      file[testCase]( test );
     }
   }
 });
