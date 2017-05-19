@@ -48,12 +48,15 @@ module.exports.normalize = function(test, common) {
   assert( 'Two Words County', [ 'two words county', 'two words' ] );
 
   assert( 'City', [ 'city' ] );
-  assert( 'City London', [ 'city london', 'london' ] );
-  assert( 'City of London', [ 'city of london', 'london' ] );
-  assert( 'London City', [ 'london city', 'london' ] );
-  assert( 'City Salt Lake', [ 'city salt lake', 'salt lake' ] );
-  assert( 'City of Salt Lake', [ 'city of salt lake', 'salt lake' ] );
-  assert( 'Salt Lake City', [ 'salt lake city', 'salt lake' ] );
+  assert( 'City London', [ 'city london' ] );
+  assert( 'City of London', [ 'city of london' ] );
+  assert( 'London City', [ 'london city' ] );
+  assert( 'City Salt Lake', [ 'city salt lake' ] );
+  assert( 'City of Salt Lake', [ 'city of salt lake' ] );
+  assert( 'New York City', [ 'new york city' ] );
+  assert( 'City New York', [ 'city new york' ] );
+  assert( 'City of New York', [ 'city of new york' ] );
+  assert( 'New York City', [ 'new york city' ] );
 };
 
 module.exports.tokenize = function(test, common) {
