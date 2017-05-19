@@ -1,7 +1,8 @@
 {
   "name": "pelias-placeholder",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0-semantic-release",
+  "author": "mapzen",
+  "license": "MIT",
   "main": "server.js",
   "scripts": {
     "test": "npm run units",
@@ -12,14 +13,18 @@
     "build": "rm -f data/graph.json data/store.sqlite3; cat data/wof.extract | node cmd/load.js",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
     "repl": "node cmd/repl.js",
-    "cli": "node cmd/cli.js"
+    "cli": "node cmd/cli.js",
+    "lint": "jshint .",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "check-dependencies": "node_modules/.bin/npm-check --production",
+    "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
+    "validate": "npm ls",
+    "travis": "npm run check-dependencies && npm test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pelias/placeholder.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/pelias/placeholder/issues"
   },
@@ -37,6 +42,17 @@
   "devDependencies": {
     "require-dir": "^0.3.1",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
-  }
+    "tape": "^4.6.3",
+    "istanbul": "^0.4.2",
+    "jshint": "^2.5.6",
+    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
+    "precommit-hook": "^3.0.0",
+    "semantic-release": "^6.3.2"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test",
+    "check-dependencies"
+  ]
 }

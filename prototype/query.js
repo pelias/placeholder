@@ -25,9 +25,10 @@ module.exports.queryOne = function( tokens ){
         if( t.length ){
           validMatches = t;
           workingSet = sorted.intersect([ found.children, workingSet ]);
-        } else {
-          // console.error( 'skip', token );
         }
+        //else {
+        // console.error( 'skip', token );
+        //}
 
       }
     } else {
