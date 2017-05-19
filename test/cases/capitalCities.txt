@@ -34,7 +34,7 @@
 101748283 Madrid, Spain
 101748417 Helsinki, Finland
 101750367 London, United Kingdom
-85632335 St. George's, Grenada
+890451719 St. George's, Grenada
 1091680781 Cayenne, French Guiana
 85681223 St Peter Port, Guernsey
 421168965 Accra, Ghana
