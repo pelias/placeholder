@@ -96,7 +96,7 @@ function insertWofRecord( wof, next ){
   }
 
   // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
-  if( 'US' === wof['wof:country'] && wof['wof:label'] ){
+  if( 'US' === wof['iso:country'] && wof['wof:label'] ){
     doc.names.eng = [ wof['wof:label'] ];
   }
 

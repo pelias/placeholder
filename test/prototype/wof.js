@@ -771,7 +771,8 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
     var mock = new Mock();
     mock.insertWofRecord({
       'wof:id': 102085121,
-      'wof:country': 'US',
+      'iso:country': 'US',
+      'wof:name': 'Test',
       'wof:label': 'Lake County',
       'name:eng_x_preferred': [ 'Lake' ],
     }, function(){
@@ -798,7 +799,7 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
     var mock = new Mock();
     mock.insertWofRecord({
       'wof:id': 102085121,
-      'wof:country': 'US',
+      'iso:country': 'US',
       'name:eng_x_preferred': [ 'Lake' ],
     }, function(){
       t.deepEqual( mock._calls.set.length, 1 );
@@ -811,7 +812,7 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
     var mock = new Mock();
     mock.insertWofRecord({
       'wof:id': 102085121,
-      'wof:country': 'US',
+      'iso:country': 'US',
       'wof:label': 'Lake County'
     }, function(){
       t.deepEqual( mock._calls.set.length, 1 );
