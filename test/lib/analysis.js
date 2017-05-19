@@ -27,10 +27,10 @@ module.exports.normalize = function(test, common) {
   });
 
   // Synonym contractions
-  assert( 'SainT city sAiNt value saInt', [ 'st city st value st' ] );
-  assert( 'SaintE city sAinTe value saINte', [ 'ste city ste value ste' ] );
-  assert( 'FoRt city fORt value fOrT', [ 'ft city ft value ft' ] );
-  assert( 'MoUNt city mOUNt value mouNT', [ 'mt city mt value mt' ] );
+  assert( 'SainT token sAiNt value saInt', [ 'st token st value st' ] );
+  assert( 'SaintE token sAinTe value saINte', [ 'ste token ste value ste' ] );
+  assert( 'FoRt token fORt value fOrT', [ 'ft token ft value ft' ] );
+  assert( 'MoUNt token mOUNt value mouNT', [ 'mt token mt value mt' ] );
 
   // Synonym contractions - hyphens
   assert( 'Foo-Sainte-Bar', [ 'foostebar', 'foo ste bar' ] );
@@ -39,12 +39,21 @@ module.exports.normalize = function(test, common) {
   assert( 'Foo-Fort-Bar', [ 'fooftbar', 'foo ft bar' ] );
 
   // Synonym - with/without official designation
+  assert( 'County', [ 'county' ] );
   assert( 'County Durham', [ 'county durham', 'durham' ] );
   assert( 'County of Durham', [ 'county of durham', 'durham' ] );
   assert( 'Durham County', [ 'durham county', 'durham' ] );
   assert( 'County Two Words', [ 'county two words', 'two words' ] );
   assert( 'County of Two Words', [ 'county of two words', 'two words' ] );
   assert( 'Two Words County', [ 'two words county', 'two words' ] );
+
+  assert( 'City', [ 'city' ] );
+  assert( 'City London', [ 'city london', 'london' ] );
+  assert( 'City of London', [ 'city of london', 'london' ] );
+  assert( 'London City', [ 'london city', 'london' ] );
+  assert( 'City Salt Lake', [ 'city salt lake', 'salt lake' ] );
+  assert( 'City of Salt Lake', [ 'city of salt lake', 'salt lake' ] );
+  assert( 'Salt Lake City', [ 'salt lake city', 'salt lake' ] );
 };
 
 module.exports.tokenize = function(test, common) {
