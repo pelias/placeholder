@@ -59,8 +59,8 @@ module.exports.store_record = function(test, util) {
           geom: {
             area: undefined,
             bbox: undefined,
-            lat: undefined,
-            lon: undefined
+            lat: 0,
+            lon: 0
           }
         }
       ]]);
@@ -321,7 +321,18 @@ module.exports.store_geom = function(test, util) {
     mock.insertWofRecord({
       'wof:id': '1'
     }, function(){
-      t.deepEqual( mock._calls.set[0][1].geom.lat, undefined);
+      t.deepEqual( mock._calls.set[0][1].geom.lat, 0);
+      t.end();
+    });
+  });
+
+  test( 'geom: 0 lat', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'geom:latitude': 0
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lat, 0);
       t.end();
     });
   });
@@ -377,7 +388,18 @@ module.exports.store_geom = function(test, util) {
     mock.insertWofRecord({
       'wof:id': '1'
     }, function(){
-      t.deepEqual( mock._calls.set[0][1].geom.lon, undefined);
+      t.deepEqual( mock._calls.set[0][1].geom.lon, 0);
+      t.end();
+    });
+  });
+
+  test( 'geom: 0 lon', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord({
+      'wof:id': '1',
+      'geom:longitude': 0
+    }, function(){
+      t.deepEqual( mock._calls.set[0][1].geom.lon, 0);
       t.end();
     });
   });
