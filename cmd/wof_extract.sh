@@ -19,10 +19,18 @@ WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data/data'};
 
 # ensure jq exists and is executable
 JQ_BIN=$(which jq) || true
-if [[ ! -f "$JQ_BIN" || ! -x "$JQ_BIN" ]]; then
-  echo "jq binary not found or is not executable";
+if [[ ! -f "${JQ_BIN}" || ! -x "${JQ_BIN}" ]]; then
+  echo "jq binary not found or is not executable" 1>&2;
   exit 1;
 fi
 
+# parellize execution on systems which support it
+XARGS_CMD='xargs';
+PARALLEL_BIN=$(which parallel) || true
+if [[ -f "${PARALLEL_BIN}" || -x "${PARALLEL_BIN}" ]]; then
+  echo "info: using parallel execution" 1>&2;
+  XARGS_CMD='parallel --no-notice --group --keep-order --jobs +0';
+fi
+
 # extract only the json properies from each file (eg: excluding zs:*)
-find "$WOF_DIR" -type f -name '*.geojson' | xargs $JQ_BIN -c -M -f "$DIR/jq.filter";
+find "${WOF_DIR}" -type f -name '*.geojson' | ${XARGS_CMD} ${JQ_BIN} -c -M -f "$DIR/jq.filter";
