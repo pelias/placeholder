@@ -9,6 +9,8 @@ module.exports.normalize = function(test, common) {
 
   // apostrophe s
   assert( 'St. George\'s', [ 'st georges', 'st george' ] );
+  assert( 'St. George\‘s', [ 'st georges', 'st george' ] );
+  assert( 'St. George\’s', [ 'st georges', 'st george' ] );
 
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
@@ -44,6 +46,9 @@ module.exports.tokenize = function(test, common) {
   assert( 'Foo  Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo,,Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo\'\'Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
+  assert( 'Foo‘‘Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
+  assert( 'Foo’’Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
+  assert( 'Foo\'’’Bar', [[ 'foobar' ], [ 'foo', 'bar' ]] );
   assert( 'Foo""Bar', [[ 'foo', 'bar' ]] );
 
   // not a delimeter
