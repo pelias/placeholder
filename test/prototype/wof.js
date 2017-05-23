@@ -1,5 +1,6 @@
 
-var wof = require('../../prototype/wof');
+var _ = require('lodash'),
+    wof = require('../../prototype/wof');
 
 /**
   Mock object used for all tests in this file
@@ -27,6 +28,16 @@ var Mock = function(){
 Mock.prototype.insertWofRecord = wof.insertWofRecord;
 // End of Mock
 
+// return params with default values merged in.
+// note: without these all the tests should fail.
+var params = function( obj ){
+  return _.merge({
+    'wof:id': 1,
+    'geom:latitude': 55,
+    'geom:longitude': 55
+  }, obj);
+};
+
 module.exports.store_record = function(test, util) {
 
   test( 'empty data', function(t) {
@@ -46,6 +57,16 @@ module.exports.store_record = function(test, util) {
     }, function(){
       t.deepEqual( mock._calls.addToken, [] );
       t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.set, []);
+      t.end();
+    });
+  });
+
+  test( 'id + lat/lon only', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({}), function(){
+      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setEdge, [] );
       t.deepEqual( mock._calls.set, [[
         1, {
           id: 1,
@@ -59,8 +80,8 @@ module.exports.store_record = function(test, util) {
           geom: {
             area: undefined,
             bbox: undefined,
-            lat: 0,
-            lon: 0
+            lat: 55,
+            lon: 55
           }
         }
       ]]);
@@ -73,9 +94,7 @@ module.exports.store_default_name = function(test, util) {
 
   test( 'name: no name', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].name, undefined);
       t.end();
     });
@@ -83,11 +102,10 @@ module.exports.store_default_name = function(test, util) {
 
   test( 'name: prefer label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:label': 'A',
       'wof:name': 'B'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].name, 'A');
       t.end();
     });
@@ -95,10 +113,9 @@ module.exports.store_default_name = function(test, util) {
 
   test( 'name: no label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:name': 'B'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].name, 'B');
       t.end();
     });
@@ -109,9 +126,7 @@ module.exports.store_abbr = function(test, util) {
 
   test( 'abbr: no abbr', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].abbr, undefined);
       t.end();
     });
@@ -119,12 +134,11 @@ module.exports.store_abbr = function(test, util) {
 
   test( 'abbr: calls function', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'country',
       'wof:country_alpha3': 'TEST',
       'wof:abbreviation': 'TEST2'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].abbr, 'TEST');
       t.end();
     });
@@ -135,9 +149,7 @@ module.exports.store_placetype = function(test, util) {
 
   test( 'placetype: no placetype', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].placetype, undefined);
       t.end();
     });
@@ -145,10 +157,9 @@ module.exports.store_placetype = function(test, util) {
 
   test( 'placetype: exists', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'AA'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].placetype, 'AA');
       t.end();
     });
@@ -159,9 +170,7 @@ module.exports.store_population = function(test, util) {
 
   test( 'population: no population', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].population, undefined);
       t.end();
     });
@@ -169,10 +178,9 @@ module.exports.store_population = function(test, util) {
 
   test( 'population: calls function', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'mz:population': 999
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].population, 999);
       t.end();
     });
@@ -180,10 +188,9 @@ module.exports.store_population = function(test, util) {
 
   test( 'population: calls function - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'mz:population': '999'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].population, 999);
       t.end();
     });
@@ -194,9 +201,7 @@ module.exports.store_popularity = function(test, util) {
 
   test( 'popularity: no popularity', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].popularity, undefined);
       t.end();
     });
@@ -204,10 +209,9 @@ module.exports.store_popularity = function(test, util) {
 
   test( 'popularity: exists', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'misc:photo_sum': 100
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].popularity, 100);
       t.end();
     });
@@ -215,10 +219,9 @@ module.exports.store_popularity = function(test, util) {
 
   test( 'popularity: exists - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'misc:photo_sum': '100'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].popularity, 100);
       t.end();
     });
@@ -229,9 +232,7 @@ module.exports.store_lineage = function(test, util) {
 
   test( 'lineage: no lineage', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].lineage, undefined);
       t.end();
     });
@@ -239,10 +240,9 @@ module.exports.store_lineage = function(test, util) {
 
   test( 'lineage: calls function', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:hierarchy': { a: 'b', c: 'd' }
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].lineage, { a: 'b', c: 'd' });
       t.end();
     });
@@ -253,9 +253,7 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: no area', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].geom.area, undefined);
       t.end();
     });
@@ -263,10 +261,9 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: area defined', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'geom:area': 999
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.area, 999);
       t.end();
     });
@@ -274,10 +271,9 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: area defined - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'geom:area': '999'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.area, 999);
       t.end();
     });
@@ -285,9 +281,7 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: no bbox', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.set[0][1].geom.bbox, undefined);
       t.end();
     });
@@ -295,11 +289,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: bbox prefer label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'lbl:bbox': 'ABC',
       'geom:bbox': 'DEF'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.bbox, 'ABC');
       t.end();
     });
@@ -307,10 +300,9 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: bbox no label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'geom:bbox': 'DEF'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.bbox, 'DEF');
       t.end();
     });
@@ -318,20 +310,21 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: no lat', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
-      t.deepEqual( mock._calls.set[0][1].geom.lat, 0);
+    mock.insertWofRecord(params({
+      'lbl:latitude': null,
+      'geom:latitude': null
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 0);
       t.end();
     });
   });
 
   test( 'geom: 0 lat', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
-      'geom:latitude': 0
-    }, function(){
+    mock.insertWofRecord(params({
+      'lbl:latitude': null,
+      'geom:latitude': 0,
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 0);
       t.end();
     });
@@ -339,11 +332,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lat prefer label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'lbl:latitude': 1,
       'geom:latitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 1);
       t.end();
     });
@@ -351,11 +343,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lat prefer label - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'lbl:latitude': '1',
       'geom:latitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 1);
       t.end();
     });
@@ -363,10 +354,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lat no label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
+      'lbl:latitude': null,
       'geom:latitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 2);
       t.end();
     });
@@ -374,10 +365,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lat no label - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
+      'lbl:latitude': null,
       'geom:latitude': '2'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lat, 2);
       t.end();
     });
@@ -385,20 +376,21 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: no lon', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
-      t.deepEqual( mock._calls.set[0][1].geom.lon, 0);
+    mock.insertWofRecord(params({
+      'lbl:longitude': null,
+      'geom:longitude': null
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 0);
       t.end();
     });
   });
 
   test( 'geom: 0 lon', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
+      'lbl:longitude': null,
       'geom:longitude': 0
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 0);
       t.end();
     });
@@ -406,11 +398,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lon prefer label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'lbl:longitude': 1,
       'geom:longitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 1);
       t.end();
     });
@@ -418,11 +409,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lon prefer label - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'lbl:longitude': '1',
       'geom:longitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 1);
       t.end();
     });
@@ -430,10 +420,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lon no label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
+      'lbl:longitude': null,
       'geom:longitude': 2
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 2);
       t.end();
     });
@@ -441,10 +431,10 @@ module.exports.store_geom = function(test, util) {
 
   test( 'geom: lon no label - as string', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
+      'lbl:longitude': null,
       'geom:longitude': '2'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set[0][1].geom.lon, 2);
       t.end();
     });
@@ -549,55 +539,55 @@ module.exports.getPopulation = function(test, util) {
 module.exports.isValidWofRecord = function(test, util) {
 
   test( 'valid id', function(t) {
-    t.true( wof.isValidWofRecord( 1, {} ) );
-    t.true( wof.isValidWofRecord( 999999, {} ) );
+    t.true( wof.isValidWofRecord( 1, params({}) ) );
+    t.true( wof.isValidWofRecord( 999999, params({}) ) );
     t.end();
   });
 
   test( 'invalid id', function(t) {
-    t.false( wof.isValidWofRecord( -1, {} ) );
-    t.false( wof.isValidWofRecord( 0, {} ) );
-    t.false( wof.isValidWofRecord( null, {} ) );
+    t.false( wof.isValidWofRecord( -1, params({}) ) );
+    t.false( wof.isValidWofRecord( 0, params({}) ) );
+    t.false( wof.isValidWofRecord( null, params({}) ) );
     t.end();
   });
 
   test( 'deprecated', function(t) {
-    t.false( wof.isValidWofRecord( 1, { 'edtf:deprecated': 'any value' } ) );
+    t.false( wof.isValidWofRecord( 1, params({ 'edtf:deprecated': 'any value' }) ) );
     t.end();
   });
 
   test( 'not deprecated', function(t) {
-    t.true( wof.isValidWofRecord( 1, { 'edtf:deprecated': '' } ) );
-    t.true( wof.isValidWofRecord( 1, { 'edtf:deprecated': 'uuuu' } ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'edtf:deprecated': '' }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'edtf:deprecated': 'uuuu' }) ) );
     t.end();
   });
 
   test( 'superseded', function(t) {
-    t.false( wof.isValidWofRecord( 1, { 'wof:superseded_by': [ 'any value' ] } ) );
+    t.false( wof.isValidWofRecord( 1, params({ 'wof:superseded_by': [ 'any value' ] }) ) );
     t.end();
   });
 
   test( 'not superseded', function(t) {
-    t.true( wof.isValidWofRecord( 1, { 'wof:superseded_by': [] } ) );
-    t.true( wof.isValidWofRecord( 1, { 'wof:superseded_by': 'scalar' } ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'wof:superseded_by': [] }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'wof:superseded_by': 'scalar' }) ) );
     t.end();
   });
 
   test( 'not current', function(t) {
-    t.false( wof.isValidWofRecord( 1, { 'mz:is_current': 0 } ) );
-    t.false( wof.isValidWofRecord( 1, { 'mz:is_current': '0' } ) );
+    t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': 0 }) ) );
+    t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': '0' }) ) );
     t.end();
   });
 
   test( 'current', function(t) {
-    t.true( wof.isValidWofRecord( 1, { 'mz:is_current': 1 } ) );
-    t.true( wof.isValidWofRecord( 1, { 'mz:is_current': '1' } ) );
-    t.true( wof.isValidWofRecord( 1, { 'mz:is_current': '' } ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': 1 }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '1' }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '' }) ) );
     t.end();
   });
 
   test( 'default', function(t) {
-    t.true( wof.isValidWofRecord( 1, {} ) );
+    t.true( wof.isValidWofRecord( 1, params({}) ) );
     t.end();
   });
 };
@@ -614,10 +604,9 @@ module.exports.add_token = function(test, util) {
 
   test( 'wof:abbreviation', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:abbreviation': 'EXAMPLE'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 1 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
       t.end();
@@ -626,11 +615,10 @@ module.exports.add_token = function(test, util) {
 
   test( 'index both wof:label and wof:name', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:label': 'EXAMPLE',
       'wof:name': 'EXAMPLE2'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 2 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
       t.deepEqual( mock._calls.addToken[1][3], [ 'example2' ] );
@@ -640,13 +628,12 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - not one', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'ne:iso_a2': 'EX',
       'ne:iso_a3': 'EXA',
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken, [] );
       t.end();
     });
@@ -654,14 +641,13 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - is country', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'country',
       'ne:iso_a2': 'EX',
       'ne:iso_a3': 'EXA',
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 4 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
       t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
@@ -673,13 +659,12 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - is country - missing iso:country', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'country',
       'ne:iso_a2': 'EX',
       'ne:iso_a3': 'EXA',
       'wof:country_alpha3': 'EXP'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken, [] );
       t.end();
     });
@@ -687,14 +672,13 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - is dependency', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'dependency',
       'ne:iso_a2': 'EX',
       'ne:iso_a3': 'EXA',
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 4 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
       t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
@@ -706,13 +690,12 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - is country - missing iso:country', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'dependency',
       'ne:iso_a2': 'EX',
       'ne:iso_a3': 'EXA',
       'wof:country_alpha3': 'EXP'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken, [] );
       t.end();
     });
@@ -720,13 +703,12 @@ module.exports.add_token = function(test, util) {
 
   test( 'country/dependency - dont import some problematic fields (see source)', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'wof:placetype': 'dependency',
       'iso:country': 'EP',
       'wof:country': 'TEST',
       'ne:abbrev': 'TEST2'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 1 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'ep' ] );
       t.end();
@@ -738,9 +720,7 @@ module.exports.add_names = function(test, util) {
 
   test( 'no names', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.addToken, [] );
       t.end();
     });
@@ -748,14 +728,13 @@ module.exports.add_names = function(test, util) {
 
   test( 'tokens: supported name fields', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'name:foo_x_preferred': [ 'A', 'B' ],
       'name:foo_x_colloquial': [ 'C', 'D' ],
       'name:foo_x_variant': [ 'E', 'F' ],
       'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
       'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.addToken.length, 6 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'a' ] );
       t.deepEqual( mock._calls.addToken[1][3], [ 'b' ] );
@@ -769,15 +748,14 @@ module.exports.add_names = function(test, util) {
 
   test( 'store: supported name fields', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1',
+    mock.insertWofRecord(params({
       'name:foo_x_preferred': [ 'A', 'B' ],
       'name:foo_x_colloquial': [ 'C', 'D' ],
       'name:foo_x_variant': [ 'E', 'F' ],
       'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
       'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
       'name:bar_x_preferred': [ 'Y', 'Z' ],
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { foo: [ 'A', 'B' ], bar: [ 'Y', 'Z' ] });
       t.end();
@@ -791,13 +769,13 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
 
   test( 'override name:eng_x_preferred with wof:label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 102085121,
       'iso:country': 'US',
       'wof:name': 'Test',
       'wof:label': 'Lake County',
       'name:eng_x_preferred': [ 'Lake' ],
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake County' ] } );
       t.end();
@@ -806,11 +784,11 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
 
   test( 'no country', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 102085121,
       'wof:label': 'Lake County',
       'name:eng_x_preferred': [ 'Lake' ],
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
       t.end();
@@ -819,11 +797,11 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
 
   test( 'no label', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 102085121,
       'iso:country': 'US',
       'name:eng_x_preferred': [ 'Lake' ],
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
       t.end();
@@ -832,11 +810,11 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
 
   test( 'no eng_x_preferred', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 102085121,
       'iso:country': 'US',
       'wof:label': 'Lake County'
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake County' ] } );
       t.end();
@@ -845,12 +823,12 @@ module.exports.usa_english_name_override_with_label = function(test, util) {
 
   test( 'wrong country', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 102085121,
       'wof:country': 'DE',
       'wof:label': 'Lake County',
       'name:eng_x_preferred': [ 'Lake' ],
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'Lake' ] } );
       t.end();
@@ -862,9 +840,7 @@ module.exports.set_edges = function(test, util) {
 
   test( 'no hierarchy', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
-      'wof:id': '1'
-    }, function(){
+    mock.insertWofRecord(params({}), function(){
       t.deepEqual( mock._calls.setEdge, [] );
       t.end();
     });
@@ -872,7 +848,7 @@ module.exports.set_edges = function(test, util) {
 
   test( 'hierarchy: single lineage', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 100,
       'wof:hierarchy': [{
         'continent_id':     101,
@@ -885,7 +861,7 @@ module.exports.set_edges = function(test, util) {
         'postalcode_id':    108,
         'region_id':        109
       }]
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.setEdge.length, 9 );
       mock._calls.setEdge.forEach( function( c, i ){
         t.deepEqual( c[0], 101+i );
@@ -897,7 +873,7 @@ module.exports.set_edges = function(test, util) {
 
   test( 'hierarchy: multiple lineage', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 100,
       'wof:hierarchy': [{
         'continent_id':     101,
@@ -920,7 +896,7 @@ module.exports.set_edges = function(test, util) {
         'postalcode_id':    117,
         'region_id':        118
       }]
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.setEdge.length, 18 );
       mock._calls.setEdge.forEach( function( c, i ){
         t.deepEqual( c[0], 101+i );
@@ -932,14 +908,14 @@ module.exports.set_edges = function(test, util) {
 
   test( 'hierarchy: invalid values', function(t) {
     var mock = new Mock();
-    mock.insertWofRecord({
+    mock.insertWofRecord(params({
       'wof:id': 100,
       'wof:hierarchy': [{
         'self_id':          100,
         'null_id':          0,
         'invalid_id':       -1
       }]
-    }, function(){
+    }), function(){
       t.deepEqual( mock._calls.setEdge.length, 0 );
       t.end();
     });
