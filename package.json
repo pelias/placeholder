@@ -16,7 +16,7 @@
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "check-dependencies": "node_modules/.bin/npm-check --production",
+    "check-dependencies": "node_modules/.bin/npm-check --skip-unused --production",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
     "travis": "npm run check-dependencies && npm test"
@@ -33,6 +33,7 @@
     "express": "^4.15.2",
     "lodash": "^4.17.4",
     "lower-case": "^1.1.4",
+    "npm-check": "^5.4.4",
     "remove-accents": "^0.4.0",
     "sorted-intersect": "^0.1.4",
     "split2": "^2.1.1",
@@ -45,7 +46,6 @@
     "tape": "^4.6.3",
     "istanbul": "^0.4.2",
     "jshint": "^2.5.6",
-    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
     "semantic-release": "^6.3.2"
   },
