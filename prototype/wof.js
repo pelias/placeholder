@@ -37,8 +37,8 @@ function insertWofRecord( wof, next ){
   doc.population = _.toInteger( doc.population ) || undefined;
   doc.popularity = _.toInteger( doc.popularity ) || undefined;
   doc.geom.area = _.toFinite( doc.geom.area ) || undefined;
-  doc.geom.lat = _.toFinite( doc.geom.lat ) || undefined;
-  doc.geom.lon = _.toFinite( doc.geom.lon ) || undefined;
+  doc.geom.lat = _.toFinite( doc.geom.lat );
+  doc.geom.lon = _.toFinite( doc.geom.lon );
 
   // --- tokens ---
 
@@ -117,6 +117,11 @@ function insertWofRecord( wof, next ){
 
 }
 
+// check if value is a valid number
+function isFiniteNumber( value ){
+  return !_.isEmpty(_.trim( value )) && _.isFinite(_.toNumber( value ));
+}
+
 function isValidWofRecord( id, wof ){
 
   // sanity check inputs
@@ -140,6 +145,16 @@ function isValidWofRecord( id, wof ){
   // skip non-current records
   var isCurrent = wof['mz:is_current'];
   if( isCurrent === '0' || isCurrent === 0 ){
+    return false;
+  }
+
+  // invalid latitude
+  if( !isFiniteNumber(wof['lbl:latitude']) && !isFiniteNumber(wof['geom:latitude']) ){
+    return false;
+  }
+
+  // invalid longitude
+  if( !isFiniteNumber(wof['lbl:longitude']) && !isFiniteNumber(wof['geom:longitude']) ){
     return false;
   }
 
