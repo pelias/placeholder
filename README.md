@@ -180,7 +180,7 @@ $ docker-compose up -d
 - jq 1.5+ must be installed
     - on ubuntu: `sudo apt-get install jq`
     - on mac: `brew install jq`
-- Who's on First data download with **admin data only** (not tested or recommended to run with postalcodes and venues)
+- Who's on First data download
     - use the download script in [pelias/whosonfirst](https://github.com/pelias/whosonfirst#downloading-the-data)
 
 ### steps
