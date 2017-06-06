@@ -16,6 +16,11 @@ module.exports.tokenize = function(test, util) {
   // duplicates
   assert('lancaster lancaster pa', [['lancaster', 'lancaster', 'pa']]);
 
+  // synonymous groupings
+  // see: https://github.com/pelias/placeholder/issues/28
+  assert('Le Cros-d’Utelle, France', [['le cros','d','utelle','france']]);
+  assert('luxemburg luxemburg', [['luxemburg', 'luxemburg']]); // does not remove duplicate tokens
+
   // ambiguous parses
   // @note: these are the glorious future:
 
