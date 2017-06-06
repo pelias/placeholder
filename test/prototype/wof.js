@@ -762,6 +762,25 @@ module.exports.add_names = function(test, util) {
     });
   });
 
+  // none of these names should be used
+  test( 'store: non-standard name fields', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:zho_min_nan_x_preferred': [ 'A' ],
+      'name:zho_yue_x_preferred': [ 'A' ],
+      'name:cbk_zam_x_preferred': [ 'A' ],
+      'name:nds_nld_x_preferred': [ 'A' ],
+      'name:eng.p_x_preferred': [ 'A' ],
+      'name:ger.p_x_preferred': [ 'A' ],
+      'name:eng_x_preferred_x_preferred': [ 'A' ],
+      'name:cze_x_preferred_x_preferred': [ 'A' ],
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, {});
+      t.end();
+    });
+  });
+
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.

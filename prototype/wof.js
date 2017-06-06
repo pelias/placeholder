@@ -83,7 +83,7 @@ function insertWofRecord( wof, next ){
   for( var attr in wof ){
     // https://github.com/whosonfirst/whosonfirst-names
     // names: preferred|colloquial|variant|unknown
-    var match = attr.match(/^name:(.*)_x_(preferred|colloquial|variant)$/);
+    var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
     if( match ){
       for( var n in wof[ attr ] ){
         analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
