@@ -32,5 +32,13 @@ if [[ -f "${PARALLEL_BIN}" || -x "${PARALLEL_BIN}" ]]; then
   XARGS_CMD='parallel --no-notice --group --keep-order --jobs +0';
 fi
 
+# filter records by placetype
+# removing any file names from the stream whose body does not match the pattern
+function placetypeFilter {
+  while IFS= read -r FILENAME; do
+    grep --files-with-match -f "${DIR}/placetype.filter" "${FILENAME}";
+  done
+}
+
 # extract only the json properies from each file (eg: excluding zs:*)
-find "${WOF_DIR}" -type f -name '*.geojson' | ${XARGS_CMD} ${JQ_BIN} -c -M -f "$DIR/jq.filter";
+find "${WOF_DIR}" -type f -name '*.geojson' | placetypeFilter | ${XARGS_CMD} ${JQ_BIN} -c -M -f "${DIR}/jq.filter";
