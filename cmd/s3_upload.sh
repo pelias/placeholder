@@ -19,9 +19,9 @@ if type pigz >/dev/null
 fi
 
 echo '--- upload files to s3 ---';
-aws s3 cp "${DATA_DIR}/graph.json.gz" "${BUCKET}" --acl public-read;
-aws s3 cp "${DATA_DIR}/store.sqlite3.gz" "${BUCKET}" --acl public-read;
-aws s3 cp "${DATA_DIR}/wof.extract.gz" "${BUCKET}" --acl public-read;
+aws s3 cp "${DATA_DIR}/graph.json.gz" "${BUCKET}" --region us-east-1 --acl public-read;
+aws s3 cp "${DATA_DIR}/store.sqlite3.gz" "${BUCKET}" --region us-east-1 --acl public-read;
+aws s3 cp "${DATA_DIR}/wof.extract.gz" "${BUCKET}" --region us-east-1 --acl public-read;
 
 echo '--- list files ---';
 aws s3 ls --human-readable "${BUCKET}";
