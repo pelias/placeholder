@@ -49,7 +49,7 @@ function runner( ph, actual, expected, next ){
   try {
     process.stderr.write('.');
     // console.time('took');
-    resultIds = ph.query( ph.tokenize( actual ) );
+    resultIds = ph.query( ph.tokenize( actual ) ).ids;
     // console.timeEnd('took');
     assert.ok( -1 !== resultIds.indexOf( expected ), 'id found in results' );
   } catch( e ){

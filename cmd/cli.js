@@ -12,7 +12,7 @@ console.log( input + '\n' );
 // -- search --
 console.time('search');
 var tokens = ph.tokenize( input );
-var results = ph.query( tokens );
+var results = ph.query( tokens ).ids;
 console.timeEnd('search');
 
 // print results
