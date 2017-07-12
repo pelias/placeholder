@@ -36,7 +36,7 @@ fi
 # removing any file names from the stream whose body does not match the pattern
 function placetypeFilter {
   while IFS= read -r FILENAME; do
-    grep --files-with-match -f "${DIR}/placetype.filter" "${FILENAME}";
+    grep --files-with-match -f "${DIR}/placetype.filter" "${FILENAME}" || true;
   done
 }
 
