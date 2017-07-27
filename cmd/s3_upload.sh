@@ -3,7 +3,7 @@ set -euo pipefail
 
 # directory of this file
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd );
-DATA_DIR="${DIR}/../data";
+DATA_DIR=${PLACEHOLDER_DATA:-"${DIR}/../data"};
 BUCKET='s3://pelias-data/placeholder/';
 
 echo '--- gzip data files ---';
