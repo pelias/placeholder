@@ -4,8 +4,8 @@ var fs = require('fs'),
     path = require('path');
 
 var dataDir = process.env.PLACEHOLDER_DATA || path.join( __dirname, '../data/');
-var graphPath = path.join( dataDir, '/graph.json' );
-var storePath = path.join( dataDir, '/store.sqlite3' );
+var graphPath = path.join( dataDir, 'graph.json' );
+var storePath = path.join( dataDir, 'store.sqlite3' );
 
 // load data from disk
 module.exports.load = function( opts ){
