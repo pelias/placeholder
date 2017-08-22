@@ -63,7 +63,25 @@ module.exports.tokenize = function( input ){
   }, this);
 
   // console.log( '[', queries.join( ', ' ), ']' );
-  return queries.filter( function( query ){
+
+  // remove empty arrays
+  queries = queries.filter( function( query ){
     return !!query.length;
   });
+
+  // synonymous groupings
+  // this removes queries such as `[ B, C ]` where another group such as
+  // `[ A, B, C ]` exists.
+  // see: https://github.com/pelias/placeholder/issues/28
+  queries = queries.filter( function( query, i ){
+    for( var j=0; j<queries.length; j++ ){
+      if( j === i ){ continue; }
+      if( _.isEqual( query, queries[j].slice( -query.length ) ) ){
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return queries;
 };
