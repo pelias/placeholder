@@ -42,7 +42,7 @@
   "devDependencies": {
     "istanbul": "^0.4.2",
     "jshint": "^2.5.6",
-    "npm-check": "^5.4.4",
+    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
     "require-dir": "^0.3.1",
     "semantic-release": "^6.3.2",
