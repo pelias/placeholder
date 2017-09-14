@@ -7,7 +7,7 @@ DOCKER_REPOSITORY="pelias"
 DOCKER_PROJECT="${DOCKER_REPOSITORY}/${CIRCLE_PROJECT_REPONAME}"
 
 # skip builds on greenkeeper branches
-if [ "${CIRCLE_BRANCH##greenkeeper}" ]; then
+if [[ -z "${CIRCLE_BRANCH##*greenkeeper*}" ]]; then
 	exit 0
 fi
 
