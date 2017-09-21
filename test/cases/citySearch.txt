@@ -181,7 +181,7 @@
 101912525 Cacak
 101750149 Caen
 890458845 Calgary
-85675853 Callao
+85675817 Callao
 85923249 Camarillo
 890435969 Camayenne
 101750465 Cambridge, England
@@ -245,7 +245,7 @@
 421174425 Chitungwiza
 85678795 Chon Buri
 102027689 Chongqing
-101915501 Christchurch
+101914521 Christchurch
 85922285 Chula Vista
 85940877 Cicero
 101712203 Cincinnati
@@ -345,7 +345,7 @@
 101748713 Duisburg
 404513247 Duluth
 85950181 Dundalk
-101914509 Dunedin
+101914269 Dunedin
 890456493 Durham
 404512099 Eagan
 101732375 Eau Claire
@@ -472,7 +472,7 @@
 85899245 Hamburg-Mitte
 85899247 Hamburg-Nord
 101735515 Hamilton, Canada
-101914771 Hamilton, NZ
+101914271 Hamilton, NZ
 101712657 Hamilton, OH
 101748739 Hamm
 85823723 Hammond
@@ -662,7 +662,7 @@
 85923517 Los Angeles
 85929677 Loveland
 85950327 Lowell
-101916199 Lower Hutt
+101914319 Lower Hutt
 101750443 Lowestoft
 85667669 Luanda
 101725261 Lubbock
@@ -1131,7 +1131,7 @@
 102018849 Tangerang
 102027111 Tangshan
 101751591 Taunton
-101915917 Tauranga
+101914325 Tauranga
 101728059 Taylorsville
 85670879 Tebessa
 85672313 Tehran

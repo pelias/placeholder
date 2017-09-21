@@ -65,6 +65,10 @@ module.exports.normalize = function(test, common) {
 module.exports.tokenize = function(test, common) {
   var assert = runner.bind(null, test, 'tokenize');
 
+  // invalid type
+  assert( [], [] );
+  assert( {}, [] );
+
   // delimiters
   assert( 'Foo  Bar', [[ 'foo', 'bar' ]] );
   assert( 'Foo,,Bar', [[ 'foo', 'bar' ]] );

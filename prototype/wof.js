@@ -101,6 +101,17 @@ function insertWofRecord( wof, next ){
   }
 
   // --- graph ---
+
+  // parent_id property (some records have this property set but no hierarchy)
+  if( wof.hasOwnProperty('wof:parent_id') ){
+    var parentId = wof['wof:parent_id'];
+    if( 'string' === typeof parentId ){ parentId = parseInt( parentId, 10 ); }
+    if( parentId !== id && parentId > 0 ){
+      this.graph.setEdge( parentId, id ); // is child of
+    }
+  }
+
+  // hierarchy properties
   for( var h in wof['wof:hierarchy'] ){
    for( var i in wof['wof:hierarchy'][h] ){
      var pid = wof['wof:hierarchy'][h][i];
@@ -142,9 +153,15 @@ function isValidWofRecord( id, wof ){
     return false;
   }
 
-  // skip non-current records
+  /**
+    skip non-current records
+
+    0 signifies a non-current record
+    1 signifies a current record
+    -1 signifies an inderminate state, someone needs to look at this record and decide
+  **/
   var isCurrent = wof['mz:is_current'];
-  if( isCurrent === '0' || isCurrent === 0 ){
+  if( isCurrent === '0' || isCurrent === 0 || isCurrent === '-1' || isCurrent === -1 ){
     return false;
   }
 

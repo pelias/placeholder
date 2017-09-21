@@ -36,7 +36,7 @@
 101750367 London, United Kingdom
 890451719 St. George's, Grenada
 1091680781 Cayenne, French Guiana
-85681223 St Peter Port, Guernsey
+85632547 St Peter Port, Guernsey
 421168965 Accra, Ghana
 101753853 Gibraltar, Gibraltar
 101870623 Nuuk, Greenland
@@ -69,7 +69,7 @@
 890451463 Majuro, Marshall Islands
 890491957 Skopje, Macedonia
 85681291 Macao, Macao
-101750297 Plymouth, Montserrat
+1108960813 Plymouth, Montserrat
 101752423 Valletta, Malta
 85674093 Male, Maldives
 421168781 Lilongwe, Malawi
@@ -80,8 +80,8 @@
 101751893 Amsterdam, Netherlands
 101751917 Oslo, Norway
 85675677 Yaren, Nauru
-85632493 Alofi, Niue
-85632179 Panama City, Panama
+1141909453 Alofi, Niue
+890445081 Panama City, Panama
 890435983 Saint-Pierre, Saint Pierre and Miquelon
 85676471 Melekeok, Palau
 890441607 Doha, Qatar
@@ -91,7 +91,7 @@
 101752307 Stockholm, Sweden
 102032341 Singapore, Singapore
 101752073 Ljubljana, Slovenia
-101913495 Bratislava, Slovakia
+1108800123 Bratislava, Slovakia
 890452049 Freetown, Sierra Leone
 85677205 San Marino, San Marino
 890449737 Mogadishu, Somalia
