@@ -103,10 +103,11 @@ function insertWofRecord( wof, next ){
   // --- graph ---
 
   // parent_id property (some records have this property set but no hierarchy)
+  var parentId;
   if( wof.hasOwnProperty('wof:parent_id') ){
-    var parentId = wof['wof:parent_id'];
+    parentId = wof['wof:parent_id'];
     if( 'string' === typeof parentId ){ parentId = parseInt( parentId, 10 ); }
-    if( parentId !== id && parentId > 0 ){
+    if( !isNaN( parentId ) && parentId !== id && parentId > 0 ){
       this.graph.setEdge( parentId, id ); // is child of
     }
   }
@@ -116,7 +117,7 @@ function insertWofRecord( wof, next ){
    for( var i in wof['wof:hierarchy'][h] ){
      var pid = wof['wof:hierarchy'][h][i];
      if( 'string' === typeof pid ){ pid = parseInt( pid, 10 ); }
-     if( pid === id || pid <= 0 ){ continue; }
+     if( pid === id || pid <= 0 || pid === parentId ){ continue; }
      //  this.graph.setEdge( id, pid, 'p' ); // has parent
      this.graph.setEdge( pid, id ); // is child of
    }
