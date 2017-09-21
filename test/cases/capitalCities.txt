@@ -42,7 +42,7 @@
 101870623 Nuuk, Greenland
 421167921 Banjul, Gambia
 890444429 Conakry, Guinea
-890442797 Basse-Terre, Guadeloupe
+890420199 Basse-Terre, Guadeloupe
 421178347 Malabo, Equatorial Guinea
 421197943 Bissau, Guinea-Bissau
 890437279 Hong Kong, Hong Kong

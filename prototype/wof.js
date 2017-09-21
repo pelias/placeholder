@@ -159,9 +159,11 @@ function isValidWofRecord( id, wof ){
     0 signifies a non-current record
     1 signifies a current record
     -1 signifies an inderminate state, someone needs to look at this record and decide
+
+    note: we are considering -1 values as current (for now)
   **/
   var isCurrent = wof['mz:is_current'];
-  if( isCurrent === '0' || isCurrent === 0 || isCurrent === '-1' || isCurrent === -1 ){
+  if( isCurrent === '0' || isCurrent === 0 ){
     return false;
   }
 

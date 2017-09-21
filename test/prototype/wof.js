@@ -576,8 +576,6 @@ module.exports.isValidWofRecord = function(test, util) {
   test( 'not current', function(t) {
     t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': 0 }) ) );
     t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': '0' }) ) );
-    t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': -1 }) ) );
-    t.false( wof.isValidWofRecord( 1, params({ 'mz:is_current': '-1' }) ) );
     t.end();
   });
 
@@ -585,6 +583,10 @@ module.exports.isValidWofRecord = function(test, util) {
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': 1 }) ) );
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '1' }) ) );
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '' }) ) );
+
+    // we are considering -1 values as current (for now)
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': -1 }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '-1' }) ) );
     t.end();
   });
 
