@@ -13,6 +13,10 @@ module.exports.tokenize = function(test, util) {
   assert('North Sydney', [85771181, 85784821, 101931469, 102048877, 404225393]);
   assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357]);
   assert('ケープタウン 南アフリカ', [101928027]);
+  assert('경기도 광명시', [890472589]);
+  assert('서울 마포구', [890473201]);
+  assert('부산광역시 부산진구', [890475779]);
+  assert('전라북도 전주시 완산구', [890476473]);
 
   assert('london on', [ 101735809 ]);
   assert('paris, tx', [ 101725293 ]);
