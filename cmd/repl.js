@@ -34,11 +34,19 @@ var commands = {
     console.timeEnd('took');
     cb();
   },
+  edges: function( id, cb ){
+    console.log( 'edges', '"' + id + '"' );
+    console.time('took');
+    console.log( ph.graph.outEdges( id ) );
+    console.timeEnd('took');
+    cb();
+  },
   id: function( id, cb ){
     console.time('took');
     ph.store.get( id, function( err, doc ){
       if( err ){ return console.error( err ); }
-      console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+      // console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+      console.log( doc );
       console.timeEnd('took');
       cb();
     });

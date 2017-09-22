@@ -583,6 +583,10 @@ module.exports.isValidWofRecord = function(test, util) {
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': 1 }) ) );
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '1' }) ) );
     t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '' }) ) );
+
+    // we are considering -1 values as current (for now)
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': -1 }) ) );
+    t.true( wof.isValidWofRecord( 1, params({ 'mz:is_current': '-1' }) ) );
     t.end();
   });
 
@@ -860,6 +864,30 @@ module.exports.set_edges = function(test, util) {
   test( 'no hierarchy', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({}), function(){
+      t.deepEqual( mock._calls.setEdge, [] );
+      t.end();
+    });
+  });
+
+  test( 'from parent_id', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'wof:id': 100,
+      'wof:parent_id': 200
+    }), function(){
+      t.equal( mock._calls.setEdge.length, 1 );
+      t.equal( mock._calls.setEdge[0][0], 200 );
+      t.equal( mock._calls.setEdge[0][1], 100 );
+      t.end();
+    });
+  });
+
+  test( 'from parent_id - same value', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'wof:id': 100,
+      'wof:parent_id': 100
+    }), function(){
       t.deepEqual( mock._calls.setEdge, [] );
       t.end();
     });
