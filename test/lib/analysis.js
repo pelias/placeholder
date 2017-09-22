@@ -73,8 +73,13 @@ module.exports.normalize = function(test, common) {
   assert( 'Sutherland Shire (A)', [ 'sutherland shire' ] );
   assert( 'Cocos- [Keeling] eilande', [ 'cocos' ] );
 
-  // handle '-1'
-  assert( '-1', [] );
+  // remove tokens that *only* contain numbers
+  assert( '1', [] );
+  assert( '22', [] );
+  assert( '333', [] );
+  assert( '22nd', ['22nd'] );
+  assert( 'a12', ['a12'] );
+  assert( '-1', [] ); // special case: handle '-1' values
 };
 
 module.exports.tokenize = function(test, common) {
