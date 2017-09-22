@@ -11,7 +11,7 @@ module.exports.tokenize = function(test, util) {
 
   assert('Kelburn Wellington New Zealand', [85772991]);
   assert('North Sydney', [85771181, 85784821, 101931469, 102048877, 404225393]);
-  assert('Sydney New South Wales Australia', [101932003, 404226357]);
+  assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357]);
   assert('ケープタウン 南アフリカ', [101928027]);
 
   assert('london on', [ 101735809 ]);

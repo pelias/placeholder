@@ -60,6 +60,17 @@ module.exports.normalize = function(test, common) {
 
   assert( 'City of the Sun', [ 'city of the sun' ] );
   assert( 'City of Sun', [ 'city of sun', 'sun' ] );
+
+  // remove 'disambiguation' tokens from name suffix
+  // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/885
+  assert( 'St Kilda (Vic.)', [ 'st kilda' ] );
+  assert( 'Spring Mountain (Qld)', [ 'spring mountain' ] );
+  assert( 'Mónaco - Monaco', [ 'monaco' ] );
+  assert( 'Monako (peyi)', [ 'monako' ] );
+  assert( 'Monako [peyi]', [ 'monako' ] );
+  assert( 'Port Phillip (C)', [ 'port phillip' ] );
+  assert( 'Portland (Oregon)', [ 'portland' ] );
+  assert( 'Sutherland Shire (A)', [ 'sutherland shire' ] );
 };
 
 module.exports.tokenize = function(test, common) {
