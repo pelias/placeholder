@@ -71,6 +71,7 @@ module.exports.normalize = function(test, common) {
   assert( 'Port Phillip (C)', [ 'port phillip' ] );
   assert( 'Portland (Oregon)', [ 'portland' ] );
   assert( 'Sutherland Shire (A)', [ 'sutherland shire' ] );
+  assert( 'Cocos- [Keeling] eilande', [ 'cocos' ] );
 };
 
 module.exports.tokenize = function(test, common) {
