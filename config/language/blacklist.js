@@ -6,7 +6,7 @@
   can cause issues when the source data has been machine transiliterated.
 
   The list is non-exhaustive and was originally sourced from wikipedia and various
-  online sources, I aimed to include the most commonly spoken languages worldwide.
+  online sources, I aimed to only include the least commonly spoken languages.
 
   If you feel a language code is wrong or missing, please feel free to edit this file.
 **/
