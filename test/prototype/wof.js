@@ -6,7 +6,7 @@ var _ = require('lodash'),
   Mock object used for all tests in this file
 
   The mock stores all function calls in an internal Array for
-  later inspection during tests, this let's us know how many times
+  later inspection during tests, this lets us know how many times
   each function was called and which arguments were provided.
 **/
 var Mock = function(){
@@ -733,11 +733,11 @@ module.exports.add_names = function(test, util) {
   test( 'tokens: supported name fields', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'name:foo_x_preferred': [ 'A', 'B' ],
-      'name:foo_x_colloquial': [ 'C', 'D' ],
-      'name:foo_x_variant': [ 'E', 'F' ],
-      'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
-      'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
+      'name:eng_x_preferred': [ 'A', 'B' ],
+      'name:eng_x_colloquial': [ 'C', 'D' ],
+      'name:eng_x_variant': [ 'E', 'F' ],
+      'name:eng_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
+      'name:eng_x_foobar': [ 'I', 'J' ], // made-up name
     }), function(){
       t.deepEqual( mock._calls.addToken.length, 6 );
       t.deepEqual( mock._calls.addToken[0][3], [ 'a' ] );
@@ -753,15 +753,15 @@ module.exports.add_names = function(test, util) {
   test( 'store: supported name fields', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'name:foo_x_preferred': [ 'A', 'B' ],
-      'name:foo_x_colloquial': [ 'C', 'D' ],
-      'name:foo_x_variant': [ 'E', 'F' ],
-      'name:foo_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
-      'name:foo_x_foobar': [ 'I', 'J' ], // made-up name
-      'name:bar_x_preferred': [ 'Y', 'Z' ],
+      'name:deu_x_preferred': [ 'A', 'B' ],
+      'name:deu_x_colloquial': [ 'C', 'D' ],
+      'name:deu_x_variant': [ 'E', 'F' ],
+      'name:deu_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
+      'name:deu_x_foobar': [ 'I', 'J' ], // made-up name
+      'name:ita_x_preferred': [ 'Y', 'Z' ],
     }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
-      t.deepEqual( mock._calls.set[0][1].names, { foo: [ 'A', 'B' ], bar: [ 'Y', 'Z' ] });
+      t.deepEqual( mock._calls.set[0][1].names, { deu: [ 'A', 'B' ], ita: [ 'Y', 'Z' ] });
       t.end();
     });
   });
@@ -781,6 +781,66 @@ module.exports.add_names = function(test, util) {
     }), function(){
       t.deepEqual( mock._calls.set.length, 1 );
       t.deepEqual( mock._calls.set[0][1].names, {});
+      t.end();
+    });
+  });
+
+  // // language whitelist - included
+  // test( 'store: accept languages in whitelist', function(t) {
+  //   var mock = new Mock();
+  //   mock.insertWofRecord(params({
+  //     'name:chi_x_preferred': [ 'A' ],
+  //     'name:zho_x_preferred': [ 'A' ],
+  //     'name:esp_x_preferred': [ 'A' ],
+  //     'name:eng_x_preferred': [ 'A' ],
+  //     'name:ara_x_preferred': [ 'A' ],
+  //     'name:hin_x_preferred': [ 'A' ],
+  //     'name:ben_x_preferred': [ 'A' ],
+  //     'name:por_x_preferred': [ 'A' ],
+  //     'name:rus_x_preferred': [ 'A' ],
+  //     'name:jpn_x_preferred': [ 'A' ],
+  //     'name:ger_x_preferred': [ 'A' ],
+  //     'name:deu_x_preferred': [ 'A' ],
+  //     'name:jav_x_preferred': [ 'A' ],
+  //     'name:lah_x_preferred': [ 'A' ],
+  //     'name:tel_x_preferred': [ 'A' ],
+  //     'name:vie_x_preferred': [ 'A' ],
+  //     'name:mar_x_preferred': [ 'A' ],
+  //     'name:fra_x_preferred': [ 'A' ],
+  //     'name:fre_x_preferred': [ 'A' ],
+  //     'name:kor_x_preferred': [ 'A' ],
+  //     'name:tam_x_preferred': [ 'A' ],
+  //     'name:ita_x_preferred': [ 'A' ],
+  //     'name:urd_x_preferred': [ 'A' ],
+  //     'name:tai_x_preferred': [ 'A' ],
+  //     'name:tgl_x_preferred': [ 'A' ],
+  //   }), function(){
+  //     t.deepEqual( mock._calls.addToken.length, 25 );
+  //     t.end();
+  //   });
+  // });
+  //
+  // // language whitelist - excluded
+  // test( 'store: reject languages not in whitelist', function(t) {
+  //   var mock = new Mock();
+  //   mock.insertWofRecord(params({
+  //     'name:foo_x_preferred': [ 'A' ],
+  //     'name:ron_x_preferred': [ 'Ușă' ],
+  //     'name:unk_x_preferred': [ 'Kreuzberg' ],
+  //   }), function(){
+  //     t.deepEqual( mock._calls.addToken.length, 0 );
+  //     t.end();
+  //   });
+  // });
+
+  // language blacklist - excluded
+  test( 'store: reject languages in blacklist', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:unk_x_preferred': [ 'Kreuzberg' ],
+      'name:vol_x_preferred': [ 'Example' ],
+    }), function(){
+      t.deepEqual( mock._calls.addToken.length, 0 );
       t.end();
     });
   });

@@ -1,7 +1,9 @@
 
 // plugin for whosonfirst
 var _ = require('lodash'),
-    analysis = require('../lib/analysis');
+    dir = require('require-dir'),
+    analysis = require('../lib/analysis'),
+    language = dir('../config/language');
 
 // insert a wof record in to index
 function insertWofRecord( wof, next ){
@@ -85,9 +87,15 @@ function insertWofRecord( wof, next ){
     // names: preferred|colloquial|variant|unknown
     var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
     if( match ){
+
+      // skip languages in the blacklist, see config file for more info
+      if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
+
+      // index each alternative name
       for( var n in wof[ attr ] ){
         analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
       }
+
       // doc - only store 'preferred' strings
       if( match[2] === 'preferred' ){
         doc.names[ match[1] ] = wof[ attr ];
