@@ -785,7 +785,7 @@ module.exports.add_names = function(test, util) {
     });
   });
 
-  // // langauge whitelist - included
+  // // language whitelist - included
   // test( 'store: accept languages in whitelist', function(t) {
   //   var mock = new Mock();
   //   mock.insertWofRecord(params({
@@ -820,7 +820,7 @@ module.exports.add_names = function(test, util) {
   //   });
   // });
   //
-  // // langauge whitelist - excluded
+  // // language whitelist - excluded
   // test( 'store: reject languages not in whitelist', function(t) {
   //   var mock = new Mock();
   //   mock.insertWofRecord(params({
@@ -833,7 +833,7 @@ module.exports.add_names = function(test, util) {
   //   });
   // });
 
-  // langauge blacklist - excluded
+  // language blacklist - excluded
   test( 'store: reject languages in blacklist', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
