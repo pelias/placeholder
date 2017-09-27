@@ -14,3 +14,7 @@
 // Enawene Nawe language
 // https://en.wikipedia.org/wiki/Enawene_Nawe_language
 module.exports.unk = '';
+
+// Volapük
+// https://en.wikipedia.org/wiki/Volap%C3%BCk
+module.exports.vol = '';

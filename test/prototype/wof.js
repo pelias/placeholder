@@ -838,6 +838,7 @@ module.exports.add_names = function(test, util) {
     var mock = new Mock();
     mock.insertWofRecord(params({
       'name:unk_x_preferred': [ 'Kreuzberg' ],
+      'name:vol_x_preferred': [ 'Example' ],
     }), function(){
       t.deepEqual( mock._calls.addToken.length, 0 );
       t.end();
