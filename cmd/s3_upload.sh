@@ -30,7 +30,7 @@ aws s3 ls --human-readable "${BUCKET}/archive/${TODAY}/"
 echo -e "\n> would you like to promote this build to production (yes/no)?"
 read answer
 
-if [ "$answer" == "yes" || "$answer" == "y" ]; then
+if [ "$answer" == "yes" ] || [ "$answer" == "y" ]; then
   echo '--- promoting build to production ---'
   aws s3 cp "${BUCKET}/archive/${TODAY}/graph.json.gz" "${BUCKET}/graph.json.gz" --region us-east-1 --acl public-read
   aws s3 cp "${BUCKET}/archive/${TODAY}/store.sqlite3.gz" "${BUCKET}/store.sqlite3.gz" --region us-east-1 --acl public-read
