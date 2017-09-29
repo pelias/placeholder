@@ -249,3 +249,17 @@ if you have push access you can upload your new image to dockerhub:
 ```bash
 $ docker push mapzen/pelias-placeholder
 ```
+
+---
+
+### uploading a new build to s3
+
+this section is applicable to mapzen employees only and requires s3 credentials and the `aws` command to be installed and configured prior to running.
+
+other organizations may elect to change the bucket name in the config and utilize the same script.
+
+the script takes care of creating a date stamped archive and promoting the most recent build to the root of the bucket (with a public ACL).
+
+```bash
+$ ./cmd/s3_upload.sh
+```
