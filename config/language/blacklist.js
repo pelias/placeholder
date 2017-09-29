@@ -1,0 +1,20 @@
+
+/**
+  This blacklist lists all the language codes we exclude for import in to placeholder.
+
+  The whosonfirst dataset contains many disused and rarely-used languages which
+  can cause issues when the source data has been machine transiliterated.
+
+  The list is non-exhaustive and was originally sourced from wikipedia and various
+  online sources, I aimed to only include the least commonly spoken languages.
+
+  If you feel a language code is wrong or missing, please feel free to edit this file.
+**/
+
+// Enawene Nawe language
+// https://en.wikipedia.org/wiki/Enawene_Nawe_language
+module.exports.unk = '';
+
+// Volapük
+// https://en.wikipedia.org/wiki/Volap%C3%BCk
+module.exports.vol = '';

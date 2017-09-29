@@ -19,7 +19,7 @@ module.exports.load = function( opts ){
   }
 };
 
-// load data from disk
+// save data to disk
 module.exports.save = function( path ){
   fs.writeFileSync( graphPath, JSON.stringify( this.graph ) );
   this.close();

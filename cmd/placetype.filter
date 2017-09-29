@@ -1,1 +1,1 @@
-"wof:placetype":\s*"\(continent\|country\|dependency\|disputed\|macroregion\|region\|macrocounty\|county\|localadmin\|locality\|borough\|macrohood\|neighbourhood\)"
+"wof:placetype":\s*"\(ocean\|continent\|marinearea\|empire\|country\|dependency\|disputed\|macroregion\|region\|macrocounty\|county\|localadmin\|locality\|borough\|macrohood\|neighbourhood\)"
