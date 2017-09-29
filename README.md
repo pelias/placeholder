@@ -1,5 +1,5 @@
 
-#### natural language parser for geographic text
+## natural language parser for geographic text
 
 This engine takes unstructured input text, such as 'Neutral Bay North Sydney New South Wales' and attempts to deduce the geographic area the user is referring to.
 
@@ -16,6 +16,7 @@ The best estimation is then returned, either as a set of integers representing t
 The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/whosonfirst-data) project, this project also included different language translations of place names.
 
 Placeholder supports searching on, and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
+
 ---
 
 ## install
