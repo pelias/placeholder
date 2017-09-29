@@ -14,8 +14,8 @@ before_install:
 before_script:
   - npm prune
   - mkdir data
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/graph.json.gz | gunzip > data/graph.json;
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
+  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/graph.json.gz | gunzip > data/graph.json;
+  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/store.sqlite3.gz | gunzip > data/store.sqlite3;
 after_success:
   - npm run semantic-release
 branches:

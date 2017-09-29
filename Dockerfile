@@ -1,43 +1,26 @@
 # base image
-FROM ubuntu:16.04
-ENV DEBIAN_FRONTEND noninteractive
+FROM pelias/baseimage
 
-# -- apt --
+# downloader apt dependencies
+# note: this is done in one command in order to keep down the size of intermediate containers
+RUN apt-get update && apt-get install -y jq && rm -rf /var/lib/apt/lists/*
 
-# dependencies
-RUN apt-get update && apt-get install -y git-core curl python
+# clone repo
+RUN git clone https://github.com/pelias/placeholder.git /code/pelias/placeholder
 
-# --- nodejs ---
+# change working dir
+ENV WORKDIR /code/pelias/placeholder
+WORKDIR ${WORKDIR}
 
-# clone
-RUN mkdir -p /repos
-WORKDIR /repos
-RUN git clone https://github.com/isaacs/nave.git
+# copy code from local checkout
+ADD . ${WORKDIR}
 
-# install
-WORKDIR /repos/nave
-RUN ./nave.sh usemain 4.4.7
+ENV WOF_DIR '/data/whosonfirst/data'
+ENV PLACEHOLDER_DATA '/data/placeholder'
 
-# -- directories --
-
-# create app directory
-RUN mkdir -p /repos/placeholder
-WORKDIR /repos/placeholder
-
-# --- update npm modules --
-
-# npm i
-COPY package.json /repos/placeholder/package.json
-WORKDIR /repos/placeholder/server
+# install npm dependencies
 RUN npm install
 
-# --- source code --
+RUN export extract_file=${PLACEHOLDER_DATA}/wof.extract
 
-# copy files
-COPY . /repos/placeholder
-
-# -- external API --
-
-# set entry point
-WORKDIR /repos/placeholder
 CMD [ "npm", "start" ]

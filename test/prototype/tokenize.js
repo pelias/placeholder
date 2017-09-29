@@ -16,14 +16,24 @@ module.exports.tokenize = function(test, util) {
   // duplicates
   assert('lancaster lancaster pa', [['lancaster', 'lancaster', 'pa']]);
 
+  // korean place names
+  assert('세종특별자치시', [['세종특별자치시']]);
+
   // synonymous groupings
   // see: https://github.com/pelias/placeholder/issues/28
-  assert('Le Cros-d’Utelle, France', [['le cros','d','utelle','france']]);
+  // note: the 'Le Cros-d’Utelle, France' example (as at 20-09-17) no longer dedupes
+  // to a single grouping due to the introduction of the token 'le' from 85685547
+  assert('Le Cros-d’Utelle, France', [['le','france'],['le cros','d','utelle','france']]);
   assert('luxemburg luxemburg', [['luxemburg', 'luxemburg']]); // does not remove duplicate tokens
 
   // ambiguous parses
   // @note: these are the glorious future:
 
+  // assert('Adams North Brunswick', [
+  //   [ 'adams north', 'brunswick' ],
+  //   [ 'adams', 'north brunswick' ]
+  // ]);
+  //
   // assert('Heritage East San Jose', [
   //   [ 'heritage east', 'san jose' ],
   //   [ 'heritage', 'east san jose' ]

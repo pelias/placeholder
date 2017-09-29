@@ -60,10 +60,34 @@ module.exports.normalize = function(test, common) {
 
   assert( 'City of the Sun', [ 'city of the sun' ] );
   assert( 'City of Sun', [ 'city of sun', 'sun' ] );
+
+  // remove 'disambiguation' tokens from name suffix
+  // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/885
+  assert( 'St Kilda (Vic.)', [ 'st kilda' ] );
+  assert( 'Spring Mountain (Qld)', [ 'spring mountain' ] );
+  assert( 'Mónaco - Monaco', [ 'monaco' ] );
+  assert( 'Monako (peyi)', [ 'monako' ] );
+  assert( 'Monako [peyi]', [ 'monako' ] );
+  assert( 'Port Phillip (C)', [ 'port phillip' ] );
+  assert( 'Portland (Oregon)', [ 'portland' ] );
+  assert( 'Sutherland Shire (A)', [ 'sutherland shire' ] );
+  assert( 'Cocos- [Keeling] eilande', [ 'cocos' ] );
+
+  // remove tokens that *only* contain numbers
+  assert( '1', [] );
+  assert( '22', [] );
+  assert( '333', [] );
+  assert( '22nd', ['22nd'] );
+  assert( 'a12', ['a12'] );
+  assert( '-1', [] ); // special case: handle '-1' values
 };
 
 module.exports.tokenize = function(test, common) {
   var assert = runner.bind(null, test, 'tokenize');
+
+  // invalid type
+  assert( [], [] );
+  assert( {}, [] );
 
   // delimiters
   assert( 'Foo  Bar', [[ 'foo', 'bar' ]] );

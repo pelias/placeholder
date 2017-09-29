@@ -1,5 +1,21 @@
 
-natural language parser for geographic text
+## natural language parser for geographic text
+
+This engine takes unstructured input text, such as 'Neutral Bay North Sydney New South Wales' and attempts to deduce the geographic area the user is referring to.
+
+Human beings (familiar with Australian geography) are able to quickly scan the text and establish that there 3 distinct token groups: 'Neutral Bay', 'North Sydney' & 'New South Wales'.
+
+The engine uses a similar technique to our brains, scanning across the text, cycling through a dictionary of learned terms and then trying to establish logical token groups.
+
+Once token groups have been established, a reductive algorithm is used to ensure that the token groups are logical in a geographic context. We don't want to return New York City for a term such as 'nyc france', so we need to only return things called 'nyc' *inside* places called 'france'.
+
+The engine starts from the rightmost group, and works to the left, ensuring token groups represent geographic entities contained *within* those which came before. This process is repeated until it either runs out of groups, or would return 0 results.
+
+The best estimation is then returned, either as a set of integers representing the ids of those regions, or as a JSON structure which also contains additional information such as population counts etc.
+
+The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/whosonfirst-data) project, this project also includes different language translations of place names.
+
+Placeholder supports searching on and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
 
 ---
 
@@ -124,6 +140,17 @@ placeholder > id 85772991
       neighbourhood_id: 85772991,
       region_id: 85687233 },
    names: { eng: [ 'Kelburn' ] } }
+
+placeholder > edges 85632473
+ [ 85675251,
+   85675259,
+   85675261,
+   85681309,
+   421182667,
+   421188405,
+   890430305,
+   890441225,
+   890441463 ]
 ```
 
 ---
@@ -237,4 +264,32 @@ if you have push access you can upload your new image to dockerhub:
 
 ```bash
 $ docker push mapzen/pelias-placeholder
+```
+
+---
+
+### uploading a new build to s3
+
+this section is applicable to mapzen employees only and requires s3 credentials and the `aws` command to be installed and configured prior to running.
+
+other organizations may elect to change the bucket name in the config and utilize the same script.
+
+the script takes care of creating a date stamped archive and promoting the most recent build to the root of the bucket (with a public ACL).
+
+```bash
+$ ./cmd/s3_upload.sh
+
+--- gzipping data files ---
+--- uploading archive ---
+upload: data/graph.json.gz to s3://pelias-data/placeholder/archive/2017-09-29/graph.json.gz
+upload: data/store.sqlite3.gz to s3://pelias-data/placeholder/archive/2017-09-29/store.sqlite3.gz
+upload: data/wof.extract.gz to s3://pelias-data/placeholder/archive/2017-09-29/wof.extract.gz
+--- list remote archive ---
+2017-09-29 14:52:20   15.3 MiB graph.json.gz
+2017-09-29 14:52:33   46.6 MiB store.sqlite3.gz
+2017-09-29 14:53:08   53.8 MiB wof.extract.gz
+
+> would you like to promote this build to production (yes/no)?
+no
+you did not answer yes, the build was not promoted to production
 ```
