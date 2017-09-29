@@ -47,58 +47,63 @@ function insertWofRecord( wof, next ){
   // convenience function with $id bound as first argument
   var addToken = this.graph.addToken.bind( this.graph, id );
 
-  // add 'wof:label'
-  analysis.normalize( wof['wof:label'] ).forEach( addToken );
+  // disable adding tokens to the index for the 'empire' placetype.
+  // this ensures empire records are not retrieved via search.
+  if( 'empire' !== doc.placetype ){
 
-  // add 'wof:name'
-  analysis.normalize( wof['wof:name'] ).forEach( addToken );
+    // add 'wof:label'
+    analysis.normalize( wof['wof:label'] ).forEach( addToken );
 
-  // add 'wof:abbreviation'
-  analysis.normalize( wof['wof:abbreviation'] ).forEach( addToken );
+    // add 'wof:name'
+    analysis.normalize( wof['wof:name'] ).forEach( addToken );
 
-  // add 'ne:abbrev'
-  // analysis.normalize( wof['ne:abbrev'] ).forEach( addToken );
+    // add 'wof:abbreviation'
+    analysis.normalize( wof['wof:abbreviation'] ).forEach( addToken );
 
-  // fields specific to countries & dependencies
-  if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
-    if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
+    // add 'ne:abbrev'
+    // analysis.normalize( wof['ne:abbrev'] ).forEach( addToken );
 
-      // add 'ne:iso_a2'
-      analysis.normalize( wof['ne:iso_a2'] ).forEach( addToken );
+    // fields specific to countries & dependencies
+    if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
+      if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
-      // add 'ne:iso_a3'
-      analysis.normalize( wof['ne:iso_a3'] ).forEach( addToken );
+        // add 'ne:iso_a2'
+        analysis.normalize( wof['ne:iso_a2'] ).forEach( addToken );
 
-      // add 'wof:country'
-      // warning: eg. FR for 'French Guiana'
-      // analysis.normalize( wof['wof:country'] ).forEach( addToken );
+        // add 'ne:iso_a3'
+        analysis.normalize( wof['ne:iso_a3'] ).forEach( addToken );
 
-      // add 'iso:country'
-      analysis.normalize( wof['iso:country'] ).forEach( addToken );
+        // add 'wof:country'
+        // warning: eg. FR for 'French Guiana'
+        // analysis.normalize( wof['wof:country'] ).forEach( addToken );
 
-      // add 'wof:country_alpha3'
-      analysis.normalize( wof['wof:country_alpha3'] ).forEach( addToken );
-    }
-  }
+        // add 'iso:country'
+        analysis.normalize( wof['iso:country'] ).forEach( addToken );
 
-  // add 'name:*'
-  for( var attr in wof ){
-    // https://github.com/whosonfirst/whosonfirst-names
-    // names: preferred|colloquial|variant|unknown
-    var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
-    if( match ){
-
-      // skip languages in the blacklist, see config file for more info
-      if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
-
-      // index each alternative name
-      for( var n in wof[ attr ] ){
-        analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
+        // add 'wof:country_alpha3'
+        analysis.normalize( wof['wof:country_alpha3'] ).forEach( addToken );
       }
+    }
 
-      // doc - only store 'preferred' strings
-      if( match[2] === 'preferred' ){
-        doc.names[ match[1] ] = wof[ attr ];
+    // add 'name:*'
+    for( var attr in wof ){
+      // https://github.com/whosonfirst/whosonfirst-names
+      // names: preferred|colloquial|variant|unknown
+      var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
+      if( match ){
+
+        // skip languages in the blacklist, see config file for more info
+        if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
+
+        // index each alternative name
+        for( var n in wof[ attr ] ){
+          analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
+        }
+
+        // doc - only store 'preferred' strings
+        if( match[2] === 'preferred' ){
+          doc.names[ match[1] ] = wof[ attr ];
+        }
       }
     }
   }

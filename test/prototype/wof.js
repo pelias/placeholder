@@ -845,6 +845,18 @@ module.exports.add_names = function(test, util) {
     });
   });
 
+  // do not store tokens for the 'empire' placetype
+  test( 'empire tokens excluded', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'wof:placetype': 'empire',
+      'name:eng_x_preferred': [ 'A', 'B' ]
+    }), function(){
+      t.deepEqual( mock._calls.addToken.length, 0 );
+      t.end();
+    });
+  });
+
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
