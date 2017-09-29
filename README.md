@@ -9,7 +9,7 @@ The engine uses a similar technique to our brains, scanning across the text, cyc
 
 Once token groups have been established, a reductive algorithm is used to ensure that the the token groups are logical in a geographic context. We don't want to return New York City for a term such as 'nyc france', so we need to only return things called 'nyc' *inside* places called 'france'.
 
-the engine starts from the rightmost group, and works to the left, ensuring token groups represent geographic entities contained within those which came before. This process is repeated until it either runs out of groups, or would return 0 results.
+The engine starts from the rightmost group, and works to the left, ensuring token groups represent geographic entities contained *within* those which came before. This process is repeated until it either runs out of groups, or would return 0 results.
 
 The best estimation is then returned, either as a set of integers representing the ids of those regions, or as a JSON structure which also contains additional information such as population counts etc.
 
