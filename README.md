@@ -13,9 +13,9 @@ The engine starts from the rightmost group, and works to the left, ensuring toke
 
 The best estimation is then returned, either as a set of integers representing the ids of those regions, or as a JSON structure which also contains additional information such as population counts etc.
 
-The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/whosonfirst-data) project, this project also included different language translations of place names.
+The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/whosonfirst-data) project, this project also includes different language translations of place names.
 
-Placeholder supports searching on, and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
+Placeholder supports searching on and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
 
 ---
 
