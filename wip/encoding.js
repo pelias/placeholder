@@ -45,6 +45,7 @@ codec.state = {
     return Buffer.concat([ prefix, codec.id.encode( state.id ) ]);
   },
   decode: ( str ) => {
+
     let buffer = '';
     let from = '', to = '', idBytes = '';
     let step = 0;

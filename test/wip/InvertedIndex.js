@@ -1,11 +1,9 @@
 
-var memdown = require('memdown');
 var InvertedIndex = require('../../wip/InvertedIndex');
 var State = require('../../wip/State');
 
 function createIndex(){
-  memdown.clearGlobalStore();
-  return new InvertedIndex( 'test', { db: memdown } );
+  return new InvertedIndex( '/tmp/' + Math.random().toString(36).substring(7) );
 }
 
 module.exports.interface = function(test, util) {
@@ -103,6 +101,60 @@ module.exports.putStateMany = function(test, util) {
         values.forEach(( val, pos ) => {
           t.equal( val, states[pos].value );
         });
+        t.end();
+      });
+    });
+  });
+};
+
+module.exports.hasPrefix = function(test, util) {
+  test('interfaces', function(t) {
+    const idx = createIndex();
+    t.equal(typeof idx.hasPrefix, 'function');
+    t.end();
+  });
+  test('hasPrefix', function(t) {
+    const idx = createIndex();
+    const states = [
+      new State( 'a', 'b', 1 ),
+      new State( 'a', 'c', 1 ),
+      new State( 'b', 'c', 2 )
+    ];
+
+    t.plan(4);
+    idx.putStateMany( states, ( err ) => {
+      t.false( err );
+      idx.hasPrefix( 'a', t.true );
+      idx.hasPrefix( 'b', t.true );
+      idx.hasPrefix( 'c', t.false );
+    });
+  });
+};
+
+module.exports.prefixMatch = function(test, util) {
+  test('interfaces', function(t) {
+    const idx = createIndex();
+    t.equal(typeof idx.prefixMatch, 'function');
+    t.end();
+  });
+  test('prefixMatch', function(t) {
+    const idx = createIndex();
+    const states = [
+      new State('paris', 'texas', 3),
+      new State('paris', 'france', 3),
+      new State('pizza', 'france', 3),
+      new State('paris', '', 40),
+      new State('pizza', '', 40)
+    ];
+
+    t.plan(2);
+    idx.putStateMany( states, ( err ) => {
+      t.false( err );
+      idx.prefixIntersect( 'paris', 'pizza', ( err, res ) => {
+        t.deepEqual( res, [
+          { from: 'paris', to: '',       id: 40, value: null },
+          { from: 'paris', to: 'france', id: 3,  value: null }
+        ]);
         t.end();
       });
     });

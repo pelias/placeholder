@@ -1,9 +1,10 @@
 
-var async = require('async');
+// var async = require('async');
+// var memdown = require('memdown');
 var InvertedIndex = require('./InvertedIndex');
 var State = require('./State');
 var encoding = require('./encoding');
-var idx = new InvertedIndex('./db');
+var idx = new InvertedIndex('./db' );
 
 var states = [
   new State('shoreditch', 'hackney', 1),
@@ -20,42 +21,47 @@ var states = [
 ];
 
 // write states to db
-function writer( states, done ){
-  async.series( states.map( state => {
-    return cb => idx.putState( state, cb );
-  }), done );
-}
+// function writer( states, done ){
+//   async.series( states.map( state => {
+//     return cb => idx.putState( state, cb );
+//   }), done );
+// }
 
-// read states from db
-function reader( states, done ){
-  async.series( states.map( state => {
-    return cb => idx.getState( state, cb );
-  }), done );
-}
+// // read states from db
+// function reader( states, done ){
+//   async.series( states.map( state => {
+//     return cb => idx.getStateValue( state, cb );
+//   }), done );
+// }
 
 // read next states for prefix
-function next( states, done ){
-  async.series( states.map( state => {
-    return cb => idx.prefixMatch( state.from, cb );
-  }), done );
-}
+// function next( states, done ){
+//   async.series( states.map( state => {
+//     return cb => idx.prefixMatch( state.from, cb );
+//   }), done );
+// }
+
+// var async = require('async');
 
 // load states in to db
-writer( states, (err, res) => {
+idx.putStateMany( states, (err, res) => {
   // debug( 'write', err, res );
 
   // read states from db
-  reader( states, (err, res) => {
-    // debug( 'read', err, res );
-  });
+  // reader( states, (err, res) => {
+  //   // debug( 'read', err, res );
+  // });
 
   // read next states for prefix
   // next( states, (err, res) => {
   //   debug( 'next', err, res );
   // });
 
-  idx.prefixIntersect( 'paris', 'pizza', (err, res) => {
-    debug( 'paris', err, res );
+  idx.prefixIntersect( 'paris', 'pizza', (err2, res2) => {
+    debug( 'paris', err2, res2 );
+
+
+    // idx.dump()
   });
 });
 
