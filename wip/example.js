@@ -15,6 +15,8 @@ var states = [
   new State('paris', 'texas', 3),
   new State('paris', 'france', 3),
   new State('pizza', 'france', 3),
+  new State('paris', '', 40),
+  new State('pizza', '', 40),
 ];
 
 // write states to db
@@ -51,20 +53,6 @@ writer( states, (err, res) => {
   // next( states, (err, res) => {
   //   debug( 'next', err, res );
   // });
-
-  // idx.prefixMatch( 'paris', (err, res) => {
-  //   debug( 'paris', err, res );
-
-  //     var matches1 = res.reduce((out, item) => { out[item.id] = true; return out; }, {});
-
-  //     idx.prefixMatch( 'pizza', (err2, res2) => {
-  //       debug( 'pizza', err2, res2 );
-
-  //       var matches2 = res2.reduce((out, item) => { out[item.id] = true; return out; }, {});
-        
-  //       console.log( matches1, matches2 );
-  //     });
-  // })
 
   idx.prefixIntersect( 'paris', 'pizza', (err, res) => {
     debug( 'paris', err, res );
