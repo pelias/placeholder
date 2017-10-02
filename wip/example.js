@@ -1,19 +1,20 @@
 
 var async = require('async');
 var InvertedIndex = require('./InvertedIndex');
+var State = require('./State');
+var encoding = require('./encoding');
 var idx = new InvertedIndex('./db');
 
-var State = function( from, to, id ){
-  this.from = from;
-  this.to = to;
-  this.id = id;
-};
-
 var states = [
-  new State('foo', 'bar', 1),
-  new State('foo', 'baz', 1),
-  new State('boo', 'foo', 2),
-  new State('boo', 'baz', 2),
+  new State('shoreditch', 'hackney', 1),
+  new State('hackney', 'london', 1),
+  new State('shoreditch', 'london', 1),
+  new State('islington', 'london', 2),
+  new State('angel', 'islington', 2),
+  new State('angel', 'london', 2),
+  new State('paris', 'texas', 3),
+  new State('paris', 'france', 3),
+  new State('pizza', 'france', 3),
 ];
 
 // write states to db
@@ -33,7 +34,7 @@ function reader( states, done ){
 // read next states for prefix
 function next( states, done ){
   async.series( states.map( state => {
-    return cb => idx.readNext( state, cb );
+    return cb => idx.prefixMatch( state.from, cb );
   }), done );
 }
 
@@ -47,8 +48,26 @@ writer( states, (err, res) => {
   });
 
   // read next states for prefix
-  next( states, (err, res) => {
-    debug( 'next', err, res );
+  // next( states, (err, res) => {
+  //   debug( 'next', err, res );
+  // });
+
+  // idx.prefixMatch( 'paris', (err, res) => {
+  //   debug( 'paris', err, res );
+
+  //     var matches1 = res.reduce((out, item) => { out[item.id] = true; return out; }, {});
+
+  //     idx.prefixMatch( 'pizza', (err2, res2) => {
+  //       debug( 'pizza', err2, res2 );
+
+  //       var matches2 = res2.reduce((out, item) => { out[item.id] = true; return out; }, {});
+        
+  //       console.log( matches1, matches2 );
+  //     });
+  // })
+
+  idx.prefixIntersect( 'paris', 'pizza', (err, res) => {
+    debug( 'paris', err, res );
   });
 });
 
@@ -56,4 +75,9 @@ function debug( head, err, res ){
   console.error( head );
   console.error( 'err:', err );
   console.error( 'res:', res );
+  // console.error( 'res:', JSON.stringify( res.map( function( re ){
+  //   return re.map( function( r ){
+  //     return r.toString('utf8');
+  //   })
+  // }), null, 2 ));
 }

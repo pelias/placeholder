@@ -1,66 +1,48 @@
 
-var util = require('util');
 var levelup = require('levelup');
-
-// const TOKEN_PREFIX = '*';
-const BYTE_DELIM = '\x02';
-const BYTE_EMPTY = null;
-const BYTE_START = '\x00';
-const BYTE_END = '\xFF';
-
-const FMT_TOKEN = '\x01%s';
-const FMT_STATE = '%s\x02%s\x03';
-
-// function memberKey( key, int ){
-//   return [ key, BYTE_DELIM, int ].join();
-// }
+var intersect = require('sorted-intersect-stream');
+var encoding = require('./encoding');
 
 function InvertedIndex( path ){
   this.db = levelup( path );
 }
-//
-// InvertedIndex.prototype.getToken = function( token, cb ){
-//   this.db.get( TOKEN_PREFIX + token, cb );
-// };
-//
-// InvertedIndex.prototype.hasToken = function( token, cb ){
-//   this.getToken( TOKEN_PREFIX + token, function( err ){
-//     cb( err && err.notFound );
-//   });
-// };
-//
-// InvertedIndex.prototype.addToken = function( id, token, cb ){
-//   this.db.set( memberKey( TOKEN_PREFIX + token, id ), BYTE_EMPTY, cb );
-// };
 
 InvertedIndex.prototype.putState = function( state, cb ){
-  var prefix = Buffer.from( util.format( FMT_STATE, state.from, state.to ) );
-  var id = Buffer.alloc( byteLength( state.id ) );
-  id.writeUInt32LE( state.id, 0 );
-
-  var key = Buffer.concat([ prefix, id ]);
-  this.db.put( key, BYTE_EMPTY, cb );
+  this.db.put( encoding.codec.state.encode( state ), encoding.byte.empty, cb );
 };
 
 InvertedIndex.prototype.getState = function( state, cb ){
-  var prefix = Buffer.from( util.format( FMT_STATE, state.from, state.to ) );
-  var id = Buffer.alloc( byteLength( state.id ) );
-  id.writeUInt32LE( state.id, 0 );
-
-  var key = Buffer.concat([ prefix, id ]);
-  this.db.get( key, cb );
+  this.db.get( encoding.codec.state.encode( state ), cb );
 };
 
-InvertedIndex.prototype.readNext = function( state, cb ){
+InvertedIndex.prototype.prefixMatch = function( from, cb ){
+  this._keyStreamToStateArray( this.db.createKeyStream({
+    gt: from + encoding.byte.delim,
+    lt: from + encoding.byte.end + encoding.byte.delim
+  }), cb );
+};
+
+InvertedIndex.prototype.prefixIntersect = function( fromA, fromB, cb ){
+  this._keyStreamToStateArray( intersect(
+    this.db.createKeyStream({
+      gt: fromA + encoding.byte.delim,
+      lt: fromA + encoding.byte.end + encoding.byte.delim
+    }),
+    this.db.createKeyStream({
+      gt: fromB + encoding.byte.delim,
+      lt: fromB + encoding.byte.end + encoding.byte.delim
+    }),
+    // only compare id bytes (very fast)
+    ( key ) => { return key.slice( key.lastIndexOf('\x03') ); }),
+    cb
+  );
+};
+
+InvertedIndex.prototype._keyStreamToStateArray = function( stream, cb ){
   var res = [];
-  this.db.createKeyStream({ gt: state.from + BYTE_DELIM, lt: state.from + BYTE_END + BYTE_DELIM })
-         .on('data',  (data)  => res.push( data ))
-         .on('error', (err)   => cb( err ))
-         .on('end',   ()      => cb( null, res ));
+  stream.on('data',  (data)  => res.push( encoding.codec.state.decode(data) ))
+        .on('error', (err)   => cb( err ))
+        .on('end',   ()      => cb( null, res ));
 };
-
-function byteLength( x ){
-  return Math.ceil(( x / Math.log10(2) ) /8 ) +1;
-}
 
 module.exports = InvertedIndex;
