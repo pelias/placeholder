@@ -5,6 +5,7 @@
   "license": "MIT",
   "main": "server.js",
   "scripts": {
+    "wip": "rm -rf db; node wip/example.js",
     "test": "npm run units",
     "units": "node test/units.js | tap-spec",
     "integration": "node test/integration.js | tap-spec",
@@ -32,6 +33,8 @@
   "homepage": "https://github.com/pelias/placeholder#readme",
   "dependencies": {
     "express": "^4.15.2",
+    "leveldown": "^1.7.2",
+    "levelup": "^1.3.9",
     "lodash": "^4.17.4",
     "lower-case": "^1.1.4",
     "morgan": "^1.9.0",
