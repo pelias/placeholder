@@ -79,13 +79,13 @@ Database.prototype.matchSubjectObject = function( subject, object, cb ){
 Database.prototype._prefixIntersect = function( prefixA, prefixB, cb ){
   this._keyStreamToStateArray( intersect(
     this.db.createKeyStream({
-      gt:  prefixA,
+      gte: prefixA,
       lte: prefixA + encoding.byte.high,
       keyAsBuffer: true,
       limit: -1
     }),
     this.db.createKeyStream({
-      gt:  prefixB,
+      gte: prefixB,
       lte: prefixB + encoding.byte.high,
       keyAsBuffer: true,
       limit: -1
