@@ -1,7 +1,7 @@
 
-var State = function( from, to, id, value ){
-  this.from = from;
-  this.to = to;
+var State = function( subject, object, id, value ){
+  this.subject = subject;
+  this.object = object;
   this.id = id;
   this.value = value || null;
 };

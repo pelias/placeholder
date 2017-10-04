@@ -8,14 +8,14 @@ const byte = {
   low:    '\x00',
   high:   '\xFF',
   bound: {
-    from: '',
-    to:   '\x02',
-    id:   '\x03'
+    subject:  '',
+    object:   '\x02',
+    id:       '\x03'
   },
 };
 
 const fmt = {
-  state:  [ byte.bound.from, byte.bound.to, byte.bound.id ].join('%s')
+  state:  [ byte.bound.subject, byte.bound.object, byte.bound.id ].join('%s')
 };
 
 const codec = {};
@@ -35,31 +35,31 @@ codec.id = {
 // state
 codec.state = {
   encode: ( state ) => {
-    let prefix = Buffer.from( util.format( fmt.state, state.from, state.to ) );
+    let prefix = Buffer.from( util.format( fmt.state, state.subject, state.object ) );
     return Buffer.concat([ prefix, codec.id.encode( state.id ) ]);
   },
   decode: ( str ) => {
 
     let buffer = '';
-    let from = '', to = '', idBytes = '';
+    let subject = '', object = '', idBytes = '';
     let step = 0;
 
     str.toString('utf8').split('').forEach((char, i) => {
       switch( step ){
         case 0:
-          if( char === byte.bound.to ){ step = 1; return; }
-          from += char;
+          if( char === byte.bound.object ){ step = 1; return; }
+          subject += char;
           return;
         case 1:
           if( char === byte.bound.id ){ step = 2; return; }
-          to += char;
+          object += char;
           return;
         case 2:
           idBytes += char;
       }
     });
 
-    return new State( from, to, codec.id.decode( idBytes ) );
+    return new State( subject, object, codec.id.decode( idBytes ) );
   }
 };
 

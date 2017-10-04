@@ -17,8 +17,8 @@ module.exports.byte = function(test, util) {
     t.deepEqual(encoding.byte.empty, null);
     t.equal(typeof encoding.byte.low, 'string');
     t.equal(typeof encoding.byte.high, 'string');
-    t.equal(typeof encoding.byte.bound.from, 'string');
-    t.equal(typeof encoding.byte.bound.to, 'string');
+    t.equal(typeof encoding.byte.bound.subject, 'string');
+    t.equal(typeof encoding.byte.bound.object, 'string');
     t.equal(typeof encoding.byte.bound.id, 'string');
     t.end();
   });

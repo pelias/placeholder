@@ -13,7 +13,7 @@ module.exports.interface = function(test, util) {
   });
   test('instance', function(t) {
     const idx = createIndex();
-    
+
     t.equal(typeof idx, 'object');
     t.end();
   });
@@ -28,7 +28,7 @@ module.exports.putState = function(test, util) {
   });
   test('putState', function(t) {
     const idx = createIndex();
-    const state = new State( 'a', 'b', 1 );    
+    const state = new State( 'a', 'b', 1 );
 
     idx.putState( state, ( err ) => {
       t.false( err );
@@ -41,7 +41,7 @@ module.exports.putState = function(test, util) {
 
     idx.putState( state, ( err ) => {
       t.false( err );
-      
+
       idx.getStateValue( state, ( err2, value ) => {
         t.false( err2 );
         t.deepEqual( value, state.value );
@@ -79,7 +79,7 @@ module.exports.putStateMany = function(test, util) {
       new State( 'a', 'c', 1 ),
       new State( 'b', 'c', 2 )
     ];
-    
+
     idx.putStateMany( states, ( err ) => {
       t.false( err );
       t.end();
@@ -107,13 +107,13 @@ module.exports.putStateMany = function(test, util) {
   });
 };
 
-module.exports.hasPrefix = function(test, util) {
+module.exports.matchSubject = function(test, util) {
   test('interfaces', function(t) {
     const idx = createIndex();
-    t.equal(typeof idx.hasPrefix, 'function');
+    t.equal(typeof idx.matchSubject, 'function');
     t.end();
   });
-  test('hasPrefix', function(t) {
+  test('matchSubject', function(t) {
     const idx = createIndex();
     const states = [
       new State( 'a', 'b', 1 ),
@@ -124,20 +124,20 @@ module.exports.hasPrefix = function(test, util) {
     t.plan(4);
     idx.putStateMany( states, ( err ) => {
       t.false( err );
-      idx.hasPrefix( 'a', t.true );
-      idx.hasPrefix( 'b', t.true );
-      idx.hasPrefix( 'c', t.false );
+      idx.matchSubject( 'a', t.true );
+      idx.matchSubject( 'b', t.true );
+      idx.matchSubject( 'c', t.false );
     });
   });
 };
 
-module.exports.prefixMatch = function(test, util) {
+module.exports.matchSubject = function(test, util) {
   test('interfaces', function(t) {
     const idx = createIndex();
-    t.equal(typeof idx.prefixMatch, 'function');
+    t.equal(typeof idx.matchSubject, 'function');
     t.end();
   });
-  test('prefixMatch', function(t) {
+  test('matchSubject', function(t) {
     const idx = createIndex();
     const states = [
       new State('paris', 'texas', 3),
@@ -150,10 +150,10 @@ module.exports.prefixMatch = function(test, util) {
     t.plan(2);
     idx.putStateMany( states, ( err ) => {
       t.false( err );
-      idx.prefixIntersect( 'paris', 'pizza', ( err, res ) => {
+      idx.intersectSubject( 'paris', 'pizza', ( err, res ) => {
         t.deepEqual( res, [
-          { from: 'paris', to: '',       id: 40, value: null },
-          { from: 'paris', to: 'france', id: 3,  value: null }
+          { subject: 'paris', object: '',       id: 40, value: null },
+          { subject: 'paris', object: 'france', id: 3,  value: null }
         ]);
         t.end();
       });
