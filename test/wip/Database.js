@@ -107,6 +107,55 @@ module.exports.putStateMany = function(test, util) {
   });
 };
 
+module.exports.hasSubject = function(test, util) {
+  test('interfaces', function(t) {
+    const idx = createIndex();
+    t.equal(typeof idx.hasSubject, 'function');
+    t.end();
+  });
+  test('hasSubject', function(t) {
+    const idx = createIndex();
+    const states = [
+      new State( 'a', 'b', 1 ),
+      new State( 'a', 'c', 1 ),
+      new State( 'b', 'c', 2 )
+    ];
+
+    t.plan(4);
+    idx.putStateMany( states, ( err ) => {
+      t.false( err );
+      idx.hasSubject( 'a', t.true );
+      idx.hasSubject( 'b', t.true );
+      idx.hasSubject( 'c', t.false );
+    });
+  });
+};
+
+module.exports.hasSubjectObject = function(test, util) {
+  test('interfaces', function(t) {
+    const idx = createIndex();
+    t.equal(typeof idx.hasSubjectObject, 'function');
+    t.end();
+  });
+  test('matchSubject', function(t) {
+    const idx = createIndex();
+    const states = [
+      new State( 'a', 'b', 1 ),
+      new State( 'a', 'c', 1 ),
+      new State( 'b', 'c', 2 )
+    ];
+
+    t.plan(5);
+    idx.putStateMany( states, ( err ) => {
+      t.false( err );
+      idx.hasSubjectObject( 'a', 'b', t.true );
+      idx.hasSubjectObject( 'a', 'c', t.true );
+      idx.hasSubjectObject( 'b', 'c', t.true );
+      idx.hasSubjectObject( 'b', 'a', t.false );
+    });
+  });
+};
+
 module.exports.matchSubject = function(test, util) {
   test('interfaces', function(t) {
     const idx = createIndex();
@@ -121,23 +170,74 @@ module.exports.matchSubject = function(test, util) {
       new State( 'b', 'c', 2 )
     ];
 
-    t.plan(4);
+    t.plan(7);
     idx.putStateMany( states, ( err ) => {
       t.false( err );
-      idx.matchSubject( 'a', t.true );
-      idx.matchSubject( 'b', t.true );
-      idx.matchSubject( 'c', t.false );
+      idx.matchSubject( 'a', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, [
+          { subject: 'a', object: 'b', id: 1, value: null },
+          { subject: 'a', object: 'c', id: 1, value: null }
+        ]);
+      });
+      idx.matchSubject( 'b', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, [
+          { subject: 'b', object: 'c', id: 2, value: null }
+        ]);
+      });
+      idx.matchSubject( 'c', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, {} );
+      });
     });
   });
 };
 
-module.exports.matchSubject = function(test, util) {
+module.exports.matchSubjectObject = function(test, util) {
   test('interfaces', function(t) {
     const idx = createIndex();
-    t.equal(typeof idx.matchSubject, 'function');
+    t.equal(typeof idx.matchSubjectObject, 'function');
     t.end();
   });
-  test('matchSubject', function(t) {
+  test('matchSubjectObject', function(t) {
+    const idx = createIndex();
+    const states = [
+      new State( 'a', 'b', 1 ),
+      new State( 'a', 'c', 1 ),
+      new State( 'b', 'c', 2 )
+    ];
+
+    t.plan(7);
+    idx.putStateMany( states, ( err ) => {
+      t.false( err );
+      idx.matchSubjectObject( 'a', 'b', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, [
+          { subject: 'a', object: 'b', id: 1, value: null }
+        ]);
+      });
+      idx.matchSubjectObject( 'b', 'c', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, [
+          { subject: 'b', object: 'c', id: 2, value: null }
+        ]);
+      });
+      idx.matchSubjectObject( 'b', 'a', function( err, match ){
+        t.false( err );
+        t.deepEqual( match, {} );
+      });
+    });
+  });
+};
+
+module.exports.intersectSubject = function(test, util) {
+  test('interfaces', function(t) {
+    const idx = createIndex();
+    t.equal(typeof idx.intersectSubject, 'function');
+    t.end();
+  });
+  test('intersectSubject', function(t) {
     const idx = createIndex();
     const states = [
       new State('paris', 'texas', 3),
