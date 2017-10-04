@@ -31,8 +31,8 @@ InvertedIndex.prototype.getStateValueMany = function( states, cb ){
 InvertedIndex.prototype.hasPrefix = function( from, cb ){
   var found = false;
   this.db.createKeyStream({
-    gte: from + encoding.byte.delim,
-    lte: from + encoding.byte.delim + encoding.byte.end,
+    gte: from + encoding.byte.bound.to,
+    lte: from + encoding.byte.bound.to + encoding.byte.high,
     keyAsBuffer: true,
     limit: 1
   }).on('data',  (data)  => { found = true; })
@@ -42,8 +42,8 @@ InvertedIndex.prototype.hasPrefix = function( from, cb ){
 
 InvertedIndex.prototype.prefixMatch = function( from, cb ){
   this._keyStreamToStateArray( this.db.createKeyStream({
-    gte: from + encoding.byte.delim,
-    lte: from + encoding.byte.delim + encoding.byte.end,
+    gte: from + encoding.byte.bound.to,
+    lte: from + encoding.byte.bound.to + encoding.byte.high,
     keyAsBuffer: true,
     limit: -1
   }), cb );
@@ -52,19 +52,19 @@ InvertedIndex.prototype.prefixMatch = function( from, cb ){
 InvertedIndex.prototype.prefixIntersect = function( fromA, fromB, cb ){
   this._keyStreamToStateArray( intersect(
     this.db.createKeyStream({
-      gt:  fromA + encoding.byte.delim,
-      lte: fromA + encoding.byte.delim + encoding.byte.end,
+      gt:  fromA + encoding.byte.bound.to,
+      lte: fromA + encoding.byte.bound.to + encoding.byte.high,
       keyAsBuffer: true,
       limit: -1
     }),
     this.db.createKeyStream({
-      gt:  fromB + encoding.byte.delim,
-      lte: fromB + encoding.byte.delim + encoding.byte.end,
+      gt:  fromB + encoding.byte.bound.to,
+      lte: fromB + encoding.byte.bound.to + encoding.byte.high,
       keyAsBuffer: true,
       limit: -1
     }),
     // only compare id bytes (very fast)
-    ( key ) => { return key.slice( key.lastIndexOf('\x03') ); }),
+    ( key ) => { return key.slice( key.lastIndexOf( encoding.byte.bound.id ) ); }),
     cb
   );
 };

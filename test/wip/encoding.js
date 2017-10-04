@@ -14,17 +14,18 @@ module.exports.interface = function(test, util) {
 
 module.exports.byte = function(test, util) {
   test('byte', function(t) {
-    t.equal(typeof encoding.byte.delim, 'string');
     t.deepEqual(encoding.byte.empty, null);
-    t.equal(typeof encoding.byte.start, 'string');
-    t.equal(typeof encoding.byte.end, 'string');
+    t.equal(typeof encoding.byte.low, 'string');
+    t.equal(typeof encoding.byte.high, 'string');
+    t.equal(typeof encoding.byte.bound.from, 'string');
+    t.equal(typeof encoding.byte.bound.to, 'string');
+    t.equal(typeof encoding.byte.bound.id, 'string');
     t.end();
   });
 };
 
 module.exports.fmt = function(test, util) {
   test('fmt', function(t) {
-    t.equal(typeof encoding.fmt.token, 'string');
     t.equal(typeof encoding.fmt.state, 'string');
     t.end();
   });

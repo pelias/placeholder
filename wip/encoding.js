@@ -3,25 +3,19 @@
 let util = require('util');
 let State = require('./State');
 
-// const TOKEN_PREFIX = '*';
-const BYTE_DELIM = '\x02';
-const BYTE_EMPTY = null;
-const BYTE_START = '\x00';
-const BYTE_END = '\xFF';
-
-const FMT_TOKEN = '\x01%s';
-const FMT_STATE = '%s\x02%s\x03';
-
 const byte = {
-  delim: BYTE_DELIM,
-  empty: BYTE_EMPTY,
-  start: BYTE_START,
-  end: BYTE_END,
+  empty:  null,
+  low:    '\x00',
+  high:   '\xFF',
+  bound: {
+    from: '',
+    to:   '\x02',
+    id:   '\x03'
+  },
 };
 
 const fmt = {
-  token: FMT_TOKEN,
-  state: FMT_STATE,
+  state:  [ byte.bound.from, byte.bound.to, byte.bound.id ].join('%s')
 };
 
 const codec = {};
@@ -49,15 +43,15 @@ codec.state = {
     let buffer = '';
     let from = '', to = '', idBytes = '';
     let step = 0;
-    
+
     str.toString('utf8').split('').forEach((char, i) => {
       switch( step ){
         case 0:
-          if( char === '\x02' ){ step = 1; return; }
+          if( char === byte.bound.to ){ step = 1; return; }
           from += char;
           return;
         case 1:
-          if( char === '\x03' ){ step = 2; return; }
+          if( char === byte.bound.id ){ step = 2; return; }
           to += char;
           return;
         case 2:
