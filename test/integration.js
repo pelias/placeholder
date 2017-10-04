@@ -6,6 +6,7 @@ var tests = [
   './prototype/query',
   './prototype/wof',
   './wip/InvertedIndex',
+  './wip/Database',
   './functional',
 ];
 

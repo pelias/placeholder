@@ -1,14 +1,14 @@
 
-var InvertedIndex = require('../../wip/InvertedIndex');
+var Database = require('../../wip/Database');
 var State = require('../../wip/State');
 
 function createIndex(){
-  return new InvertedIndex( '/tmp/' + Math.random().toString(36).substring(7) );
+  return new Database( '/tmp/' + Math.random().toString(36).substring(7) );
 }
 
 module.exports.interface = function(test, util) {
   test('interface', function(t) {
-    t.equal(typeof InvertedIndex, 'function');
+    t.equal(typeof Database, 'function');
     t.end();
   });
   test('instance', function(t) {
