@@ -5,6 +5,8 @@ var _ = require('lodash'),
     analysis = require('../lib/analysis'),
     language = dir('../config/language');
 
+var cache = {};
+
 // insert a wof record in to index
 function insertWofRecord( wof, next ){
 
@@ -42,10 +44,42 @@ function insertWofRecord( wof, next ){
   doc.geom.lat = _.toFinite( doc.geom.lat );
   doc.geom.lon = _.toFinite( doc.geom.lon );
 
+  // ----------------------------------
+
   // --- tokens ---
 
   // convenience function with $id bound as first argument
-  var addToken = this.graph.addToken.bind( this.graph, id );
+  // var addToken = this.graph.addToken.bind( this.graph, id );
+
+  // gather up all the tokens belonging to this record and all the
+  // tokens belonging to each parent record
+  var tokens = { self: [], parents: [] };
+  var addToken = function( token ){
+    if( -1 === tokens.self.indexOf( token ) ){
+      tokens.self.push( token );
+    }
+  };
+  var addParentToken = function( token ){
+    if( -1 === tokens.parents.indexOf( token ) ){
+      tokens.parents.push( token );
+    }
+  };
+
+  // disable normalize, replace with cached version
+  var norm = analysis.normalize;
+  analysis.normalize = function( arr ){ return arr || []; };
+  var cachedNorm = function( token ){
+    if( !cache.hasOwnProperty( token ) ){
+      cache[ token ] = norm( token );
+    }
+    return cache[ token ];
+  };
+
+  // override setEdge to store parent ids in an array
+  var parentIds = [];
+  this.graph.setEdge = function( pid, id ){ parentIds.push( pid ); };
+
+  // ----------------------------------
 
   // disable adding tokens to the index for the 'empire' placetype.
   // this ensures empire records are not retrieved via search.
@@ -136,9 +170,30 @@ function insertWofRecord( wof, next ){
    }
   }
 
+  // get parent tokens
+  parentIds.forEach( function( pid ){
+
+    this.store.get( pid, function( err, parentObj ){
+      console.log( pid, parentObj );
+    });
+
+    // pTokens.forEach( addParentToken );
+
+    // tokens.self = tokens.self.map( cachedNorm );
+    // tokens.parents = tokens.parents.map( cachedNorm );
+
+    // next()
+  }, this);
+
+  // -- do the normalization for all tokens (via cache)
+  tokens.self = tokens.self.map( cachedNorm );
+  tokens.parents = tokens.parents.map( cachedNorm );
+
   // --- store ---
   // add doc to store
-  this.store.set( id, doc, next );
+  // this.store.set( id, doc, next );
+
+
 
 }
 
