@@ -55,7 +55,7 @@
     "precommit-hook": "^3.0.0",
     "semantic-release": "^6.3.2",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "tape": "^4.8.0"
   },
   "pre-commit": [
     "lint",
