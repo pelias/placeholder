@@ -5,8 +5,6 @@ var _ = require('lodash'),
     analysis = require('../lib/analysis'),
     language = dir('../config/language');
 
-var cache = {};
-
 // insert a wof record in to index
 function insertWofRecord( wof, next ){
 
@@ -32,7 +30,9 @@ function insertWofRecord( wof, next ){
       lat: wof['lbl:latitude'] || wof['geom:latitude'],
       lon: wof['lbl:longitude'] ||wof['geom:longitude']
     },
-    names: {}
+    names: {},
+    tokens: [],
+    parentIds: []
   };
 
   // --- cast strings to numeric types ---
@@ -44,78 +44,43 @@ function insertWofRecord( wof, next ){
   doc.geom.lat = _.toFinite( doc.geom.lat );
   doc.geom.lon = _.toFinite( doc.geom.lon );
 
-  // ----------------------------------
-
   // --- tokens ---
-
-  // convenience function with $id bound as first argument
-  // var addToken = this.graph.addToken.bind( this.graph, id );
-
-  // gather up all the tokens belonging to this record and all the
-  // tokens belonging to each parent record
-  var tokens = { self: [], parents: [] };
-  var addToken = function( token ){
-    if( -1 === tokens.self.indexOf( token ) ){
-      tokens.self.push( token );
-    }
-  };
-  var addParentToken = function( token ){
-    if( -1 === tokens.parents.indexOf( token ) ){
-      tokens.parents.push( token );
-    }
-  };
-
-  // disable normalize, replace with cached version
-  var norm = analysis.normalize;
-  analysis.normalize = function( arr ){ return arr || []; };
-  var cachedNorm = function( token ){
-    if( !cache.hasOwnProperty( token ) ){
-      cache[ token ] = norm( token );
-    }
-    return cache[ token ];
-  };
-
-  // override setEdge to store parent ids in an array
-  var parentIds = [];
-  this.graph.setEdge = function( pid, id ){ parentIds.push( pid ); };
-
-  // ----------------------------------
 
   // disable adding tokens to the index for the 'empire' placetype.
   // this ensures empire records are not retrieved via search.
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    analysis.normalize( wof['wof:label'] ).forEach( addToken );
+    doc.tokens.push( wof['wof:label'] );
 
     // add 'wof:name'
-    analysis.normalize( wof['wof:name'] ).forEach( addToken );
+    doc.tokens.push( wof['wof:name'] );
 
     // add 'wof:abbreviation'
-    analysis.normalize( wof['wof:abbreviation'] ).forEach( addToken );
+    doc.tokens.push( wof['wof:abbreviation'] );
 
     // add 'ne:abbrev'
-    // analysis.normalize( wof['ne:abbrev'] ).forEach( addToken );
+    // doc.tokens.push( wof['ne:abbrev'] );
 
     // fields specific to countries & dependencies
     if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        analysis.normalize( wof['ne:iso_a2'] ).forEach( addToken );
+        doc.tokens.push( wof['ne:iso_a2'] );
 
         // add 'ne:iso_a3'
-        analysis.normalize( wof['ne:iso_a3'] ).forEach( addToken );
+        doc.tokens.push( wof['ne:iso_a3'] );
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // analysis.normalize( wof['wof:country'] ).forEach( addToken );
+        // doc.tokens.push( wof['wof:country'] );
 
         // add 'iso:country'
-        analysis.normalize( wof['iso:country'] ).forEach( addToken );
+        doc.tokens.push( wof['iso:country'] );
 
         // add 'wof:country_alpha3'
-        analysis.normalize( wof['wof:country_alpha3'] ).forEach( addToken );
+        doc.tokens.push( wof['wof:country_alpha3'] );
       }
     }
 
@@ -131,7 +96,7 @@ function insertWofRecord( wof, next ){
 
         // index each alternative name
         for( var n in wof[ attr ] ){
-          analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
+          doc.tokens.push( wof[ attr ][ n ] );
         }
 
         // doc - only store 'preferred' strings
@@ -155,7 +120,7 @@ function insertWofRecord( wof, next ){
     parentId = wof['wof:parent_id'];
     if( 'string' === typeof parentId ){ parentId = parseInt( parentId, 10 ); }
     if( !isNaN( parentId ) && parentId !== id && parentId > 0 ){
-      this.graph.setEdge( parentId, id ); // is child of
+      doc.parentIds.push( parentId ); // is child of
     }
   }
 
@@ -165,36 +130,56 @@ function insertWofRecord( wof, next ){
      var pid = wof['wof:hierarchy'][h][i];
      if( 'string' === typeof pid ){ pid = parseInt( pid, 10 ); }
      if( pid === id || pid <= 0 || pid === parentId ){ continue; }
-     //  this.graph.setEdge( id, pid, 'p' ); // has parent
-     this.graph.setEdge( pid, id ); // is child of
+     //  doc.parentIds.push( id, pid, 'p' ); // has parent
+     doc.parentIds.push( pid ); // is child of
    }
   }
 
-  // get parent tokens
-  parentIds.forEach( function( pid ){
+  // ---- consume aggregates
 
-    this.store.get( pid, function( err, parentObj ){
-      console.log( pid, parentObj );
+  // normalize tokens
+  doc.tokens = doc.tokens.reduce(( res, token ) => {
+    analysis.normalize( token ).forEach( norm => {
+      res.push( norm );
     });
+    return res;
+  }, []);
 
-    // pTokens.forEach( addParentToken );
+  // deduplicate tokens
+  doc.tokens = doc.tokens.filter(( token, pos ) => {
+    return doc.tokens.indexOf( token ) === pos;
+  });
 
-    // tokens.self = tokens.self.map( cachedNorm );
-    // tokens.parents = tokens.parents.map( cachedNorm );
-
-    // next()
+  // store tokens in graph
+  doc.tokens.forEach(token => {
+    this.graph.addToken( doc.id, token );
   }, this);
 
-  // -- do the normalization for all tokens (via cache)
-  tokens.self = tokens.self.map( cachedNorm );
-  tokens.parents = tokens.parents.map( cachedNorm );
+  // deduplicate parent ids
+  doc.parentIds = doc.parentIds.filter(( pid, pos ) => {
+    return doc.parentIds.indexOf( pid ) === pos;
+  });
+
+  // store parent ids
+  doc.parentIds.forEach(pid => {
+    this.graph.setEdge( pid, doc.id );
+  }, this);
 
   // --- store ---
   // add doc to store
-  // this.store.set( id, doc, next );
 
+  var tokens = doc.tokens;
+  var parentIds = doc.parentIds;
+  
+  // --- delete fields
+  delete doc.tokens;
+  delete doc.parentIds;
 
-
+  this.store.set( id, doc, () => {
+    this.store.setTokens( id, tokens, () => {
+      this.store.setLineage( id, parentIds, next );
+    });
+  });
 }
 
 // check if value is a valid number

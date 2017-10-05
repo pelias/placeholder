@@ -7,7 +7,7 @@ var split = require('split2'),
 
 // run import pipeline
 console.error('importing...');
-ph.load(/*{ reset: true }*/);
+ph.load({ reset: true });
 
 // run import
 process.stdin.pipe( split() )
