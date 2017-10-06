@@ -1,1 +1,11 @@
 select * from ( select token from tokens where id = 85633345 ), ( select token from tokens where id IN ( select pid from lineage where id = 85633345 ) );
+
+
+SELECT t1.id, t1.token, t2.token
+FROM tokens AS t1
+JOIN tokens AS t2
+WHERE t2.id IN ( SELECT pid FROM lineage WHERE id = t1.id )
+AND ( t2.lang = t1.lang OR t2.lang IN ('und', 'eng') );
+
+
+time sqlite3 store.sqlite3.save < query.sql > dump.out

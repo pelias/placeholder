@@ -51,36 +51,36 @@ function insertWofRecord( wof, next ){
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    doc.tokens.push( wof['wof:label'] );
+    doc.tokens.push({ lang: 'und', body: wof['wof:label'] });
 
     // add 'wof:name'
-    doc.tokens.push( wof['wof:name'] );
+    doc.tokens.push({ lang: 'und', body: wof['wof:name'] });
 
     // add 'wof:abbreviation'
-    doc.tokens.push( wof['wof:abbreviation'] );
+    doc.tokens.push({ lang: 'und', body: wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
-    // doc.tokens.push( wof['ne:abbrev'] );
+    // doc.tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
 
     // fields specific to countries & dependencies
     if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        doc.tokens.push( wof['ne:iso_a2'] );
+        doc.tokens.push({ lang: 'und', body: wof['ne:iso_a2'] });
 
         // add 'ne:iso_a3'
-        doc.tokens.push( wof['ne:iso_a3'] );
+        doc.tokens.push({ lang: 'und', body: wof['ne:iso_a3'] });
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // doc.tokens.push( wof['wof:country'] );
+        // doc.tokens.push({ lang: 'und', body: wof['wof:country'] });
 
         // add 'iso:country'
-        doc.tokens.push( wof['iso:country'] );
+        doc.tokens.push({ lang: 'und', body: wof['iso:country'] });
 
         // add 'wof:country_alpha3'
-        doc.tokens.push( wof['wof:country_alpha3'] );
+        doc.tokens.push({ lang: 'und', body: wof['wof:country_alpha3'] });
       }
     }
 
@@ -96,7 +96,7 @@ function insertWofRecord( wof, next ){
 
         // index each alternative name
         for( var n in wof[ attr ] ){
-          doc.tokens.push( wof[ attr ][ n ] );
+          doc.tokens.push({ lang: match[1], body: wof[ attr ][ n ] });
         }
 
         // doc - only store 'preferred' strings
@@ -139,15 +139,16 @@ function insertWofRecord( wof, next ){
 
   // normalize tokens
   doc.tokens = doc.tokens.reduce(( res, token ) => {
-    analysis.normalize( token ).forEach( norm => {
-      res.push( norm );
+    analysis.normalize( token.body ).forEach( norm => {
+      res.push({ lang: token.lang, body: norm });
     });
     return res;
   }, []);
 
   // deduplicate tokens
-  doc.tokens = doc.tokens.filter(( token, pos ) => {
-    return doc.tokens.indexOf( token ) === pos;
+  var seen = {};
+  doc.tokens = doc.tokens.filter( token => {
+    return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
   });
 
   // store tokens in graph
