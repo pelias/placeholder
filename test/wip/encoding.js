@@ -39,15 +39,18 @@ module.exports.codec_id = function(test, util) {
     t.end();
   });
   test('codec - id - encode', function(t) {
-    function encode( id ){ return encoding.codec.id.encode(id).toString('utf8'); }
-    t.equal( encode( 1 ), '\x01\x00\x00\x00' );
-    t.equal( encode( 37846327 ), '7}A\x02' );
+    function encode( id ){ return encoding.codec.id.encode(id).toString('hex'); }
+
+    t.equal( encode( 1 ), '01000000' );
+    t.equal( encode( 37846327 ), '377d4102' );
+    t.equal( encode( 85633111 ), '57a81a05' );
     t.end();
   });
   test('codec - id - decode', function(t) {
-    function decode( str ){ return encoding.codec.id.decode(str); }
-    t.deepEqual( decode( '\x01\x00\x00\x00' ), 1 );
-    t.deepEqual( decode( '7}A\x02' ), 37846327 );
+    function decode( buf ){ return encoding.codec.id.decode(Buffer.from(buf, 'hex')); }
+    t.deepEqual( decode( '01000000' ), 1 );
+    t.deepEqual( decode( '377d4102' ), 37846327 );
+    t.deepEqual( decode( '57a81a05' ), 85633111 );
     t.end();
   });
 };
@@ -60,15 +63,55 @@ module.exports.codec_state = function(test, util) {
     t.end();
   });
   test('codec - state - encode', function(t) {
-    function encode( state ){ return encoding.codec.state.encode(state).toString('utf8'); }
-    t.equal( encode( new State( 'foo', 'bar', 1 ) ), 'foo\x02bar\x03\x01\x00\x00\x00' );
-    t.equal( encode( new State( 'long word', 'next word', 37846327 ) ), 'long word\x02next word\x037}A\x02' );
+    function encode( state ){ return encoding.codec.state.encode( state ).toString('hex'); }
+    t.equal(
+      encode( new State( 1, 'foo', 2, 'bar' ) ),
+      '666f6f02626172030100000002000000'
+    );
+    t.equal(
+      encode( new State( 85633111, 'long word', 37846327, 'next word' ) ),
+      '6c6f6e6720776f7264026e65787420776f72640357a81a05377d4102'
+    );
     t.end();
   });
   test('codec - state - decode', function(t) {
-    function decode( str ){ return encoding.codec.state.decode(str); }
-    t.deepEqual( decode( 'foo\x02bar\x03\x01\x00\x00\x00' ), new State( 'foo', 'bar', 1 ) );
-    t.deepEqual( decode( 'long word\x02next word\x037}A\x02' ), new State( 'long word', 'next word', 37846327 ) );
+    function decode( buf ){ return encoding.codec.state.decode(Buffer.from(buf, 'hex')); }
+    t.deepEqual(
+      decode( '666f6f02626172030100000002000000' ),
+      new State( 1, 'foo', 2, 'bar' )
+    );
+    t.deepEqual(
+      decode( '6c6f6e6720776f7264026e65787420776f72640357a81a05377d4102' ),
+      new State( 85633111, 'long word', 37846327, 'next word' )
+    );
+    t.end();
+  });
+  test('codec - state - enc/dec', function(t) {
+
+    [{
+      subjectId: 85774601,
+      subject: 'neutral bay',
+      objectId: 102048877,
+      object: 'north sydney',
+      value: null
+    }, {
+      subjectId: 101931387,
+      subject: 'neutral bay',
+      objectId: 102048877,
+      object: 'north sydney',
+      value: null
+    }, {
+      subjectId: 404225267,
+      subject: 'neutral bay',
+      objectId: 102048877,
+      object: 'north sydney',
+      value: null
+    }]
+    .forEach( state => {
+      var encoded = encoding.codec.state.encode( state );
+      t.deepEqual( encoding.codec.state.decode( encoded ), state, encoded );
+    });
+
     t.end();
   });
 };

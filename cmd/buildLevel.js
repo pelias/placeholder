@@ -26,9 +26,10 @@ tap.pipe( split() )
       next( null, {
         type: 'put',
         key: encoding.codec.state.encode({
-          id: parseInt( cols[0], 10 ),
+          subjectId: parseInt( cols[0], 10 ),
           subject: cols[1],
-          object: cols[2]
+          objectId: parseInt( cols[2], 10 ),
+          object: cols[3]
         }),
         value: undefined
       });
