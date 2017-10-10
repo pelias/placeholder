@@ -2,9 +2,36 @@
 var express = require('express'),
     Placeholder = require('../Placeholder.js');
 
+const morgan = require( 'morgan' );
+const logger = require('pelias-logger').get('interpolation');
+const through = require( 'through2' );
+const _ = require('lodash');
+
 // optionally override port using env var
 var PORT = process.env.PORT || 3000;
 var app = express();
+
+function log() {
+  morgan.token('url', (req, res) => {
+    // if there's a DNT header, just return '/' as the URL
+    if (['DNT', 'dnt', 'do_not_track'].some(header => _.has(req.headers, header))) {
+      return _.get(req, 'route.path');
+    } else {
+      return req.originalUrl;
+    }
+  });
+
+  // 'short' format includes response time but leaves out date
+  return morgan('short', {
+    stream: through( function write( ln, _, next ){
+      logger.info( ln.toString().trim() );
+      next();
+    })
+  });
+}
+
+// make sure that logging is the first thing that happens for all endpoints
+app.use(log());
 
 // init placeholder
 console.error( 'loading data' );
