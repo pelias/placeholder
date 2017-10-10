@@ -152,9 +152,9 @@ function insertWofRecord( wof, next ){
   });
 
   // store tokens in graph
-  doc.tokens.forEach(token => {
-    this.graph.addToken( doc.id, token );
-  }, this);
+  // doc.tokens.forEach(token => {
+  //   this.graph.addToken( doc.id, token );
+  // }, this);
 
   // deduplicate parent ids
   doc.parentIds = doc.parentIds.filter(( pid, pos ) => {
@@ -162,9 +162,9 @@ function insertWofRecord( wof, next ){
   });
 
   // store parent ids
-  doc.parentIds.forEach(pid => {
-    this.graph.setEdge( pid, doc.id );
-  }, this);
+  // doc.parentIds.forEach(pid => {
+  //   this.graph.setEdge( pid, doc.id );
+  // }, this);
 
   // --- store ---
   // add doc to store

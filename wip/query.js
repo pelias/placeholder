@@ -3,7 +3,7 @@ var async = require('async');
 var util = require('util');
 // var sorted = require('../lib/sorted');
 
-var debug = false;
+var debug = true;
 
 function query( db, tokenize, text, done ){
 
@@ -45,6 +45,14 @@ function query( db, tokenize, text, done ){
       // check if we are done
       if( -1 === pos.subject ){
         if( pos.object <= 1 ){
+
+          if( 0 === res.length ){
+            return db.matchSubject( group[ 0 ], ( err, states ) => {
+              var subjectIds = states.map( state => { return state.subjectId; } );
+              return cb( null, subjectIds, [], group );
+            });
+          }
+
           return cb( null, res, mask, group );
         }
 
@@ -75,7 +83,13 @@ function query( db, tokenize, text, done ){
         if( debug ){
           console.log('found (' + states.length + '):');
           console.log( states.map( state => {
-            return ' - ' + state.fmtString();
+            return ' - ' + util.format(
+              '"%s" (%d) >>> "%s" (%d)',
+              state.subject,
+              state.subjectId,
+              state.object,
+              state.objectId
+            );
           }).join('\n'));
         }
 
