@@ -16,19 +16,19 @@ module.exports.tokenize = function( input, cb ){
     // console.log( 'tokens', tokens );
 
     // expand token permutations
-    var perms = permutations.expand( tokens );
-    // console.log( 'perms', perms );
-
-    var myset = _.uniq( perms.map( function( perm ){
+    var perms = _.uniq( permutations.expand( tokens ).map( function( perm ){
       return perm.join(' ');
     }));
-    var pos = 0;
-    async.filterSeries( myset, function( token, cb ){
-      var isLastToken = ( pos === myset.length -1 );
-      pos++;
+    // console.log( 'perms', perms );
 
-      // var method = ( isLastToken ) ? 'hasTokenAutocomplete' : 'hasToken';
-      var method = 'hasTokenAutocomplete';
+    var finalToken = perms[ perms.length -1 ];
+
+    async.filterSeries( perms, function( token, cb ){
+
+      // @todo: could be affected by edge cases where tokens are repeated?
+      var containsFinalToken = ( token.lastIndexOf( finalToken ) === token.length - finalToken.length );
+      var method = ( containsFinalToken ) ? 'hasTokenAutocomplete' : 'hasToken';
+      // var method = 'hasTokenAutocomplete';
 
       // console.error( token );
       // console.error( method, '\t', token );

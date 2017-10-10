@@ -9,8 +9,9 @@ module.exports = function( req, res ){
   // perform query
   // var tokens = ph.tokenize( req.query.text );
   // var ids = ph.query( tokens );
-
+  console.time('took');
   query( ph.wip.db, ph.wip.tokenize, req.query.text, ( err, ids, mask, group ) => {
+    console.timeEnd('took');
 
     // language property
     var lang;

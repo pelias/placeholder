@@ -3,12 +3,11 @@ var async = require('async');
 var util = require('util');
 // var sorted = require('../lib/sorted');
 
-var debug = true;
+var debug = false;
 
 function query( db, tokenize, text, done ){
 
   console.time('tokenize');
-  console.time('total');
 
   var tokens = tokenize( text, function( err, groups ){
 
@@ -36,13 +35,24 @@ function query( db, tokenize, text, done ){
         };
       }
 
+      // reset indicates if we failed to find any matches for
+      // object with any of the subjects
+      // in this case we will use the previous object value
+      // as a 'seed' for the id pool
+      var reset = false;
+      var prevObject = null;
+
       // check if we are done
       if( -1 === pos.subject ){
         if( pos.object <= 1 ){
           return cb( null, res, mask, group );
         }
 
-        // more values to try
+        // reset
+        reset = true;
+        prevObject = group[ pos.object ];
+
+        // more values to try (do a reset)
         pos.object--;
         pos.subject = pos.object-1;
       }
@@ -52,6 +62,7 @@ function query( db, tokenize, text, done ){
 
       var isObjectLastToken = ( pos.object === group.length -1 );
 
+      if( reset ){ console.error( 'RESET!!' ); }
       if( debug ){
         console.log( '---------------------------------------------------' );
         // console.log( 'subject', subject );
@@ -87,7 +98,7 @@ function query( db, tokenize, text, done ){
               }
             });
 
-            if( matches.length > 1 ){
+            if( matches.length >= 1 ){
               res = matches;
               pos.object--;
               pos.subject = pos.object;
@@ -110,45 +121,56 @@ function query( db, tokenize, text, done ){
       if( isObjectLastToken ){
         db.matchSubjectObjectAutocomplete( subject, object, next);
       }
+      else if( reset ){
+        db.matchSubject( prevObject, next );
+      }
       else {
         db.matchSubjectObject( subject, object, next);
       }
     }
 
-    // find a starting point
-    var res = [];
-
     // console.log( group.reverse() );
 
-  //   console.time('starting set');
-  //   async.detectSeries( group.slice().reverse(), ( subject, cb ) => {
-  //     db.matchSubject( subject, ( err, states ) => {
-  //       if( !err && states && states.length ){
-  //         res = states.map( state => { return state.subjectId; } );
-  //         return cb( null, true );
-  //       }
-  //       cb( null, false );
-  //     });
-  //   }, ( err, foo ) => {
-  //     console.timeEnd('starting set');
-  //     console.error( 'starting with', res.length );
-  //     // console.error( err, foo );
-  //     reduceRight( res, [], group, null, done );
-  //   });
-
-    // only one group present
+    // handle single token groups
     if( 1 === group.length ){
-      db.matchSubjectAutocomplete( group[0], ( err, states ) => {
+      db.matchSubjectAutocomplete( group[ 0 ], ( err, states ) => {
+
         if( err || !states || !states.length ){
           return done( err, [], [], group );
         }
 
         var ids = states.map( state => { return state.subjectId; } );
-        return done( null, ids, [ ids.length ], group );
+        // return done( null, ids, [ ids.length ], group );
+
+        reduceRight( ids, [], group, null, done );
       });
-    } else {
-      reduceRight( res, [], group, null, done );
     }
+    else {
+      reduceRight( [], [], group, null, done );
+    }
+
+    // else {
+    //   console.time('starting set');
+    //   var res = [];
+    //
+    //   var foo = group.slice().reverse();
+    //   // foo.shift();
+    //
+    //   async.detectSeries( foo, ( subject, cb ) => {
+    //     db.matchSubject( subject, ( err, states ) => {
+    //       if( !err && states && states.length ){
+    //         res = states.map( state => { return state.subjectId; } );
+    //         return cb( null, true );
+    //       }
+    //       cb( null, false );
+    //     });
+    //   }, ( err, foo ) => {
+    //     console.timeEnd('starting set');
+    //     console.error( 'starting with', res.length );
+    //     // console.error( err, foo );
+    //     reduceRight( res, [], group, null, done );
+    //   });
+    // }
   });
 }
 

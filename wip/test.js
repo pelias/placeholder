@@ -23,9 +23,10 @@ var text = ( process.argv.length > 2 ) ? process.argv.slice(2).join(' ') : 'test
 
 var query = require('./query').query;
 
+console.time('took');
 query( db, tokenize, text, ( err, windows, mask, group ) => {
   console.log( '===================================================' );
-  console.timeEnd('total');
+  console.timeEnd('took');
   if( err ){ console.error( err ); }
   if( debug ){ console.error( 'results', windows ); }
   console.error( 'group', group );
