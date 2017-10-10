@@ -9,3 +9,11 @@ AND ( t2.lang = t1.lang OR t2.lang IN ('und', 'eng') );
 
 
 time sqlite3 store.sqlite3.save < query.sql > dump.out
+
+
+SELECT * FROM tokens AS t1
+   ...> JOIN lineage AS l1 ON t1.id = l1.id
+   ...> JOIN tokens AS t2 ON t2.id = l1.pid AND ( t2.lang = t1.lang OR t2.lang IN ('und', 'eng') )
+   ...> WHERE t1.token = 'ontario'
+   ...> AND t2.token LIKE 'ca%'
+   ...> GROUP BY t1.id, t2.id;
