@@ -171,7 +171,7 @@ function insertWofRecord( wof, next ){
 
   var tokens = doc.tokens;
   var parentIds = doc.parentIds;
-  
+
   // --- delete fields
   delete doc.tokens;
   delete doc.parentIds;

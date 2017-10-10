@@ -10,12 +10,7 @@ var storePath = path.join( dataDir, 'store.sqlite3' );
 // WIP
 var Database = require('../wip/Database');
 var db = new Database('./db' );
-var tokenize = require('../wip/test_tokenize').tokenize.bind({
-  graph: {
-    hasToken: db.hasSubject.bind( db ),
-    hasTokenAutocomplete: db.hasSubjectAutocomplete.bind( db )
-  }
-});
+var tokenize = require('../wip/test_tokenize').tokenize.bind({ db: db });
 
 // load data from disk
 module.exports.load = function( opts ){

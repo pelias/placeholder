@@ -27,13 +27,13 @@ module.exports.tokenize = function( input, cb ){
 
       // @todo: could be affected by edge cases where tokens are repeated?
       var containsFinalToken = ( token.lastIndexOf( finalToken ) === token.length - finalToken.length );
-      var method = ( containsFinalToken ) ? 'hasTokenAutocomplete' : 'hasToken';
+      var method = ( containsFinalToken ) ? 'hasSubjectAutocomplete' : 'hasSubject';
       // var method = 'hasTokenAutocomplete';
 
       // console.error( token );
       // console.error( method, '\t', token );
 
-      self.graph[method]( token, function( bool ){
+      self.db[method]( token, function( bool ){
         return cb( null, bool );
       });
     }, function( err, validTokens ){
