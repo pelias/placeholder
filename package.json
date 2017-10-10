@@ -62,8 +62,5 @@
     "tape": "^4.8.0"
   },
   "pre-commit": [
-    "lint",
-    "validate",
-    "check-dependencies"
   ]
 }

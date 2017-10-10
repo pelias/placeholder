@@ -13,8 +13,12 @@ var tokenize = require('./test_tokenize').tokenize.bind({
   graph: { hasToken: db.hasSubject.bind( db ) }
 });
 
+var debug = false;
+
 // var text = 'Example Street Neutral Bay North Sydney New South Wales 9999 AU';
-var text = '123 apple bay ave neutral bay north sydney rome new south wales au';
+// var text = '123 apple bay ave neutral bay north sydney rome new south wales au';
+// var text = 'paris fr';
+var text = ( process.argv.length > 2 ) ? process.argv.slice(2).join(' ') : 'test string';
 
 console.time('tokenize');
 console.time('total');
@@ -26,16 +30,24 @@ var tokens = tokenize( text, function( err, groups ){
   var group = groups[0];
 
   // handle group lengths
-  if( group.length <= 1 ){
-    console.error( 'group length <= 1' );
+  if( group.length <= 0 ){
+    console.error( 'group length <= 0' );
     return [];
   }
-  // else if( group.length === 1 ){
-  //   group.unshift( '' );
-  // }
+  else if( group.length === 1 ){
+    group.push( '' );
+  }
 
 
   function reduceRight( res, mask, group, pos, cb ){
+
+    // initialize pos
+    if( null === pos ){
+      pos = {
+        subject: group.length -2,
+        object: group.length -1
+      };
+    }
 
     // check if we are done
     if( -1 === pos.subject ){
@@ -51,17 +63,23 @@ var tokens = tokenize( text, function( err, groups ){
     var subject = group[ pos.subject ];
     var object = group[ pos.object ];
 
-    console.log( '---------------------------------------------------' );
-    // console.log( 'subject', subject );
-    // console.log( 'object', object );
-    console.log( util.format( '"%s" >>> "%s"', subject, object ) );
+    // var isObjectLastToken = ( pos.object === group.length -1 );
 
-    db.matchSubjectObject( subject, object, function( err, states ){
+    if( debug ){
+      console.log( '---------------------------------------------------' );
+      // console.log( 'subject', subject );
+      // console.log( 'object', object );
+      console.log( util.format( '"%s" >>> "%s"', subject, object ) );
+    }
 
-      console.log('found (' + states.length + '):');
-      console.log( states.map( state => {
-        return ' - ' + state.fmtString();
-      }).join('\n'));
+    var next = function( err, states ){
+
+      if( debug ){
+        console.log('found (' + states.length + '):');
+        console.log( states.map( state => {
+          return ' - ' + state.fmtString();
+        }).join('\n'));
+      }
 
       if( !err && states.length ){
         var subjectIds = states.map( state => { return state.subjectId; } );
@@ -96,19 +114,24 @@ var tokens = tokenize( text, function( err, groups ){
       }
 
       pos.subject--;
-      console.error( 'res', res );
+      if( debug ){ console.error( 'res', res ); }
       reduceRight( res, mask, group, pos, cb );
-    });
+    };
+
+    // autocomplete last word
+    // if( isObjectLastToken ){
+    //   db.matchSubjectObjectAutocomplete( subject, object, next);
+    // }
+    // else {
+      db.matchSubjectObject( subject, object, next);
+    // }
   }
 
-  reduceRight( [], [], group, {
-    subject: group.length -2,
-    object: group.length -1
-  }, ( err, windows, mask ) => {
+  reduceRight( [], [], group, null, ( err, windows, mask ) => {
     console.log( '===================================================' );
     console.timeEnd('total');
     if( err ){ console.error( err ); }
-    console.error( 'results', windows );
+    if( debug ){ console.error( 'results', windows ); }
     console.error( 'group', group );
     console.error( 'mask', mask );
     console.log( '===================================================' );
@@ -120,76 +143,4 @@ var tokens = tokenize( text, function( err, groups ){
       console.log( '===================================================' );
     });
   });
-
-  // var pos = group.length -1;
-  //
-  // async.reduceRight( group, [], ( memo, item, callback ) => {
-  //   console.log( memo, Array.isArray( memo ), item );
-  //   memo.push( item );
-  //   callback( null, memo );
-  //
-  //   //
-  //   // var subject =
-  //   // var object =
-  //   //
-  //   // db.matchSubjectObject( group, function( err, states ){
-  //
-  // }, function( err, windows ){
-  //   console.error( err );
-  //   console.error( 'windows', windows );
-  // });
-
-  // while( pos > 0 ){
-  //   windows.push( [ group[ pos -1 ], group[ pos ] ] );
-  //   pos--;
-  // }
-
-  // console.log( 'windows', windows );
-
-  //
-  // intersectMultiple( groups[0], function( err, ids ){
-  //
-  //   console.error( ids );
-  //
-  //   var workingSet = [];
-  //
-  //   var idGroup = ids.pop();
-  //   var firstToken = true;
-  //
-  //   while( idGroup ){
-  //
-  //     if( idGroup.length ){
-  //       if( firstToken ){
-  //         workingSet = idGroup;
-  //       } else {
-  //         // console.log( 'intersect' );
-  //         var t = sorted.intersect([ idGroup, workingSet ]);
-  //
-  //         if( t.length ){
-  //           workingSet = t;
-  //         }
-  //       }
-  //     } else {
-  //       return workingSet;
-  //     }
-  //
-  //     idGroup = ids.pop();
-  //     firstToken = false;
-  //   }
-  //
-  //   console.error( workingSet );
-  // });
 });
-
-// function intersectMultiple( groups, cb ){
-//   async.map( groups, function( group, done ){
-//     db.matchSubject( group, function( err, states ){
-//
-//       // console.log( states );
-//
-//       // console.error( group, states );
-//       // cb( null );
-//       done( err, sorted.unique( sorted.sort( states.map( state => { return state.id; } )) ));
-//     });
-//   }, cb);
-// }

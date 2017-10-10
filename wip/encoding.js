@@ -14,6 +14,17 @@ const byte = {
   },
 };
 
+const buffer = {
+  empty:  Buffer.alloc(0),
+  low:    Buffer.from( byte.low ),
+  high:   Buffer.from( byte.high ),
+  bound: {
+    subject:  Buffer.from( byte.bound.subject ),
+    object:   Buffer.from( byte.bound.object ),
+    id:       Buffer.from( byte.bound.id )
+  },
+};
+
 const fmt = {
   state:  [ byte.bound.subject, byte.bound.object, byte.bound.id ].join('%s')
 };
@@ -92,30 +103,15 @@ codec.state = {
 };
 
 module.exports.byte = byte;
+module.exports.buffer = buffer;
 module.exports.fmt = fmt;
 module.exports.codec = codec;
 
-/**
- * @summary increment a buffer in little endian
- * @param buffer {Buffer} input buffer, will be modified
- * @description
- * Since 255 + 1 = 0 (mod 256), a "carry" is needed, if the
- * element is 255 before incrementing
- */
-function incrementLE (buffer) {
-    for (var i = 0; i < buffer.length; i++) {
-        if (buffer[i]++ !== 255){ break; }
-    }
+function incrementBuffer( buf ){
+  var nextBuf = Buffer.alloc( buf.length );
+  buf.copy( nextBuf, 0 );
+  nextBuf[ buf.length-1 ] = nextBuf[ buf.length-1 ] +1;
+  return nextBuf;
 }
 
-/**
- * @summary increment a buffer in big endian
- */
-function incrementBE (buffer) {
-    for (var i = buffer.length - 1; i >= 0; i--) {
-        if (buffer[i]++ !== 255){ break; }
-    }
-}
-
-module.exports.incrementLE = incrementLE;
-module.exports.incrementBE = incrementBE;
+module.exports.incrementBuffer = incrementBuffer;

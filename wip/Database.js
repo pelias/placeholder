@@ -9,6 +9,36 @@ var globalOpts = {
   valueEncoding: 'binary'
 };
 
+function streamOptions( subject, object, isAutocomplete, limit ){
+
+  isAutocomplete = true;
+
+  var parts = [];
+  parts.push( Buffer.from( subject || '' ) );
+
+  if( 'string' === typeof object || true !== isAutocomplete ){
+    parts.push( encoding.buffer.bound.object );
+  }
+
+  if( 'string' === typeof object ){
+    parts.push( Buffer.from( object ) );
+    if( true !== isAutocomplete ){
+      parts.push( encoding.buffer.bound.id );
+    }
+  }
+
+  var key = Buffer.concat( parts );
+
+  return {
+    gte: key,
+    lt: encoding.incrementBuffer( key ),
+    keyAsBuffer: true,
+    keyEncoding: 'binary',
+    valueEncoding: 'binary',
+    limit: limit || -1
+  };
+}
+
 function Database( path, options ){
   options = options || {};
   options.keyAsBuffer = true;
@@ -40,96 +70,51 @@ Database.prototype.getStateValueMany = function( states, cb ){
 };
 
 // cb( bool ) whether an arbitrary byte prefix exist in the db
-Database.prototype._hasPrefix = function( prefix, cb ){
+Database.prototype._hasPrefix = function( options, cb ){
   var found = false;
-  this.db.createKeyStream({
-    gte: prefix,
-    lte: Buffer.concat([ prefix, Buffer.from( encoding.byte.high ) ]),
-    keyAsBuffer: true,
-    keyEncoding: 'binary',
-    valueEncoding: 'binary',
-    limit: 1
-  }).on('data',  (data)  => { found = true; })
-    .on('error', (err)   => cb( false ))
-    .on('end',   ()      => cb( found ));
+  this.db.createKeyStream(options)
+         .on('data',  (data)  => { found = true; })
+         .on('error', (err)   => cb( false ))
+         .on('end',   ()      => cb( found ));
 };
 
 // cb( bool ) whether a 'subject' value exists in the db
 Database.prototype.hasSubject = function( subject, cb ){
-  this._hasPrefix( Buffer.concat([
-    Buffer.from( subject ),
-    Buffer.from( encoding.byte.bound.object )
-  ]), cb );
+  this._hasPrefix( streamOptions( subject, undefined, false, 1 ), cb );
 };
 
 // cb( bool ) whether a 'subject' and 'object' pair of values exists in the db
 Database.prototype.hasSubjectObject = function( subject, object, cb ){
-  this._hasPrefix( Buffer.concat([
-    Buffer.from( subject ),
-    Buffer.from( encoding.byte.bound.object ),
-    Buffer.from( object ),
-    Buffer.from( encoding.byte.bound.id )
-  ]), cb );
+  this._hasPrefix( streamOptions( subject, object, false, 1 ) , cb );
 };
 
-function incrementBuffer( buf ){
-  var nextBuf = Buffer.alloc( buf.length );
-  buf.copy( nextBuf, 0 );
-  nextBuf[ buf.length-1 ] = nextBuf[ buf.length-1 ] +1;
-  return nextBuf;
-}
-
 // cb( err, res ) all entries which have the specified prefix
-Database.prototype._prefixMatch = function( prefix, cb ){
-  this._keyStreamToStateArray( this.db.createKeyStream({
-    gte: prefix,
-    lt: incrementBuffer( prefix ),
-    keyAsBuffer: true,
-    keyEncoding: 'binary',
-    valueEncoding: 'binary',
-    limit: -1
-  }), cb );
+Database.prototype._prefixMatch = function( options, cb ){
+  this._keyStreamToStateArray( this.db.createKeyStream( options ), cb );
 };
 
 // cb( err, res ) all entries which have the specified 'subject' value
 Database.prototype.matchSubject = function( subject, cb ){
-  this._prefixMatch( Buffer.concat([
-    Buffer.from( subject ),
-    Buffer.from( encoding.byte.bound.object )
-  ]), cb );
+  this._prefixMatch( streamOptions( subject ), cb );
 };
 
 // cb( err, res ) all entries which have both the specified 'subject' and 'object' values
 Database.prototype.matchSubjectObject = function( subject, object, cb ){
-  this._prefixMatch( Buffer.concat([
-    Buffer.from( subject ),
-    Buffer.from( encoding.byte.bound.object ),
-    Buffer.from( object ),
-    Buffer.from( encoding.byte.bound.id )
-  ]), cb );
+  this._prefixMatch( streamOptions( subject, object ), cb );
+};
+
+// cb( err, res ) all entries which have both the specified 'subject' and 'object' values
+Database.prototype.matchSubjectObjectAutocomplete = function( subject, object, cb ){
+  this._prefixMatch( streamOptions( subject, object, true ), cb );
 };
 
 // cb( err, res ) all entries which share an ID from the two input prefixes
-Database.prototype._prefixIntersect = function( prefixA, prefixB, cb ){
+Database.prototype._prefixIntersect = function( optionsA, optionsB, cb ){
   this._keyStreamToStateArray( intersect(
-    this.db.createKeyStream({
-      gte: prefixA,
-      lte: prefixA + encoding.byte.high,
-      keyAsBuffer: true,
-      keyEncoding: 'binary',
-      valueEncoding: 'binary',
-      limit: -1
-    }),
-    this.db.createKeyStream({
-      gte: prefixB,
-      lte: prefixB + encoding.byte.high,
-      keyAsBuffer: true,
-      keyEncoding: 'binary',
-      valueEncoding: 'binary',
-      limit: -1
-    }),
-    // only compare id bytes (very fast)
+    this.db.createKeyStream(optionsA),
+    this.db.createKeyStream(optionsB),
     ( key ) => {
+      // only compare id bytes (very fast)
       // @todo: this matched BOTH subjectId and objectID
       return key.slice( key.indexOf( encoding.byte.bound.id ) );
     }),
@@ -140,8 +125,8 @@ Database.prototype._prefixIntersect = function( prefixA, prefixB, cb ){
 // cb( err, res ) all entries which share an ID with the two input 'subject' values
 Database.prototype.intersectSubject = function( subjectA, subjectB, cb ){
   this._prefixIntersect(
-    subjectA + encoding.byte.bound.object,
-    subjectB + encoding.byte.bound.object,
+    streamOptions( subjectA ),
+    streamOptions( subjectB ),
     cb
   );
 };
