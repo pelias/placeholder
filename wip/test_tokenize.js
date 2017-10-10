@@ -19,10 +19,21 @@ module.exports.tokenize = function( input, cb ){
     var perms = permutations.expand( tokens );
     // console.log( 'perms', perms );
 
-    async.filter( _.uniq( perms.map( function( perm ){
+    var myset = _.uniq( perms.map( function( perm ){
       return perm.join(' ');
-    })), function( token, cb ){
-      self.graph.hasToken( token, function( bool ){
+    }));
+    var pos = 0;
+    async.filterSeries( myset, function( token, cb ){
+      var isLastToken = ( pos === myset.length -1 );
+      pos++;
+
+      // var method = ( isLastToken ) ? 'hasTokenAutocomplete' : 'hasToken';
+      var method = 'hasTokenAutocomplete';
+
+      // console.error( token );
+      // console.error( method, '\t', token );
+
+      self.graph[method]( token, function( bool ){
         return cb( null, bool );
       });
     }, function( err, validTokens ){

@@ -9,9 +9,9 @@ var globalOpts = {
   valueEncoding: 'binary'
 };
 
-function streamOptions( subject, object, isAutocomplete, limit ){
+const MAX_RESULTS = 1000;
 
-  isAutocomplete = true;
+function streamOptions( subject, object, isAutocomplete, limit ){
 
   var parts = [];
   parts.push( Buffer.from( subject || '' ) );
@@ -83,6 +83,11 @@ Database.prototype.hasSubject = function( subject, cb ){
   this._hasPrefix( streamOptions( subject, undefined, false, 1 ), cb );
 };
 
+
+Database.prototype.hasSubjectAutocomplete = function( subject, cb ){
+  this._hasPrefix( streamOptions( subject, undefined, true, 1 ), cb );
+};
+
 // cb( bool ) whether a 'subject' and 'object' pair of values exists in the db
 Database.prototype.hasSubjectObject = function( subject, object, cb ){
   this._hasPrefix( streamOptions( subject, object, false, 1 ) , cb );
@@ -98,12 +103,17 @@ Database.prototype.matchSubject = function( subject, cb ){
   this._prefixMatch( streamOptions( subject ), cb );
 };
 
+// @todo: refactor to handle non-parented items
+Database.prototype.matchSubjectAutocomplete = function( subject, cb ){
+  this._prefixMatch( streamOptions( subject, undefined, true, MAX_RESULTS ), cb );
+};
+
 // cb( err, res ) all entries which have both the specified 'subject' and 'object' values
 Database.prototype.matchSubjectObject = function( subject, object, cb ){
   this._prefixMatch( streamOptions( subject, object ), cb );
 };
 
-// cb( err, res ) all entries which have both the specified 'subject' and 'object' values
+
 Database.prototype.matchSubjectObjectAutocomplete = function( subject, object, cb ){
   this._prefixMatch( streamOptions( subject, object, true ), cb );
 };

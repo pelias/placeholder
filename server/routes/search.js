@@ -1,49 +1,54 @@
 
+var query = require('../../wip/query').query;
+
 module.exports = function( req, res ){
 
   // placeholder
   var ph = req.app.locals.ph;
 
   // perform query
-  var tokens = ph.tokenize( req.query.text );
-  var ids = ph.query( tokens );
+  // var tokens = ph.tokenize( req.query.text );
+  // var ids = ph.query( tokens );
 
-  // language property
-  var lang;
-  if( req.query.lang && req.query.lang.length === 3 ){
-    lang = req.query.lang;
-  }
+  query( ph.wip.db, ph.wip.tokenize, req.query.text, ( err, ids, mask, group ) => {
 
-  // fetch all result docs by id
-  ph.store.getMany( ids, function( err, results ){
-    if( err ){ return res.status(500).send(err); }
-    if( !results || !results.length ){ return res.status(200).send([]); }
+    // language property
+    var lang;
+    if( req.query.lang && req.query.lang.length === 3 ){
+      lang = req.query.lang;
+    }
 
-    // get a list of parent ids
-    var parentIds = getParentIds( results );
+    // fetch all result docs by id
+    ph.store.getMany( ids, function( err, results ){
+      if( err ){ return res.status(500).send(err); }
+      if( !results || !results.length ){ return res.status(200).send([]); }
 
-    // load all the parents
-    ph.store.getMany( parentIds, function( err, parentResults ){
+      // get a list of parent ids
+      var parentIds = getParentIds( results );
 
-      // @todo handle errors
-      // if( err ){ return res.status(500).send({}); }
-      // if( !parentResults || !parentResults.length ){ return res.status(404).send({}); }
-      parentResults = parentResults || [];
+      // load all the parents
+      ph.store.getMany( parentIds, function( err, parentResults ){
 
-      // create a map of parents
-      var parents = rowsToIdMap( parentResults );
+        // @todo handle errors
+        // if( err ){ return res.status(500).send({}); }
+        // if( !parentResults || !parentResults.length ){ return res.status(404).send({}); }
+        parentResults = parentResults || [];
 
-      // map documents to dict using id as key
-      var docs = results.map( function( result ){
-        return mapResult( ph, result, parents, lang );
+        // create a map of parents
+        var parents = rowsToIdMap( parentResults );
+
+        // map documents to dict using id as key
+        var docs = results.map( function( result ){
+          return mapResult( ph, result, parents, lang );
+        });
+
+        // sort results according to sorting rules
+        docs.sort( sortingAlgorithm );
+
+        res.status(200).json( docs );
       });
-
-      // sort results according to sorting rules
-      docs.sort( sortingAlgorithm );
-
-      res.status(200).json( docs );
     });
-  });
+  }); // end query
 };
 
 /**
