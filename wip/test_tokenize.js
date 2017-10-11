@@ -28,7 +28,7 @@ module.exports.tokenize = function( input, cb ){
       // @todo: could be affected by edge cases where tokens are repeated?
       var containsFinalToken = ( token.lastIndexOf( finalToken ) === token.length - finalToken.length );
       var method = ( containsFinalToken ) ? 'hasSubjectAutocomplete' : 'hasSubject';
-      // var method = 'hasTokenAutocomplete';
+      // var method = 'hasSubjectAutocomplete';
 
       // console.error( token );
       // console.error( method, '\t', token );

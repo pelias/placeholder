@@ -133,13 +133,15 @@ function query( db, tokenize, text, done ){
 
       // autocomplete last word
       if( isObjectLastToken ){
-        db.matchSubjectObjectAutocomplete( subject, object, next);
+        db.matchSubjectObjectAutocomplete( subject, object, next );
       }
+      // reset
       else if( reset ){
         db.matchSubject( prevObject, next );
       }
+      // regular
       else {
-        db.matchSubjectObject( subject, object, next);
+        db.matchSubjectObject( subject, object, next );
       }
     }
 
