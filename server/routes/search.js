@@ -1,6 +1,4 @@
 
-var query = require('../../wip/query').query;
-
 module.exports = function( req, res ){
 
   // placeholder
@@ -10,7 +8,7 @@ module.exports = function( req, res ){
   // var tokens = ph.tokenize( req.query.text );
   // var ids = ph.query( tokens );
   console.time('took');
-  query( ph.wip.db, ph.wip.tokenize, req.query.text, ( err, ids, mask, group ) => {
+  ph.wip.query( req.query.text, ( err, ids, mask, group ) => {
     console.timeEnd('took');
 
     // language property

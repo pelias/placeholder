@@ -1,6 +1,5 @@
 
-var util = require('util'),
-    query = require('./query').query;
+var util = require('util');
 
 var Placeholder = require('../Placeholder'),
     ph = new Placeholder();
@@ -12,7 +11,7 @@ ph.load();
 var text = ( process.argv.length > 2 ) ? process.argv.slice(2).join(' ') : 'test string';
 
 console.time('took');
-query( ph.wip.db, ph.wip.tokenize, text, ( err, windows, mask, group ) => {
+ph.wip.query( text, ( err, windows, mask, group ) => {
   console.log( '===================================================' );
   console.timeEnd('took');
   if( err ){ console.error( err ); }

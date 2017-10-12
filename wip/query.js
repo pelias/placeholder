@@ -1,7 +1,7 @@
 
 var async = require('async');
 var util = require('util');
-// var sorted = require('../lib/sorted');
+var sorted = require('../lib/sorted');
 
 var debug = true;
 
@@ -11,8 +11,10 @@ function query( db, tokenize, text, done ){
 
   var tokens = tokenize( text, function( err, groups ){
 
-    console.timeEnd('tokenize');
-    console.error( groups );
+    if( debug ){
+      console.timeEnd('tokenize');
+      console.error( groups );
+    }
 
     var group = groups[0];
 
@@ -49,7 +51,7 @@ function query( db, tokenize, text, done ){
           if( 0 === res.length ){
             return db.matchSubject( group[ 0 ], ( err, states ) => {
               var subjectIds = states.map( state => { return state.subjectId; } );
-              return cb( null, subjectIds, [], group );
+              return cb( null, sorted.unique( subjectIds ), [], group );
             });
           }
 
@@ -70,7 +72,7 @@ function query( db, tokenize, text, done ){
 
       var isObjectLastToken = ( pos.object === group.length -1 );
 
-      if( reset ){ console.error( 'RESET!!' ); }
+      if( debug && reset ){ console.error( 'RESET!!' ); }
       if( debug ){
         console.log( '---------------------------------------------------' );
         // console.log( 'subject', subject );
@@ -98,7 +100,7 @@ function query( db, tokenize, text, done ){
 
           if( !res.length ){
             // first match
-            res = subjectIds;
+            res = sorted.unique( subjectIds );
             pos.object--;
             pos.subject = pos.object;
             mask.unshift( subjectIds.length );
@@ -113,12 +115,12 @@ function query( db, tokenize, text, done ){
             });
 
             if( matches.length >= 1 ){
-              res = matches;
+              res = sorted.unique( matches );
               pos.object--;
               pos.subject = pos.object;
               mask.unshift( matches.length );
             } else {
-              console.error( 'failed!' );
+              if( debug ){ console.error( 'failed!' ); }
               mask.unshift( 0 );
             }
           }
@@ -158,7 +160,7 @@ function query( db, tokenize, text, done ){
         var ids = states.map( state => { return state.subjectId; } );
         // return done( null, ids, [ ids.length ], group );
 
-        reduceRight( ids, [], group, null, done );
+        reduceRight( sorted.unique( ids ), [], group, null, done );
       });
     }
     else {

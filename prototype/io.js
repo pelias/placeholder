@@ -25,11 +25,13 @@ module.exports.load = function( opts ){
 
   // both
   var tokenize = require('../wip/test_tokenize').tokenize.bind({ db: db });
+  var query = require('../wip/query').query.bind( null, db, tokenize );
 
   // WIP
   this.wip = {
     db: db,
-    tokenize: tokenize
+    tokenize: tokenize,
+    query: query
   };
 };
 
