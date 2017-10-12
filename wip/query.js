@@ -3,7 +3,7 @@ var async = require('async');
 var util = require('util');
 var sorted = require('../lib/sorted');
 
-var debug = true;
+var debug = false;
 
 function query( db, tokenize, text, done ){
 
@@ -49,9 +49,9 @@ function query( db, tokenize, text, done ){
         if( pos.object <= 1 ){
 
           if( 0 === res.length ){
-            return db.matchSubject( group[ 0 ], ( err, states ) => {
+            return db.matchSubjectDistinctSubjectIds( group[ 1 ], ( err, states ) => {
               var subjectIds = states.map( state => { return state.subjectId; } );
-              return cb( null, sorted.unique( subjectIds ), [], group );
+              return cb( null, subjectIds, [], group );
             });
           }
 
@@ -139,7 +139,7 @@ function query( db, tokenize, text, done ){
       }
       // reset
       else if( reset ){
-        db.matchSubject( prevObject, next );
+        db.matchSubjectDistinctSubjectIds( prevObject, next );
       }
       // regular
       else {
@@ -151,7 +151,7 @@ function query( db, tokenize, text, done ){
 
     // handle single token groups
     if( 1 === group.length ){
-      db.matchSubjectAutocomplete( group[ 0 ], ( err, states ) => {
+      db.matchSubjectAutocompleteDistinctSubjectIds( group[ 0 ], ( err, states ) => {
 
         if( err || !states || !states.length ){
           return done( err, [], [], group );
@@ -160,7 +160,7 @@ function query( db, tokenize, text, done ){
         var ids = states.map( state => { return state.subjectId; } );
         // return done( null, ids, [ ids.length ], group );
 
-        reduceRight( sorted.unique( ids ), [], group, null, done );
+        reduceRight( ids, [], group, null, done );
       });
     }
     else {
