@@ -10,6 +10,7 @@ function SqlDatabase( db ){
 var TIMER = false;
 var DEBUG = false;
 var AUTOCOMPLETE = true;
+var TAG_BLACKLIST = [ 'colloquial' ];
 
 // function debug(){}
 function debug( sql, args ){
@@ -19,6 +20,12 @@ function debug( sql, args ){
     output = output.replace( key, '\'' + args[ key ] + '\'' );
   });
   console.error( '\x1b[36m' + output + ';' + '\x1b[0m' );
+}
+
+function singleQuoteEach( values ){
+  return values.map( value => {
+    return '\'' + value + '\'';
+  });
 }
 
 // cb( bool ) whether a 'subject' value exists in the db
@@ -52,6 +59,7 @@ SqlDatabase.prototype.hasSubjectAutocomplete = function( subject, cb ){
     'FROM tokens as t1',
       'JOIN fulltext AS f1 ON f1.rowid = t1.rowid',
     'WHERE f1.fulltext MATCH $subject',
+    ( TAG_BLACKLIST.length? 'AND t1.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
     'LIMIT 1'
   ].join('\n');
 
@@ -75,6 +83,7 @@ SqlDatabase.prototype.matchSubjectDistinctSubjectIds = function( subject, cb ){
     'SELECT DISTINCT( t1.id ) AS subjectId',
     'FROM tokens AS t1',
     'WHERE t1.token = $subject',
+    ( TAG_BLACKLIST.length? 'AND t1.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
     'ORDER BY t1.id ASC',
     'LIMIT $limit'
   ].join('\n');
@@ -100,8 +109,8 @@ SqlDatabase.prototype.matchSubjectAutocompleteDistinctSubjectIds = function( sub
     'SELECT DISTINCT( t1.id ) AS subjectId',
     'FROM tokens AS t1',
       'JOIN fulltext AS f1 ON f1.rowid = t1.rowid',
-    // 'WHERE f1.fulltext MATCH REPLACE($subject, " ", "_")',
     'WHERE f1.fulltext MATCH $subject',
+    ( TAG_BLACKLIST.length? 'AND t1.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
     'ORDER BY t1.id ASC',
     'LIMIT $limit'
   ].join('\n');
@@ -133,6 +142,8 @@ SqlDatabase.prototype.matchSubjectObject = function( subject, object, cb ){
     'WHERE t1.token = $subject',
     'AND t2.token = $object',
     'AND t1.lang IN (t2.lang, \'eng\', \'und\')',
+    ( TAG_BLACKLIST.length? 'AND t1.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
+    ( TAG_BLACKLIST.length? 'AND t2.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
     'ORDER BY t1.id ASC, t2.id ASC',
     'LIMIT $limit'
   ].join('\n');
@@ -163,8 +174,8 @@ SqlDatabase.prototype.matchSubjectObjectAutocomplete = function( subject, object
     'WHERE t1.token = $subject',
     'AND t2.token LIKE $object',
     'AND t1.lang IN (t2.lang, \'eng\', \'und\')',
-    // 'AND t2.lang IN (t1.lang, \'eng\', \'und\')',
-    // ( AUTOCOMPLETE? 'AND t2.tag NOT IN ("colloquial", "variant")' : '' ),
+    ( TAG_BLACKLIST.length? 'AND t1.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
+    ( TAG_BLACKLIST.length? 'AND t2.tag NOT IN ('+ singleQuoteEach(TAG_BLACKLIST).join(',') +')': '' ),
     'ORDER BY t1.id ASC, t2.id ASC',
     'LIMIT $limit'
   ].join('\n');
