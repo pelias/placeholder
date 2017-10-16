@@ -1,12 +1,10 @@
 
 var _ = require('lodash'),
-    TokenGraph = require('./lib/TokenGraph'),
     DocStore = require('./lib/DocStore');
 
 // constructor
-function Placeholder(){
-  this.graph = new TokenGraph();
-  this.store = new DocStore();
+function Placeholder( options ){
+  this.store = new DocStore( options );
 }
 
 // load prototype methods from modules
