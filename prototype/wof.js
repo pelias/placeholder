@@ -51,13 +51,13 @@ function insertWofRecord( wof, next ){
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    doc.tokens.push({ lang: 'und', body: wof['wof:label'] });
+    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:label'] });
 
     // add 'wof:name'
-    doc.tokens.push({ lang: 'und', body: wof['wof:name'] });
+    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
 
     // add 'wof:abbreviation'
-    doc.tokens.push({ lang: 'und', body: wof['wof:abbreviation'] });
+    doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
     // doc.tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
@@ -67,20 +67,20 @@ function insertWofRecord( wof, next ){
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        doc.tokens.push({ lang: 'und', body: wof['ne:iso_a2'] });
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a2'] });
 
         // add 'ne:iso_a3'
-        doc.tokens.push({ lang: 'und', body: wof['ne:iso_a3'] });
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a3'] });
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // doc.tokens.push({ lang: 'und', body: wof['wof:country'] });
+        // doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country'] });
 
         // add 'iso:country'
-        doc.tokens.push({ lang: 'und', body: wof['iso:country'] });
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['iso:country'] });
 
         // add 'wof:country_alpha3'
-        doc.tokens.push({ lang: 'und', body: wof['wof:country_alpha3'] });
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country_alpha3'] });
       }
     }
 
@@ -96,7 +96,11 @@ function insertWofRecord( wof, next ){
 
         // index each alternative name
         for( var n in wof[ attr ] ){
-          doc.tokens.push({ lang: match[1], body: wof[ attr ][ n ] });
+          doc.tokens.push({
+            lang: match[1],
+            tag: match[2],
+            body: wof[ attr ][ n ]
+          });
         }
 
         // doc - only store 'preferred' strings
@@ -140,7 +144,7 @@ function insertWofRecord( wof, next ){
   // normalize tokens
   doc.tokens = doc.tokens.reduce(( res, token ) => {
     analysis.normalize( token.body ).forEach( norm => {
-      res.push({ lang: token.lang, body: norm });
+      res.push({ lang: token.lang, tag: token.tag, body: norm });
     });
     return res;
   }, []);
@@ -176,9 +180,14 @@ function insertWofRecord( wof, next ){
   delete doc.tokens;
   delete doc.parentIds;
 
-  this.store.set( id, doc, () => {
-    this.store.setTokens( id, tokens, () => {
-      this.store.setLineage( id, parentIds, next );
+  this.store.set( id, doc, ( err ) => {
+    if( err ){ console.error( err ); }
+    this.store.setTokens( id, tokens, ( err ) => {
+      if( err ){ console.error( err ); }
+      this.store.setLineage( id, parentIds, ( err ) => {
+        if( err ){ console.error( err ); }
+        next();
+      });
     });
   });
 }

@@ -9,7 +9,7 @@ function SqlDatabase( db ){
 
 var TIMER = false;
 var DEBUG = false;
-var AUTOCOMPLETE = false;
+var AUTOCOMPLETE = true;
 
 // function debug(){}
 function debug( sql, args ){
@@ -51,12 +51,14 @@ SqlDatabase.prototype.hasSubjectAutocomplete = function( subject, cb ){
     'SELECT id',
     'FROM tokens as t1',
       'JOIN fulltext AS f1 ON f1.rowid = t1.rowid',
-    'WHERE f1.fulltext MATCH REPLACE($subject, " ", "_")',
+    'WHERE f1.fulltext MATCH $subject',
     'LIMIT 1'
   ].join('\n');
 
+  subject = subject.replace(/ /g, '_');
+
   var args = {
-    $subject: subject + ( AUTOCOMPLETE? '*':'' )
+    $subject: subject + ( AUTOCOMPLETE? ' OR ' + subject + '*':'' )
   };
 
   debug( sql, args );
@@ -70,10 +72,8 @@ SqlDatabase.prototype.hasSubjectAutocomplete = function( subject, cb ){
 
 SqlDatabase.prototype.matchSubjectDistinctSubjectIds = function( subject, cb ){
   var sql = [
-    // 'SELECT t1.id AS subjectId, t1.token AS subject, t2.id as objectId, t2.token AS object',
     'SELECT DISTINCT( t1.id ) AS subjectId',
     'FROM tokens AS t1',
-    // 'WHERE t1.lang IN (\'und\', \'eng\', t2.lang )',
     'WHERE t1.token = $subject',
     'ORDER BY t1.id ASC',
     'LIMIT $limit'
@@ -100,13 +100,16 @@ SqlDatabase.prototype.matchSubjectAutocompleteDistinctSubjectIds = function( sub
     'SELECT DISTINCT( t1.id ) AS subjectId',
     'FROM tokens AS t1',
       'JOIN fulltext AS f1 ON f1.rowid = t1.rowid',
-    'WHERE f1.fulltext MATCH REPLACE($subject, " ", "_")',
+    // 'WHERE f1.fulltext MATCH REPLACE($subject, " ", "_")',
+    'WHERE f1.fulltext MATCH $subject',
     'ORDER BY t1.id ASC',
     'LIMIT $limit'
   ].join('\n');
 
+  subject = subject.replace(/ /g, '_');
+
   var args = {
-    $subject: subject + ( AUTOCOMPLETE? '*':'' ),
+    $subject: subject + ( AUTOCOMPLETE? ' OR ' + subject + '*':'' ),
     $limit: MAX_RESULTS
   };
 
@@ -127,9 +130,9 @@ SqlDatabase.prototype.matchSubjectObject = function( subject, object, cb ){
     'FROM lineage AS l1',
       'JOIN tokens AS t1 ON t1.id = l1.id',
       'JOIN tokens AS t2 ON t2.id = l1.pid',
-    // 'WHERE t1.lang IN (\'und\', \'eng\', t2.lang )',
     'WHERE t1.token = $subject',
     'AND t2.token = $object',
+    'AND t1.lang IN (t2.lang, \'eng\', \'und\')',
     'ORDER BY t1.id ASC, t2.id ASC',
     'LIMIT $limit'
   ].join('\n');
@@ -157,9 +160,11 @@ SqlDatabase.prototype.matchSubjectObjectAutocomplete = function( subject, object
     'FROM lineage AS l1',
       'JOIN tokens AS t1 ON t1.id = l1.id',
       'JOIN tokens AS t2 ON t2.id = l1.pid',
-    // 'WHERE t1.lang IN (\'und\', \'eng\', t2.lang )',
     'WHERE t1.token = $subject',
     'AND t2.token LIKE $object',
+    'AND t1.lang IN (t2.lang, \'eng\', \'und\')',
+    // 'AND t2.lang IN (t1.lang, \'eng\', \'und\')',
+    // ( AUTOCOMPLETE? 'AND t2.tag NOT IN ("colloquial", "variant")' : '' ),
     'ORDER BY t1.id ASC, t2.id ASC',
     'LIMIT $limit'
   ].join('\n');

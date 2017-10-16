@@ -147,8 +147,6 @@ function query( db, tokenize, text, done ){
       }
     }
 
-    // console.log( group.reverse() );
-
     // handle single token groups
     if( 1 === group.length ){
       db.matchSubjectAutocompleteDistinctSubjectIds( group[ 0 ], ( err, states ) => {
@@ -158,37 +156,12 @@ function query( db, tokenize, text, done ){
         }
 
         var ids = states.map( state => { return state.subjectId; } );
-        // return done( null, ids, [ ids.length ], group );
-
         reduceRight( ids, [], group, null, done );
       });
     }
     else {
       reduceRight( [], [], group, null, done );
     }
-
-    // else {
-    //   console.time('starting set');
-    //   var res = [];
-    //
-    //   var foo = group.slice().reverse();
-    //   // foo.shift();
-    //
-    //   async.detectSeries( foo, ( subject, cb ) => {
-    //     db.matchSubject( subject, ( err, states ) => {
-    //       if( !err && states && states.length ){
-    //         res = states.map( state => { return state.subjectId; } );
-    //         return cb( null, true );
-    //       }
-    //       cb( null, false );
-    //     });
-    //   }, ( err, foo ) => {
-    //     console.timeEnd('starting set');
-    //     console.error( 'starting with', res.length );
-    //     // console.error( err, foo );
-    //     reduceRight( res, [], group, null, done );
-    //   });
-    // }
   });
 }
 
