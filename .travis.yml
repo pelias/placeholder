@@ -9,13 +9,19 @@ node_js:
 matrix:
   fast_finish: true
 script: npm run travis
+env:
+  - BUCKET=http://pelias-data.s3.amazonaws.com/placeholder
 before_install:
   - npm i -g npm@^3.0.0
 before_script:
   - npm prune
   - mkdir data
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/graph.json.gz | gunzip > data/graph.json;
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/store.sqlite3.gz | gunzip > data/store.sqlite3;
+  - '[ -e data/graph.json.gz ] || curl -sfo data/graph.json.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/graph.json.gz || true'
+  - '[ -e data/graph.json.gz ] || curl -sfo data/graph.json.gz ${BUCKET}/graph.json.gz || true'
+  - '[ -e data/store.sqlite3.gz ] || curl -sfo data/store.sqlite3.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/store.sqlite3.gz || true'
+  - '[ -e data/store.sqlite3.gz ] || curl -sfo data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz || true'
+  - gunzip -f data/graph.json.gz > data/graph.json
+  - gunzip -f data/store.sqlite3.gz > data/store.sqlite3
 after_success:
   - npm install -g npx
   - npx -p node@8 npm run semantic-release
