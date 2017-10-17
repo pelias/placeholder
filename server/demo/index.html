@@ -63,8 +63,7 @@
 
       function exec( text ){
 
-        $('#results li').remove();
-        $('#tokens').empty();
+        $('#results').empty();
         clearMap();
 
         search( text, function( results ){
@@ -131,12 +130,16 @@
 
       function render( results, groups ){
 
+        $('#results').empty();
+        $('#tokens').empty();
+        clearMap();
+
         // display token groups
         groups.forEach( function( win ){
           var buttons = win.map( function( token ){
             return '<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token + '</span></li>';
           });
-          $("#tokens").append('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
+          $("#tokens").html('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
         });
 
         // render the results
@@ -230,6 +233,11 @@
           exec( $('#text').val() );
           return false;
         });
+
+        $('#search').on( 'keyup', _.debounce( function( e ){
+          exec( $('#text').val() );
+          return false;
+        }, 200));
 
         $('#go').on( 'click', function( e ){
           $('#search').submit();
