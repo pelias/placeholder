@@ -2,10 +2,10 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
-  './lib/analysis',
-  './lib/permutations',
-  './lib/sorted',
-  './lib/TokenGraph',
+  './prototype/tokenize',
+  './prototype/query',
+  './prototype/wof',
+  './functional',
 ];
 
 // test runner
