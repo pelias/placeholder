@@ -1,6 +1,8 @@
 
 var express = require('express'),
-    Placeholder = require('../Placeholder.js');
+    cluster = require('cluster'),
+    Placeholder = require('../Placeholder.js'),
+    multicore = true;
 
 const morgan = require( 'morgan' );
 const logger = require('pelias-logger').get('interpolation');
@@ -35,11 +37,18 @@ app.use(log());
 
 // init placeholder
 console.error( 'loading data' );
-var ph = new Placeholder();
+var ph = new Placeholder({ readonly: true });
 ph.load();
 
 // store $ph on app
 app.locals.ph = ph;
+
+// generic http headers
+app.use((req, res, next) => {
+  res.header('Charset','utf8');
+  res.header('Cache-Control','public, max-age=120');
+  next();
+});
 
 // routes
 app.get( '/parser/search', require( './routes/search' ) );
@@ -49,15 +58,37 @@ app.get( '/parser/tokenize', require( './routes/tokenize' ) );
 
 // demo page
 app.use('/demo', express.static( __dirname + '/demo' ));
-app.use('/', function( req, res ){ res.redirect('/demo#eng'); });
-
-// start server
-app.listen( PORT, function() {
-  console.log( 'server listening on port', PORT );
-});
+app.use('/', (req, res) => { res.redirect('/demo#eng'); });
 
 // handle SIGTERM (required for fast docker restarts)
-process.on('SIGTERM', function(){
+process.on('SIGTERM', () => {
   ph.close();
   app.close();
 });
+
+// start multi-threaded server
+if( true === multicore ){
+  if( cluster.isMaster ){
+
+    // fork workers
+    require('os').cpus().forEach(cpu => {
+      cluster.fork();
+    });
+
+    cluster.on('exit', (worker, code, signal) => {
+      console.log('worker ' + worker.process.pid + ' died');
+    });
+
+  } else {
+    app.listen( PORT, () => {
+      console.log( 'worker listening on port', PORT );
+    });
+  }
+}
+
+// start single-threaded server
+else {
+  app.listen( PORT, () => {
+    console.log( 'server listening on port', PORT );
+  });
+}
