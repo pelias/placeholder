@@ -1,16 +1,38 @@
 
-var express = require('express'),
-    cluster = require('cluster'),
-    Placeholder = require('../Placeholder.js'),
-    multicore = true;
+/**
+  The http server improves performance on multicore machines by using the
+  node core 'cluster' module to fork worker processes.
 
-const morgan = require( 'morgan' );
-const logger = require('pelias-logger').get('interpolation');
-const through = require( 'through2' );
+  The default setting is to use all available CPUs, this will spawn 32 child
+  processes on a 32 core machine.
+
+  If you would like to disable this feature (maybe because you are running
+  inside a container) then you can do so by setting the env var CPUS=1
+
+  You may also specify exactly how many child processes you would like to 
+  spawn by setting the env var to a numeric value >1, eg CPUS=4
+
+  If the CPUS env var is set less than 1 or greater than os.cpus().length
+  then the default setting will be used (using all available cores).
+**/
+
+const os = require('os');
+const morgan = require('morgan');
+const express = require('express');
+const cluster = require('cluster');
+const through = require('through2');
 const _ = require('lodash');
 
-// optionally override port using env var
+const Placeholder = require('../Placeholder.js');
+const logger = require('pelias-logger').get('interpolation');
+
+// select the amount of cpus we will use
+const envCpus = parseInt( process.env.CPUS, 10 );
+const cpus = Math.min( Math.max( envCpus, 1 ), os.cpus().length );
+
+// optionally override port/host using env var
 var PORT = process.env.PORT || 3000;
+var HOST = process.env.HOST || undefined;
 var app = express();
 
 function log() {
@@ -67,28 +89,37 @@ process.on('SIGTERM', () => {
 });
 
 // start multi-threaded server
-if( true === multicore ){
+if( cpus > 1 ){
   if( cluster.isMaster ){
+    console.error('[master] using %d cpus', cpus);
+
+    // worker exit event
+    cluster.on('exit', (worker, code, signal) => {
+      console.error('[master] worker died', worker.process.pid);
+    });
+
+    // worker fork event
+    cluster.on('fork', (worker, code, signal) => {
+      console.error('[master] worker forked', worker.process.pid);
+    });
 
     // fork workers
-    require('os').cpus().forEach(cpu => {
+    for( var c=0; c<cpus; c++ ){
       cluster.fork();
-    });
-
-    cluster.on('exit', (worker, code, signal) => {
-      console.log('worker ' + worker.process.pid + ' died');
-    });
+    }
 
   } else {
-    app.listen( PORT, () => {
-      console.log( 'worker listening on port', PORT );
+    app.listen( PORT, HOST, () => {
+      console.error('[worker %d] listening on %s:%s', process.pid, HOST||'0.0.0.0', PORT);
     });
   }
 }
 
 // start single-threaded server
 else {
-  app.listen( PORT, () => {
-    console.log( 'server listening on port', PORT );
+  console.error('[master] using %d cpus', cpus);
+
+  app.listen( PORT, HOST, () => {
+    console.log('[master] listening on %s:%s', HOST||'0.0.0.0', PORT);
   });
 }
