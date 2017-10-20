@@ -19,6 +19,8 @@ Placeholder supports searching on and retrieving tokens in different languages a
 
 ---
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
+
 ## install
 
 ```bash
