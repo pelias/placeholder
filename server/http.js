@@ -9,7 +9,7 @@
   If you would like to disable this feature (maybe because you are running
   inside a container) then you can do so by setting the env var CPUS=1
 
-  You may also specify exactly how many child processes you would like to 
+  You may also specify exactly how many child processes you would like to
   spawn by setting the env var to a numeric value >1, eg CPUS=4
 
   If the CPUS env var is set less than 1 or greater than os.cpus().length
@@ -24,7 +24,7 @@ const through = require('through2');
 const _ = require('lodash');
 
 const Placeholder = require('../Placeholder.js');
-const logger = require('pelias-logger').get('interpolation');
+const logger = require('pelias-logger').get('placeholder');
 
 // select the amount of cpus we will use
 const envCpus = parseInt( process.env.CPUS, 10 );
