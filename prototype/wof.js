@@ -177,9 +177,11 @@ function insertWofRecord( wof, next ){
   var parentIds = doc.parentIds;
 
   // --- delete fields
+  // @todo: consider improving this behavior
   delete doc.tokens;
   delete doc.parentIds;
 
+  // @todo: consider confusion of using both this.store and this.index
   this.store.set( id, doc, ( err ) => {
     if( err ){ console.error( err ); }
     this.store.setTokens( id, tokens, ( err ) => {

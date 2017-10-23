@@ -17,18 +17,20 @@ module.exports.load = function( opts ){
   }
 
   // sql
-  var db = new SqlDatabase( this.store.db );
+  this.index = new SqlDatabase( this.store.db );
 
   // both
-  var tokenize = require('../wip/test_tokenize').tokenize.bind({ db: db });
-  var query = require('../wip/query').query.bind( null, db, tokenize );
+  // @todo: cleanup
+  // var tokenize = require('../wip/test_tokenize').tokenize.bind({ index: this.index });
+  // var query = require('../wip/query').query.bind( null, this.index, tokenize );
 
   // WIP
-  this.wip = {
-    db: db,
-    tokenize: tokenize,
-    query: query
-  };
+  // @todo: cleanup
+  // this.wip = {
+  //   db: this.index,
+  //   tokenize: tokenize,
+  //   query: query
+  // };
 };
 
 // save data to disk

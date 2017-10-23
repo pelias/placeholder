@@ -45,7 +45,7 @@ stream.pipe( split() )
 
 // convenience function for writing quick 'n easy test cases
 function runner( ph, actual, expected, next ){
-  ph.wip.query( actual, ( err, ids, mask, group ) => {
+  ph.query( actual, ( err, ids, mask, group ) => {
 
     process.stderr.write('.');
 

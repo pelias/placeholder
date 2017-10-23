@@ -1,87 +1,104 @@
 
 // plugin for tokenize
 var _ = require('lodash'),
+    async = require('async'),
     analysis = require('../lib/analysis'),
     permutations = require('../lib/permutations');
 
-module.exports.tokenize = function( input ){
+module.exports.tokenize = function( input, cb ){
+
+  // @todo: clean up
+  var self = this;
 
   // tokenize input
   var synonyms = analysis.tokenize( input );
-  var queries = synonyms.map( function( tokens ){
+  async.map( synonyms, function( tokens, cb1 ){
 
     // console.log( 'tokens', tokens );
 
     // expand token permutations
-    var perms = permutations.expand( tokens );
+    var perms = _.uniq( permutations.expand( tokens ).map( function( perm ){
+      return perm.join(' ');
+    }));
     // console.log( 'perms', perms );
 
-    // valid tokens are those which exist in the index
-    var validTokens = _.uniq( perms.map( function( perm ){
-      return perm.join(' ');
-    }).filter( this.graph.hasToken, this.graph ) );
-    // console.log( 'validTokens', validTokens );
+    var finalToken = perms[ perms.length -1 ];
 
-    // sort the largest matches first
-    validTokens.sort( function( a, b ){
-      return b.length - a.length;
-    });
+    async.filterSeries( perms, function( token, cb ){
 
-    //
-    var matches = {};
-    validTokens.forEach( function( row ){
-      var words = row.split(' ');
-      var word = words[0];
-      if( !matches.hasOwnProperty( word ) ){
-        matches[ word ] = [];
-      }
-      matches[ word ].push( row );
-    });
+      // @todo: could be affected by edge cases where tokens are repeated?
+      var containsFinalToken = ( token.lastIndexOf( finalToken ) === token.length - finalToken.length );
+      var method = ( containsFinalToken ) ? 'hasSubjectAutocomplete' : 'hasSubject';
+      // var method = 'hasSubjectAutocomplete';
 
-    // console.log( 'matches', matches );
+      // console.error( token );
+      // console.error( method, '\t', token );
 
-    var window = [];
-    for( var t=0; t<tokens.length; t++ ){
-      var token = tokens[t];
-      if( matches.hasOwnProperty( token ) ){
+      self.index[method]( token, function( bool ){
+        return cb( null, bool );
+      });
+    }, function( err, validTokens ){
 
-        for( var z=0; z<matches[token].length; z++ ){
-          var match = matches[token][z];
-          var split = match.split(/\s+/);
+      // sort the largest matches first
+      validTokens.sort( function( a, b ){
+        return b.length - a.length;
+      });
 
-          if( tokens.slice( t, t + split.length ).join(' ') === match ){
-            window.push( match );
-            t += split.length -1;
-            break;
+      //
+      var matches = {};
+      validTokens.forEach( function( row ){
+        var words = row.split(' ');
+        var word = words[0];
+        if( !matches.hasOwnProperty( word ) ){
+          matches[ word ] = [];
+        }
+        matches[ word ].push( row );
+      });
+
+      // console.log( 'matches', matches );
+
+      var window = [];
+      for( var t=0; t<tokens.length; t++ ){
+        var token = tokens[t];
+        if( matches.hasOwnProperty( token ) ){
+
+          for( var z=0; z<matches[token].length; z++ ){
+            var match = matches[token][z];
+            var split = match.split(/\s+/);
+
+            if( tokens.slice( t, t + split.length ).join(' ') === match ){
+              window.push( match );
+              t += split.length -1;
+              break;
+            }
           }
         }
       }
-    }
 
-    // console.log( 'window', window );
-    return window;
-  }, this);
+      // console.log( 'window', window );
+      return cb1( null, window );
+    });
+  }, function ( err, queries ){
 
-  // console.log( '[', queries.join( ', ' ), ']' );
+    // remove empty arrays
+    queries = queries.filter( function( query ){
+      return !!query.length;
+    });
 
-  // remove empty arrays
-  queries = queries.filter( function( query ){
-    return !!query.length;
-  });
-
-  // synonymous groupings
-  // this removes queries such as `[ B, C ]` where another group such as
-  // `[ A, B, C ]` exists.
-  // see: https://github.com/pelias/placeholder/issues/28
-  queries = queries.filter( function( query, i ){
-    for( var j=0; j<queries.length; j++ ){
-      if( j === i ){ continue; }
-      if( _.isEqual( query, queries[j].slice( -query.length ) ) ){
-        return false;
+    // synonymous groupings
+    // this removes queries such as `[ B, C ]` where another group such as
+    // `[ A, B, C ]` exists.
+    // see: https://github.com/pelias/placeholder/issues/28
+    queries = queries.filter( function( query, i ){
+      for( var j=0; j<queries.length; j++ ){
+        if( j === i ){ continue; }
+        if( _.isEqual( query, queries[j].slice( -query.length ) ) ){
+          return false;
+        }
       }
-    }
-    return true;
-  });
+      return true;
+    });
 
-  return queries;
+    return cb( null, queries );
+  });
 };

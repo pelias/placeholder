@@ -64,7 +64,9 @@ module.exports.tokenize = function(test, util) {
 // convenience function for writing quick 'n easy test cases
 function runner( test, ph, actual, expected ){
   test( actual, function(t) {
-    t.deepEqual( ph.tokenize( actual ), expected );
-    t.end();
+    ph.tokenize( actual, ( err, queries ) => {
+      t.deepEqual( queries, expected );
+      t.end();
+    });
   });
 }
