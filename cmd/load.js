@@ -15,11 +15,11 @@ process.stdin.pipe( split() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row, next );
              }, function flush( next ){
-               ph.printStatistics();
-               console.error('sorting...');
-               ph.graph.sort(); // sort all arrays
-               console.error('vacuuming sqlite db...');
-               ph.store.db.run('VACUUM;');
+              //  ph.printStatistics();
+               console.error('pre commit...');
+               ph.store.preCommit();
+              //  console.error('sorting...');
+              //  ph.graph.sort(); // sort all arrays
                console.error('saving...');
                ph.save();
                next();

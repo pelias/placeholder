@@ -45,20 +45,25 @@ stream.pipe( split() )
 
 // convenience function for writing quick 'n easy test cases
 function runner( ph, actual, expected, next ){
-  var resultIds;
-  try {
+  ph.wip.query( actual, ( err, ids, mask, group ) => {
+
     process.stderr.write('.');
-    // console.time('took');
-    resultIds = ph.query( ph.tokenize( actual ) );
-    // console.timeEnd('took');
-    assert.ok( -1 !== resultIds.indexOf( expected ), 'id found in results' );
-  } catch( e ){
-    console.log( '\n' );
-    console.log( 'input:    ', actual );
-    console.log( 'tokens:   ', ph.tokenize( actual ) );
-    console.log( 'expected: ', expected );
-    console.log( 'actual:   ', resultIds.join(', ') );
-    console.log();
-  }
-  next();
+
+    try {
+      assert.ok( -1 !== ids.indexOf( expected ), 'id found in results' );
+    }
+
+    catch( e ){
+      console.log('\n');
+      console.log('input:    ', actual);
+      console.log('expected: ', expected);
+      console.log('actual:   ', ids.join(', '));
+      console.log();
+    }
+
+    finally {
+      next();
+    }
+
+  });
 }
