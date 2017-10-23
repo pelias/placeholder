@@ -9,6 +9,7 @@
     "units": "node test/units.js | tap-spec",
     "integration": "node test/integration.js | tap-spec",
     "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
+    "all": "npm run units && npm run integration && npm run funcs",
     "start": "node server/http.js",
     "extract": "bash ./cmd/extract.sh",
     "build": "bash ./cmd/build.sh",
@@ -20,7 +21,7 @@
     "check-dependencies": "node_modules/.bin/npm-check --skip-unused --production",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
-    "travis": "npm run check-dependencies && npm run units && npm run integration && npm run funcs"
+    "travis": "npm run check-dependencies && npm run all"
   },
   "repository": {
     "type": "git",

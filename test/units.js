@@ -5,7 +5,6 @@ var tests = [
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
-  './lib/TokenGraph',
 ];
 
 // test runner

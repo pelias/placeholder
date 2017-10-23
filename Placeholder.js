@@ -1,10 +1,12 @@
 
 var _ = require('lodash'),
-    DocStore = require('./lib/DocStore');
+    DocStore = require('./lib/DocStore'),
+    TokenIndex = require('./lib/TokenIndex');
 
 // constructor
 function Placeholder( options ){
   this.store = new DocStore( options );
+  this.index = new TokenIndex( options );
 }
 
 // load prototype methods from modules
