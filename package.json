@@ -35,7 +35,7 @@
     "lodash": "^4.17.4",
     "lower-case": "^1.1.4",
     "morgan": "^1.9.0",
-    "pelias-logger": "0.2.0",
+    "pelias-logger": "0.3.0",
     "remove-accents": "^0.4.0",
     "require-dir": "^0.3.1",
     "sorted-intersect": "^0.1.4",
@@ -48,7 +48,7 @@
     "jshint": "^2.5.6",
     "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
-    "semantic-release": "^6.3.2",
+    "semantic-release": "^8.2.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
   },
