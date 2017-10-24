@@ -155,23 +155,10 @@ function insertWofRecord( wof, next ){
     return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
   });
 
-  // store tokens in graph
-  // doc.tokens.forEach(token => {
-  //   this.graph.addToken( doc.id, token );
-  // }, this);
-
   // deduplicate parent ids
   doc.parentIds = doc.parentIds.filter(( pid, pos ) => {
     return doc.parentIds.indexOf( pid ) === pos;
   });
-
-  // store parent ids
-  // doc.parentIds.forEach(pid => {
-  //   this.graph.setEdge( pid, doc.id );
-  // }, this);
-
-  // --- store ---
-  // add doc to store
 
   var tokens = doc.tokens;
   var parentIds = doc.parentIds;
@@ -184,9 +171,9 @@ function insertWofRecord( wof, next ){
   // @todo: consider confusion of using both this.store and this.index
   this.store.set( id, doc, ( err ) => {
     if( err ){ console.error( err ); }
-    this.store.setTokens( id, tokens, ( err ) => {
+    this.index.setTokens( id, tokens, ( err ) => {
       if( err ){ console.error( err ); }
-      this.store.setLineage( id, parentIds, ( err ) => {
+      this.index.setLineage( id, parentIds, ( err ) => {
         if( err ){ console.error( err ); }
         next();
       });

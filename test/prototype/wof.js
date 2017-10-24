@@ -10,7 +10,7 @@ var _ = require('lodash'),
   each function was called and which arguments were provided.
 **/
 var Mock = function(){
-  var calls = { setTokens: [], setLineage: [], set: [] };
+  var calls = { set: [], setTokens: [], setLineage: [] };
   this._calls = calls;
 
   // mock methods
@@ -18,7 +18,9 @@ var Mock = function(){
     set: function( _, __, next ){
       calls.set.push( Array.prototype.slice.call( arguments, 0, 2 ) );
       next();
-    },
+    }
+  };
+  this.index = {
     setTokens: function( _, __, next ){
       calls.setTokens.push( Array.prototype.slice.call( arguments, 0, 2 ) );
       next();

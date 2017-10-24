@@ -1,15 +1,24 @@
 
 // plugin to handle I/O
-var fs = require('fs'),
-    path = require('path');
-
-var dataDir = process.env.PLACEHOLDER_DATA || path.join( __dirname, '../data/');
-var path = path.join( dataDir, 'store.sqlite3' );
+const path = require('path');
+const dataDir = process.env.PLACEHOLDER_DATA || path.join( __dirname, '../data/');
+const dbPath = path.join( dataDir, 'store.sqlite3' );
 
 // load data from disk
 module.exports.load = function( opts ){
-  this.store.open( path, opts ); // document store
-  this.index.open( path, opts ); // token index
+  this.store.open( dbPath, opts ); // document store
+  this.index.open( dbPath, opts ); // token index
+};
+
+// populate databases
+module.exports.populate = function(){
+  this.store.populate();
+  this.index.populate();
+};
+
+// optimize databases
+module.exports.optimize = function(){
+  this.index.optimize();
 };
 
 // gracefully close connections

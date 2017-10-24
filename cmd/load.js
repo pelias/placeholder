@@ -14,13 +14,12 @@ process.stdin.pipe( split() )
              .pipe( parse() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row, next );
-             }, function flush( next ){
-              //  ph.printStatistics();
-               console.error('pre commit...');
-               ph.store.preCommit();
-              //  console.error('sorting...');
-              //  ph.graph.sort(); // sort all arrays
-               console.error('saving...');
-               ph.save();
-               next();
+             }, function flush( done ){
+               console.error('populate...');
+               ph.populate();
+               console.error('optimize...');
+               ph.optimize();
+               console.error('close...');
+               ph.close();
+               done();
              }));
