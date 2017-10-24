@@ -30,7 +30,9 @@ function insertWofRecord( wof, next ){
       lat: wof['lbl:latitude'] || wof['geom:latitude'],
       lon: wof['lbl:longitude'] ||wof['geom:longitude']
     },
-    names: {}
+    names: {},
+    tokens: [],
+    parentIds: []
   };
 
   // --- cast strings to numeric types ---
@@ -44,44 +46,41 @@ function insertWofRecord( wof, next ){
 
   // --- tokens ---
 
-  // convenience function with $id bound as first argument
-  var addToken = this.graph.addToken.bind( this.graph, id );
-
   // disable adding tokens to the index for the 'empire' placetype.
   // this ensures empire records are not retrieved via search.
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    analysis.normalize( wof['wof:label'] ).forEach( addToken );
+    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:label'] });
 
     // add 'wof:name'
-    analysis.normalize( wof['wof:name'] ).forEach( addToken );
+    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
 
     // add 'wof:abbreviation'
-    analysis.normalize( wof['wof:abbreviation'] ).forEach( addToken );
+    doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
-    // analysis.normalize( wof['ne:abbrev'] ).forEach( addToken );
+    // doc.tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
 
     // fields specific to countries & dependencies
     if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        analysis.normalize( wof['ne:iso_a2'] ).forEach( addToken );
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a2'] });
 
         // add 'ne:iso_a3'
-        analysis.normalize( wof['ne:iso_a3'] ).forEach( addToken );
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a3'] });
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // analysis.normalize( wof['wof:country'] ).forEach( addToken );
+        // doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country'] });
 
         // add 'iso:country'
-        analysis.normalize( wof['iso:country'] ).forEach( addToken );
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['iso:country'] });
 
         // add 'wof:country_alpha3'
-        analysis.normalize( wof['wof:country_alpha3'] ).forEach( addToken );
+        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country_alpha3'] });
       }
     }
 
@@ -97,7 +96,11 @@ function insertWofRecord( wof, next ){
 
         // index each alternative name
         for( var n in wof[ attr ] ){
-          analysis.normalize( wof[ attr ][ n ] ).forEach( addToken );
+          doc.tokens.push({
+            lang: match[1],
+            tag: match[2],
+            body: wof[ attr ][ n ]
+          });
         }
 
         // doc - only store 'preferred' strings
@@ -121,7 +124,7 @@ function insertWofRecord( wof, next ){
     parentId = wof['wof:parent_id'];
     if( 'string' === typeof parentId ){ parentId = parseInt( parentId, 10 ); }
     if( !isNaN( parentId ) && parentId !== id && parentId > 0 ){
-      this.graph.setEdge( parentId, id ); // is child of
+      doc.parentIds.push( parentId ); // is child of
     }
   }
 
@@ -131,15 +134,62 @@ function insertWofRecord( wof, next ){
      var pid = wof['wof:hierarchy'][h][i];
      if( 'string' === typeof pid ){ pid = parseInt( pid, 10 ); }
      if( pid === id || pid <= 0 || pid === parentId ){ continue; }
-     //  this.graph.setEdge( id, pid, 'p' ); // has parent
-     this.graph.setEdge( pid, id ); // is child of
+     //  doc.parentIds.push( id, pid, 'p' ); // has parent
+     doc.parentIds.push( pid ); // is child of
    }
   }
 
+  // ---- consume aggregates
+
+  // normalize tokens
+  doc.tokens = doc.tokens.reduce(( res, token ) => {
+    analysis.normalize( token.body ).forEach( norm => {
+      res.push({ lang: token.lang, tag: token.tag, body: norm });
+    });
+    return res;
+  }, []);
+
+  // deduplicate tokens
+  var seen = {};
+  doc.tokens = doc.tokens.filter( token => {
+    return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
+  });
+
+  // store tokens in graph
+  // doc.tokens.forEach(token => {
+  //   this.graph.addToken( doc.id, token );
+  // }, this);
+
+  // deduplicate parent ids
+  doc.parentIds = doc.parentIds.filter(( pid, pos ) => {
+    return doc.parentIds.indexOf( pid ) === pos;
+  });
+
+  // store parent ids
+  // doc.parentIds.forEach(pid => {
+  //   this.graph.setEdge( pid, doc.id );
+  // }, this);
+
   // --- store ---
   // add doc to store
-  this.store.set( id, doc, next );
 
+  var tokens = doc.tokens;
+  var parentIds = doc.parentIds;
+
+  // --- delete fields
+  delete doc.tokens;
+  delete doc.parentIds;
+
+  this.store.set( id, doc, ( err ) => {
+    if( err ){ console.error( err ); }
+    this.store.setTokens( id, tokens, ( err ) => {
+      if( err ){ console.error( err ); }
+      this.store.setLineage( id, parentIds, ( err ) => {
+        if( err ){ console.error( err ); }
+        next();
+      });
+    });
+  });
 }
 
 // check if value is a valid number

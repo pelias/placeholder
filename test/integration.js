@@ -5,6 +5,8 @@ var tests = [
   './prototype/tokenize',
   './prototype/query',
   './prototype/wof',
+  './wip/InvertedIndex',
+  './wip/Database',
   './functional',
 ];
 

@@ -1,0 +1,44 @@
+select * from ( select token from tokens where id = 85633345 ), ( select token from tokens where id IN ( select pid from lineage where id = 85633345 ) );
+
+
+SELECT t1.id, t1.token, t2.token
+FROM tokens AS t1
+JOIN tokens AS t2
+WHERE t2.id IN ( SELECT pid FROM lineage WHERE id = t1.id )
+AND ( t2.lang = t1.lang OR t2.lang IN ('und', 'eng') );
+
+
+time sqlite3 store.sqlite3.save < query.sql > dump.out
+
+
+SELECT * FROM tokens AS t1
+   ...> JOIN lineage AS l1 ON t1.id = l1.id
+   ...> JOIN tokens AS t2 ON t2.id = l1.pid AND ( t2.lang = t1.lang OR t2.lang IN ('und', 'eng') )
+   ...> WHERE t1.token = 'ontario'
+   ...> AND t2.token LIKE 'ca%'
+   ...> GROUP BY t1.id, t2.id;
+
+
+
+
+
+   DROP TABLE IF EXISTS example;
+   CREATE VIRTUAL TABLE example USING fts5(token, tokenize="unicode61 tokenchars ' '", prefix="1 2 3 4 5");
+   INSERT INTO example(rowid, token) SELECT rowid, token FROM tokens;
+
+
+   SELECT t1.id AS subjectId, t1.token AS subject, t2.id as objectId, t2.token AS object
+   FROM tokens AS t1
+   JOIN lineage AS l1 ON l1.id = t1.id
+   JOIN tokens AS t2 ON t2.id = l1.pid AND t2.lang IN ('und', 'eng', t1.lang )
+   WHERE t1.token = 'ontario'
+   AND t2.rowid IN (
+     SELECT rowid FROM example
+     WHERE example MATCH '"ca*"'
+     LIMIT 1000
+   )
+   GROUP BY t1.id, t2.id;
+
+
+
+   SELECT count(rowid) FROM example WHERE example MATCH 'ca' LIMIT 1000;
