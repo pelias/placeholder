@@ -227,7 +227,7 @@ the whosonfirst project is distributed as geojson files, so in order to speed up
 
 the following command will iterate over all the `geojson` files under the `WOF_DIR` path, extracting the relevant properties in to the file `data/wof.extract`.
 
-this process takes about 7 minutes and consumes ~650MB of disk space, you will only need to run this command once, or when your local `whosonfirst-data` files are updated.
+this process can take 30-60 minutes to run and consumes ~350MB of disk space, you will only need to run this command once, or when your local `whosonfirst-data` files are updated.
 
 ```bash
 $ WOF_DIR=/data/whosonfirst-data/data npm run extract
