@@ -6,7 +6,7 @@ module.exports = function( req, res ){
 
   // var tokens = ph.tokenize( req.query.text );
 
-  ph.wip.tokenize( req.query.text, ( err, groups ) => {
+  ph.tokenize( req.query.text, ( err, groups ) => {
     res.status(200).json( groups );
   });
 

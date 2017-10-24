@@ -6,7 +6,7 @@ var split = require('split2'),
     ph = new Placeholder();
 
 // run import pipeline
-console.error('importing...');
+console.error('import...');
 ph.load({ reset: true });
 
 // run import
@@ -15,7 +15,7 @@ process.stdin.pipe( split() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row, next );
              }, function flush( done ){
-               console.error('populate...');
+               console.error('populate fts...');
                ph.populate();
                console.error('optimize...');
                ph.optimize();
