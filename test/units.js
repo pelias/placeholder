@@ -8,6 +8,7 @@ var tests = [
   './lib/Database',
   './lib/DocStore',
   './lib/TokenIndex',
+  './lib/Queries',
 ];
 
 // test runner
