@@ -1,12 +1,23 @@
 
+var analysis = require('../../lib/analysis');
+
 module.exports = function( req, res ){
 
   // placeholder
   var ph = req.app.locals.ph;
 
   // perform query
-  var tokens = ph.tokenize( req.query.text );
-  var ids = ph.query( tokens );
+  var permutations = ph.tokenize( req.query.text );
+  var q = ph.query( permutations );
+
+  // @todo: don't run tokenize again, it was previously run by ph.tokenize()
+  var tokens = analysis.tokenize( req.query.text );
+  var tokensAsString = tokens[q.match.index].join(' ');
+  var unparsedPrefix = tokensAsString.substring( 0, tokensAsString.indexOf( q.match.token )-1 );
+
+  console.error('tokens:', tokens);
+  console.error('match:', q.match);
+  console.error('unparsedPrefix:', unparsedPrefix);
 
   // language property
   var lang;
@@ -15,7 +26,7 @@ module.exports = function( req, res ){
   }
 
   // fetch all result docs by id
-  ph.store.getMany( ids, function( err, results ){
+  ph.store.getMany( q.ids, function( err, results ){
     if( err ){ return res.status(500).send(err); }
     if( !results || !results.length ){ return res.status(200).send([]); }
 

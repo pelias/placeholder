@@ -11,7 +11,7 @@ var commands = {
   search: function( input, cb ){
     console.time('took');
     var tokens = ph.tokenize( input );
-    var results = ph.query( tokens );
+    var results = ph.query( tokens ).ids;
     ph.store.getMany( results, function( err, docs ){
       if( err ){ return console.error( err ); }
       docs.forEach( function( doc ){

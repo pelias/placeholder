@@ -18,7 +18,7 @@ module.exports.query = function(test, util) {
 // convenience function for writing quick 'n easy test cases
 function runner( test, ph, actual, expected ){
   test( actual, function(t) {
-    t.deepEqual( ph.query( actual ), expected );
+    t.deepEqual( ph.query( actual ).ids, expected );
     t.end();
   });
 }
