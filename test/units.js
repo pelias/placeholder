@@ -2,6 +2,7 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
+  './lib/parse',
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
