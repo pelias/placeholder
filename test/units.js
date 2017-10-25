@@ -5,6 +5,7 @@ var tests = [
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
+  './lib/Database',
 ];
 
 // test runner
