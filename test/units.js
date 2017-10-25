@@ -10,7 +10,9 @@ var tests = [
   './lib/DocStore',
   './lib/TokenIndex',
   './lib/Queries',
+  './prototype/wof',
   './prototype/io',
+  './prototype/tokenize',
 ];
 
 // test runner

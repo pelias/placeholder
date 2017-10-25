@@ -2,9 +2,8 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
-  './prototype/tokenize',
+  './prototype/tokenize_integration',
   './prototype/query',
-  './prototype/wof',
   './functional',
 ];
 

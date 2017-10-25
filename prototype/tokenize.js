@@ -1,104 +1,140 @@
 
 // plugin for tokenize
-var _ = require('lodash'),
+const _ = require('lodash'),
     async = require('async'),
     analysis = require('../lib/analysis'),
     permutations = require('../lib/permutations');
 
-module.exports.tokenize = function( input, cb ){
+function tokenize( input, cb ){
 
   // @todo: clean up
-  var self = this;
+  const self = this;
 
   // tokenize input
-  var synonyms = analysis.tokenize( input );
-  async.map( synonyms, function( tokens, cb1 ){
+  const synonyms = analysis.tokenize( input );
 
-    // console.log( 'tokens', tokens );
+  const mapEach = ( tokens, mapCb ) => {
 
     // expand token permutations
-    var perms = _.uniq( permutations.expand( tokens ).map( function( perm ){
-      return perm.join(' ');
-    }));
-    // console.log( 'perms', perms );
+    const perms = _permutations(tokens);
 
-    var finalToken = perms[ perms.length -1 ];
+    // @todo: improve this?
+    const finalToken = perms[ perms.length -1 ];
 
-    async.filterSeries( perms, function( token, cb ){
+    const truthTest = function( phrase, cb ){
 
       // @todo: could be affected by edge cases where tokens are repeated?
-      var containsFinalToken = ( token.lastIndexOf( finalToken ) === token.length - finalToken.length );
+      var containsFinalToken = ( phrase.lastIndexOf( finalToken ) === phrase.length - finalToken.length );
       var method = ( containsFinalToken ) ? 'hasSubjectAutocomplete' : 'hasSubject';
-      // var method = 'hasSubjectAutocomplete';
 
-      // console.error( token );
-      // console.error( method, '\t', token );
-
-      self.index[method]( token, function( bool ){
+      self.index[method]( phrase, function( bool ){
         return cb( null, bool );
       });
-    }, function( err, validTokens ){
+    };
 
-      // sort the largest matches first
-      validTokens.sort( function( a, b ){
-        return b.length - a.length;
-      });
-
-      //
-      var matches = {};
-      validTokens.forEach( function( row ){
-        var words = row.split(' ');
-        var word = words[0];
-        if( !matches.hasOwnProperty( word ) ){
-          matches[ word ] = [];
-        }
-        matches[ word ].push( row );
-      });
-
-      // console.log( 'matches', matches );
-
-      var window = [];
-      for( var t=0; t<tokens.length; t++ ){
-        var token = tokens[t];
-        if( matches.hasOwnProperty( token ) ){
-
-          for( var z=0; z<matches[token].length; z++ ){
-            var match = matches[token][z];
-            var split = match.split(/\s+/);
-
-            if( tokens.slice( t, t + split.length ).join(' ') === match ){
-              window.push( match );
-              t += split.length -1;
-              break;
-            }
-          }
-        }
-      }
-
-      // console.log( 'window', window );
-      return cb1( null, window );
+    // run the filter
+    async.filterSeries( perms, truthTest, (err, matchedPermutations) => {
+      return mapCb( null, _groups(tokens, matchedPermutations) );
     });
-  }, function ( err, queries ){
+  };
 
-    // remove empty arrays
-    queries = queries.filter( function( query ){
-      return !!query.length;
-    });
-
-    // synonymous groupings
-    // this removes queries such as `[ B, C ]` where another group such as
-    // `[ A, B, C ]` exists.
-    // see: https://github.com/pelias/placeholder/issues/28
-    queries = queries.filter( function( query, i ){
-      for( var j=0; j<queries.length; j++ ){
-        if( j === i ){ continue; }
-        if( _.isEqual( query, queries[j].slice( -query.length ) ) ){
-          return false;
-        }
-      }
-      return true;
-    });
-
-    return cb( null, queries );
+  // run map
+  async.map( synonyms, mapEach, (err, queries) => {
+    return cb( null, _queryFilter( queries ) );
   });
-};
+}
+
+// expand token permutations
+function _permutations(tokens){
+  return _.uniq(permutations.expand(tokens).map(perm => perm.join(' ')));
+}
+
+// remove unwanted queries
+function _queryFilter(queries){
+
+  // remove empty arrays
+  queries = queries.filter( function( query ){
+    return 0 !== query.length;
+  });
+
+  // remove synonymous groupings
+  queries = queries.filter( function( query, i ){
+    for( var j=0; j<queries.length; j++ ){
+      if( j === i ){ continue; }
+      if( _.isEqual( query, queries[j].slice( -query.length ) ) ){
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return queries;
+}
+
+// a convenience function to very efficiently compare a range
+// of elements in array A to the entirety of array B.
+function _isArrayRangeIsEqual( A, B, offset ){
+  if( A.length-(offset||0) < B.length ){ return false; }
+  for( var i=0; i<B.length; i++ ){
+    if( A[(offset||0)+i] !== B[i] ){
+      return false;
+    }
+  }
+  return true;
+}
+
+// select the optimal phrases from those found in the database
+function _groups(tokens, phrases) {
+
+  // sort the largest phrases first
+  phrases.sort((a, b) => b.length - a.length);
+
+  // generate a map of matched phrases where the
+  // key is a single word token (the first word in
+  // the phrase) and the values is an array of
+  // phrases which contain that word.
+  const index = {};
+  phrases.forEach( phrase => {
+    const words = phrase.split(/\s+/);
+    const firstWord = words[0];
+    if( !index.hasOwnProperty( firstWord ) ){
+      index[ firstWord ] = [];
+    }
+    index[ firstWord ].push( words );
+  });
+
+  // an array of the chosen phrases
+  const groups = [];
+
+  // iterate over the input tokens
+  for( var t=0; t<tokens.length; t++ ){
+    var token = tokens[t];
+    var matches = index[token];
+
+    // skip tokens with no matching phrases in the index
+    if( !matches ){ continue; }
+
+    // iterate over each matching phrase in the index
+    for( var z=0; z<matches.length; z++ ){
+      var phrase = matches[z];
+
+      // select the longest matching phrase
+      if( !_isArrayRangeIsEqual( tokens, phrase, t ) ){ continue; }
+
+      // add the match to the groups array
+      groups.push( phrase.join(' ') );
+
+      // advance the iterator to skip any other words in the phrase
+      t += phrase.length -1;
+      break;
+    }
+  }
+
+  return groups;
+}
+
+module.exports.tokenize = tokenize;
+module.exports._permutations = _permutations;
+module.exports._queryFilter = _queryFilter;
+module.exports._groups = _groups;
+module.exports._isArrayRangeIsEqual = _isArrayRangeIsEqual;
