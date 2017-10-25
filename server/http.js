@@ -28,7 +28,7 @@ const logger = require('pelias-logger').get('placeholder');
 
 // select the amount of cpus we will use
 const envCpus = parseInt( process.env.CPUS, 10 );
-const cpus = Math.min( Math.max( envCpus, 1 ), os.cpus().length );
+const cpus = Math.min( Math.max( envCpus || Infinity, 1 ), os.cpus().length );
 
 // optionally override port/host using env var
 var PORT = process.env.PORT || 3000;
