@@ -48,8 +48,8 @@ module.exports._indexContainsPhrase = function(test, common) {
   test('_indexContainsPhrase - partial token - true', function(t) {
     t.plan(3);
     var mock = tokenize._indexContainsPhrase.bind({
-      index: { hasSubjectAutocomplete: ( phrase, cb ) => {
-        t.equals(phrase, 'hello world');
+      index: { hasSubject: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world' + PARTIAL_TOKEN_SUFFIX);
         return cb( true );
       }}
     });
@@ -62,8 +62,8 @@ module.exports._indexContainsPhrase = function(test, common) {
   test('_indexContainsPhrase - partial token - false', function(t) {
     t.plan(3);
     var mock = tokenize._indexContainsPhrase.bind({
-      index: { hasSubjectAutocomplete: ( phrase, cb ) => {
-        t.equals(phrase, 'hello world');
+      index: { hasSubject: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world' + PARTIAL_TOKEN_SUFFIX);
         return cb( false );
       }}
     });

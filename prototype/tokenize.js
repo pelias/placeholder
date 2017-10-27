@@ -20,11 +20,10 @@ function tokenize(input, cb){
 function _indexContainsPhrase(phrase, cb){
 
   // handle partial (autocomplete-style) tokens.
-  var partialToken = phrase.slice(-1) === analysis.PARTIAL_TOKEN_SUFFIX;
-  if( partialToken ){ phrase = phrase.slice(0, -1); } // remove suffix char
+  // var partialToken = phrase.slice(-1) === analysis.PARTIAL_TOKEN_SUFFIX;
+  // if( partialToken ){ phrase = phrase.slice(0, -1); } // remove suffix char
 
-  var method = partialToken ? 'hasSubjectAutocomplete': 'hasSubject';
-  this.index[ method ]( phrase, function( bool ){
+  this.index.hasSubject( phrase, function( bool ){
     return cb( null, bool );
   });
 }

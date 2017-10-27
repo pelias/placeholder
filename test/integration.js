@@ -5,6 +5,7 @@ var tests = [
   './prototype/tokenize_integration',
   './prototype/query',
   './functional',
+  './functional_autocomplete',
 ];
 
 // test runner

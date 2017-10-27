@@ -139,7 +139,7 @@ function query( text, done ){
 
       // autocomplete last word
       if( isObjectLastToken ){
-        index.matchSubjectObjectAutocomplete( subject, object, next );
+        index.matchSubjectObject( subject, object, next );
       }
       // reset
       else if( reset ){
@@ -153,7 +153,7 @@ function query( text, done ){
 
     // handle single token groups
     if( 1 === group.length ){
-      index.matchSubjectAutocompleteDistinctSubjectIds( group[ 0 ], ( err, states ) => {
+      index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, states ) => {
 
         if( err || !states || !states.length ){
           return done( err, [], [], group );

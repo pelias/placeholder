@@ -7,11 +7,8 @@ module.exports.constructor = function(test, common) {
     t.equal( typeof db._queryBool, 'function' );
     t.equal( typeof db._queryAll, 'function' );
     t.equal( typeof db.hasSubject, 'function' );
-    t.equal( typeof db.hasSubjectAutocomplete, 'function' );
     t.equal( typeof db.matchSubjectDistinctSubjectIds, 'function' );
-    t.equal( typeof db.matchSubjectAutocompleteDistinctSubjectIds, 'function' );
     t.equal( typeof db.matchSubjectObject, 'function' );
-    t.equal( typeof db.matchSubjectObjectAutocomplete, 'function' );
     t.end();
   });
 };
@@ -45,7 +42,7 @@ module.exports.hasSubject = function(test, common) {
 };
 
 module.exports.hasSubjectAutocomplete = function(test, common) {
-  test('hasSubjectAutocomplete', function(t) {
+  test('hasSubject - autocomplete', function(t) {
     var db = new TokenIndex();
     db.open('/tmp/db', { memory: true, reset: true });
 
@@ -62,13 +59,13 @@ module.exports.hasSubjectAutocomplete = function(test, common) {
     db.populate();
 
     t.plan(7);
-    db.hasSubjectAutocomplete('hel', t.false );
-    db.hasSubjectAutocomplete('hello', t.false );
-    db.hasSubjectAutocomplete('hello wor', t.false );
-    db.hasSubjectAutocomplete('hello world', t.true );
-    db.hasSubjectAutocomplete('a', t.false );
-    db.hasSubjectAutocomplete('a b', t.false );
-    db.hasSubjectAutocomplete('a b c', t.true );
+    db.hasSubject('hel\x26', t.true );
+    db.hasSubject('hello\x26', t.true );
+    db.hasSubject('hello wor\x26', t.true );
+    db.hasSubject('hello world\x26', t.true );
+    db.hasSubject('a\x26', t.true );
+    db.hasSubject('a b\x26', t.true );
+    db.hasSubject('a b c\x26', t.true );
   });
 };
 
@@ -119,7 +116,7 @@ module.exports.matchSubjectDistinctSubjectIds = function(test, common) {
 };
 
 module.exports.matchSubjectAutocompleteDistinctSubjectIds = function(test, common) {
-  test('matchSubjectAutocompleteDistinctSubjectIds', function(t) {
+  test('matchSubjectDistinctSubjectIds - autocomplete', function(t) {
     var db = new TokenIndex();
     db.open('/tmp/db', { memory: true, reset: true });
 
@@ -142,25 +139,29 @@ module.exports.matchSubjectAutocompleteDistinctSubjectIds = function(test, commo
       t.deepEquals(ids, []);
     };
 
-    t.plan(14);
-    db.matchSubjectAutocompleteDistinctSubjectIds('hel', fail);
-    db.matchSubjectAutocompleteDistinctSubjectIds('hello', fail);
-    db.matchSubjectAutocompleteDistinctSubjectIds('hello wor', fail);
-    db.matchSubjectAutocompleteDistinctSubjectIds('hello world', (err, ids) => {
+    const passOne = (err, ids) => {
       t.false(err);
       t.deepEquals(ids, [
         { subjectId: 1 },
         { subjectId: 3 }
       ]);
-    });
-    db.matchSubjectAutocompleteDistinctSubjectIds('a', fail);
-    db.matchSubjectAutocompleteDistinctSubjectIds('a b', fail);
-    db.matchSubjectAutocompleteDistinctSubjectIds('a b c', (err, ids) => {
+    };
+
+    const passTwo = (err, ids) => {
       t.false(err);
       t.deepEquals(ids, [
         { subjectId: 2 }
       ]);
-    });
+    };
+
+    t.plan(14);
+    db.matchSubjectDistinctSubjectIds('hel\x26', passOne);
+    db.matchSubjectDistinctSubjectIds('hello\x26', passOne);
+    db.matchSubjectDistinctSubjectIds('hello wor\x26', passOne);
+    db.matchSubjectDistinctSubjectIds('hello world\x26', passOne);
+    db.matchSubjectDistinctSubjectIds('a\x26', passTwo);
+    db.matchSubjectDistinctSubjectIds('a b\x26', passTwo);
+    db.matchSubjectDistinctSubjectIds('a b c\x26', passTwo);
   });
 };
 
@@ -218,7 +219,7 @@ module.exports.matchSubjectObject = function(test, common) {
 };
 
 module.exports.matchSubjectObjectAutocomplete = function(test, common) {
-  test('matchSubjectObjectAutocomplete', function(t) {
+  test('matchSubjectObject - autocomplete', function(t) {
     var db = new TokenIndex();
     db.open('/tmp/db', { memory: true, reset: true });
 
@@ -250,18 +251,18 @@ module.exports.matchSubjectObjectAutocomplete = function(test, common) {
     };
 
     t.plan(10);
-    db.matchSubjectObjectAutocomplete('paris', 'paris', fail);
-    db.matchSubjectObjectAutocomplete('france', 'france', fail);
-    db.matchSubjectObjectAutocomplete('texas', 'texas', fail);
+    db.matchSubjectObject('paris', 'par\x26', fail);
+    db.matchSubjectObject('france', 'franc\x26', fail);
+    db.matchSubjectObject('texas', 'tex\x26', fail);
 
-    db.matchSubjectObjectAutocomplete('paris', 'france', (err, ids) => {
+    db.matchSubjectObject('paris', 'fr\x26', (err, ids) => {
       t.false(err);
       t.deepEquals(ids, [
         { subjectId: 1, objectId: 3 }
       ]);
     });
 
-    db.matchSubjectObjectAutocomplete('paris', 'texas', (err, ids) => {
+    db.matchSubjectObject('paris', 't\x26', (err, ids) => {
       t.false(err);
       t.deepEquals(ids, [
         { subjectId: 2, objectId: 4 }
