@@ -1,6 +1,6 @@
 
-var through = require('through2');
-var parse = require('../../lib/parse');
+const through = require('through2');
+const parser = require('../../lib/jsonParseStream');
 
 module.exports.parse = function(test, common) {
   test('parse', function(t) {
@@ -21,7 +21,7 @@ module.exports.parse = function(test, common) {
       next();
     };
 
-    const stream = parse();
+    const stream = parser();
     stream.pipe( through.obj( xform, flush ) );
     stream.write('{ "hello": "world" }');
     stream.write('{ "test": "message" }');

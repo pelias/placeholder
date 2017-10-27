@@ -1,7 +1,7 @@
 
 var split = require('split2'),
     through = require('through2'),
-    parse = require('../lib/parse'),
+    parser = require('../lib/jsonParseStream'),
     Placeholder = require('../Placeholder'),
     ph = new Placeholder();
 
@@ -11,7 +11,7 @@ ph.load({ reset: true });
 
 // run import
 process.stdin.pipe( split() )
-             .pipe( parse() )
+             .pipe( parser() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row, next );
              }, function flush( done ){

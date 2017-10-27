@@ -2,7 +2,7 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
-  './lib/parse',
+  './lib/jsonParseStream',
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
