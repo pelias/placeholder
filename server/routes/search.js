@@ -1,14 +1,23 @@
 
+const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
+
 module.exports = function( req, res ){
 
   // placeholder
   var ph = req.app.locals.ph;
 
+  // input text
+  var text = req.query.text || '';
+
+  // live mode (autocomplete-style search)
+  // we append a byte indicating the last word is potentially incomplete.
+  if( req.query.mode === 'live' ){
+    text += PARTIAL_TOKEN_SUFFIX;
+  }
+
   // perform query
-  // var tokens = ph.tokenize( req.query.text );
-  // var ids = ph.query( tokens );
   console.time('took');
-  ph.query( req.query.text, ( err, ids, mask, group ) => {
+  ph.query( text, ( err, ids, mask, group ) => {
     console.timeEnd('took');
 
     // language property

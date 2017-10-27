@@ -1,11 +1,107 @@
 
 const tokenize = require('../../prototype/tokenize');
+const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
 
 module.exports.exports = function(test, common) {
   test('exports', function(t) {
     t.equal( typeof tokenize.tokenize, 'function' );
+    t.equal( typeof tokenize._indexContainsPhrase, 'function' );
+    t.equal( typeof tokenize._eachSynonym, 'function' );
     t.equal( typeof tokenize._permutations, 'function' );
+    t.equal( typeof tokenize._queryFilter, 'function' );
+    t.equal( typeof tokenize._isArrayRangeIsEqual, 'function' );
+    t.equal( typeof tokenize._groups, 'function' );
     t.end();
+  });
+};
+
+// test if a phrase exists in the index
+module.exports._indexContainsPhrase = function(test, common) {
+  test('_indexContainsPhrase - true', function(t) {
+    t.plan(3);
+    var mock = tokenize._indexContainsPhrase.bind({
+      index: { hasSubject: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world');
+        return cb( true );
+      }}
+    });
+
+    mock('hello world', (err, bool) => {
+      t.false(err);
+      t.true(bool);
+    });
+  });
+  test('_indexContainsPhrase - false', function(t) {
+    t.plan(3);
+    var mock = tokenize._indexContainsPhrase.bind({
+      index: { hasSubject: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world');
+        return cb( false );
+      }}
+    });
+
+    mock('hello world', (err, bool) => {
+      t.false(err);
+      t.false(bool);
+    });
+  });
+  test('_indexContainsPhrase - partial token - true', function(t) {
+    t.plan(3);
+    var mock = tokenize._indexContainsPhrase.bind({
+      index: { hasSubjectAutocomplete: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world');
+        return cb( true );
+      }}
+    });
+
+    mock('hello world' + PARTIAL_TOKEN_SUFFIX, (err, bool) => {
+      t.false(err);
+      t.true(bool);
+    });
+  });
+  test('_indexContainsPhrase - partial token - false', function(t) {
+    t.plan(3);
+    var mock = tokenize._indexContainsPhrase.bind({
+      index: { hasSubjectAutocomplete: ( phrase, cb ) => {
+        t.equals(phrase, 'hello world');
+        return cb( false );
+      }}
+    });
+
+    mock('hello world' + PARTIAL_TOKEN_SUFFIX, (err, bool) => {
+      t.false(err);
+      t.false(bool);
+    });
+  });
+};
+
+// expand each synonym in to its permutations and check them against the database.
+module.exports._eachSynonym = function(test, common) {
+  test('_eachSynonym', function(t) {
+
+    const synonym = ['hello', 'big', 'bright', 'new', 'world'];
+    const expected = [ 'hello big', 'bright', 'new world' ];
+
+    var mock = tokenize._eachSynonym.bind({
+      index: { hasSubject: ( phrase, cb ) => {
+        switch( phrase ){
+          case 'hello big':
+          case 'hello new':
+          case 'new world':
+          case 'bright':
+          case 'world':
+            return cb( true );
+          default:
+            return cb( false );
+        }
+      }}
+    });
+
+    mock(synonym, (err, phrases) => {
+      t.false(err);
+      t.deepEqual(phrases, expected);
+      t.end();
+    });
   });
 };
 

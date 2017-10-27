@@ -5,42 +5,39 @@ const _ = require('lodash'),
     analysis = require('../lib/analysis'),
     permutations = require('../lib/permutations');
 
-function tokenize( input, cb ){
-
-  // @todo: clean up
-  const self = this;
+function tokenize(input, cb){
 
   // tokenize input
-  const synonyms = analysis.tokenize( input );
+  const synonyms = analysis.tokenize(input);
 
-  const mapEach = ( tokens, mapCb ) => {
-
-    // expand token permutations
-    const perms = _permutations(tokens);
-
-    // @todo: improve this?
-    const finalToken = perms[ perms.length -1 ];
-
-    const truthTest = function( phrase, cb ){
-
-      // @todo: could be affected by edge cases where tokens are repeated?
-      var containsFinalToken = ( phrase.lastIndexOf( finalToken ) === phrase.length - finalToken.length );
-      var method = ( containsFinalToken ) ? 'hasSubjectAutocomplete' : 'hasSubject';
-
-      self.index[method]( phrase, function( bool ){
-        return cb( null, bool );
-      });
-    };
-
-    // run the filter
-    async.filterSeries( perms, truthTest, (err, matchedPermutations) => {
-      return mapCb( null, _groups(tokens, matchedPermutations) );
-    });
-  };
-
-  // run map
-  async.map( synonyms, mapEach, (err, queries) => {
+  // test each synonym against the database and select the best synonyms
+  async.map( synonyms, _eachSynonym.bind(this), (err, queries) => {
     return cb( null, _queryFilter( queries ) );
+  });
+}
+
+// test if a phrase exists in the index
+function _indexContainsPhrase(phrase, cb){
+
+  // handle partial (autocomplete-style) tokens.
+  var partialToken = phrase.slice(-1) === analysis.PARTIAL_TOKEN_SUFFIX;
+  if( partialToken ){ phrase = phrase.slice(0, -1); } // remove suffix char
+
+  var method = partialToken ? 'hasSubjectAutocomplete': 'hasSubject';
+  this.index[ method ]( phrase, function( bool ){
+    return cb( null, bool );
+  });
+}
+
+// expand each synonym in to its permutations and check them against the database.
+function _eachSynonym(synonym, cb){
+
+  // expand token permutations
+  const phrases = _permutations(synonym);
+
+  // filter out permutations which do not match phrases in the index
+  async.filterSeries( phrases, _indexContainsPhrase.bind(this), (err, matchedPhrases) => {
+    return cb( null, _groups(synonym, matchedPhrases) );
   });
 }
 
@@ -73,7 +70,7 @@ function _queryFilter(queries){
 
 // a convenience function to very efficiently compare a range
 // of elements in array A to the entirety of array B.
-function _isArrayRangeIsEqual( A, B, offset ){
+function _isArrayRangeIsEqual(A, B, offset){
   if( A.length-(offset||0) < B.length ){ return false; }
   for( var i=0; i<B.length; i++ ){
     if( A[(offset||0)+i] !== B[i] ){
@@ -134,7 +131,9 @@ function _groups(tokens, phrases) {
 }
 
 module.exports.tokenize = tokenize;
+module.exports._indexContainsPhrase = _indexContainsPhrase;
+module.exports._eachSynonym = _eachSynonym;
 module.exports._permutations = _permutations;
 module.exports._queryFilter = _queryFilter;
-module.exports._groups = _groups;
 module.exports._isArrayRangeIsEqual = _isArrayRangeIsEqual;
+module.exports._groups = _groups;
