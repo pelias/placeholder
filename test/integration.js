@@ -3,7 +3,7 @@ var path = require('path');
 
 var tests = [
   './prototype/tokenize_integration',
-  './prototype/query',
+  './prototype/query_integration',
   './functional',
   './functional_autocomplete',
 ];

@@ -1,172 +1,108 @@
 
 var async = require('async');
 var util = require('util');
-var sorted = require('../lib/sorted');
+var Result = require('../lib/Result');
 
 var debug = false;
 
-function query( text, done ){
+function reduce( index, res ){
 
-  // @todo: cleanup
-  var index = this.index;
+  // we are on the last subject for this iteration
+  if( -1 === res.pos.subject ){
 
-  console.time('tokenize');
+    // we still have more object tokens to try
+    // so we reset the iterators.
+    if( res.pos.object > 1 ){
 
-  var tokens = this.tokenize( text, function( err, groups ){
+      // reset (move on to the next object)
+      res.reset = true;
 
-    if( debug ){
-      console.timeEnd('tokenize');
-      console.error( groups );
+      // we have more values to try, update the positions
+      // move on to the next object and start checking subjects to its left
+      res.pos.prev_object = res.pos.object;
+      res.pos.object--;
+      res.pos.subject = res.pos.object-1;
     }
 
-    // @todo: handle multiple groups?
-    var group = groups[0];
+    // we have run out of tokens (all object tokens used up)
+    else {
 
-    // handle group lengths
+      // convert the internal hashmap to a sorted array of integers
+      const idsArray = res.getIdsAsArray();
+
+      // we didn't match anything, so simply return the ids for
+      // the rightmost token.
+      if( !idsArray.length ){
+        return index.matchSubjectDistinctSubjectIds( res.group[ 1 ], ( err, rows ) => {
+          const subjectIds = rows.map( row => { return row.subjectId; } );
+          return res.done( null, subjectIds, [], res.group );
+        });
+      }
+
+      // we are done, return the result
+      return res.done( null, idsArray, res.mask, res.group );
+    }
+  }
+
+  if( debug && res.reset ){ console.error( 'RESET!!' ); }
+  if( debug ){
+    console.log( '---------------------------------------------------' );
+    console.log( util.format( '"%s" >>> "%s"', res.getSubject(), res.getObject() ) );
+  }
+
+  // reset
+  if( res.reset ){
+    res.reset = false; // return to default value
+    index.matchSubjectDistinctSubjectIds( res.getPreviousObject(), (err, rows) => {
+      res.intersect( err, rows );
+      reduce( index, res );
+    });
+  }
+  // regular
+  else {
+    index.matchSubjectObject( res.getSubject(), res.getObject(), (err, rows) => {
+      res.intersect( err, rows );
+      reduce( index, res );
+    });
+  }
+}
+
+function query( text, done ){
+  this.tokenize( text, function( err, groups ){
+
+    // @todo: handle multiple groups?
+    const group = groups[0];
+
+    // handle empty group
     if( !group || group.length <= 0 ){
       console.error( 'group length <= 0' );
       return done( null, [], [], [] );
     }
-    // else if( group.length === 1 ){
-    //   group.push( '' );
-    // }
-
-    function reduceRight( res, mask, group, pos, cb ){
-
-      // initialize pos
-      if( null === pos ){
-        pos = {
-          subject: group.length -2,
-          object: group.length -1
-        };
-      }
-
-      // reset indicates if we failed to find any matches for
-      // object with any of the subjects
-      // in this case we will use the previous object value
-      // as a 'seed' for the id pool
-      var reset = false;
-      var prevObject = null;
-
-      // check if we are done
-      if( -1 === pos.subject ){
-        if( pos.object <= 1 ){
-
-          if( 0 === res.length ){
-            return index.matchSubjectDistinctSubjectIds( group[ 1 ], ( err, states ) => {
-              var subjectIds = states.map( state => { return state.subjectId; } );
-              return cb( null, subjectIds, [], group );
-            });
-          }
-
-          return cb( null, res, mask, group );
-        }
-
-        // reset
-        reset = true;
-        prevObject = group[ pos.object ];
-
-        // more values to try (do a reset)
-        pos.object--;
-        pos.subject = pos.object-1;
-      }
-
-      var subject = group[ pos.subject ];
-      var object = group[ pos.object ];
-
-      var isObjectLastToken = ( pos.object === group.length -1 );
-
-      if( debug && reset ){ console.error( 'RESET!!' ); }
-      if( debug ){
-        console.log( '---------------------------------------------------' );
-        // console.log( 'subject', subject );
-        // console.log( 'object', object );
-        console.log( util.format( '"%s" >>> "%s"', subject, object ) );
-      }
-
-      var next = function( err, states ){
-
-        if( debug ){
-          console.log('found (' + states.length + '):');
-          console.log( states.map( state => {
-            return ' - ' + util.format(
-              '"%s" (%d) >>> "%s" (%d)',
-              state.subject,
-              state.subjectId,
-              state.object,
-              state.objectId
-            );
-          }).join('\n'));
-        }
-
-        if( !err && states.length ){
-          var subjectIds = states.map( state => { return state.subjectId; } );
-
-          if( !res.length ){
-            // first match
-            res = sorted.unique( subjectIds );
-            pos.object--;
-            pos.subject = pos.object;
-            mask.unshift( subjectIds.length );
-          } else {
-
-            var matches = [];
-            states.forEach( state => {
-              // console.error( 'state', state );
-              if( -1 !== res.indexOf( state.objectId ) ){
-                matches.push( state.subjectId );
-              }
-            });
-
-            if( matches.length >= 1 ){
-              res = sorted.unique( matches );
-              pos.object--;
-              pos.subject = pos.object;
-              mask.unshift( matches.length );
-            } else {
-              if( debug ){ console.error( 'failed!' ); }
-              mask.unshift( 0 );
-            }
-          }
-        } else {
-          mask.unshift( 0 );
-        }
-
-        pos.subject--;
-        if( debug ){ console.error( 'res', res ); }
-        reduceRight( res, mask, group, pos, cb );
-      };
-
-      // autocomplete last word
-      if( isObjectLastToken ){
-        index.matchSubjectObject( subject, object, next );
-      }
-      // reset
-      else if( reset ){
-        index.matchSubjectDistinctSubjectIds( prevObject, next );
-      }
-      // regular
-      else {
-        index.matchSubjectObject( subject, object, next );
-      }
-    }
 
     // handle single token groups
     if( 1 === group.length ){
-      index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, states ) => {
+      this.index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, rows ) => {
 
-        if( err || !states || !states.length ){
+        if( err || !rows || !rows.length ){
           return done( err, [], [], group );
         }
 
-        var ids = states.map( state => { return state.subjectId; } );
-        reduceRight( ids, [], group, null, done );
+        const res = new Result( group );
+        res.ids = Result.subjectIdsFromRows( rows );
+        res.done = done;
+
+        reduce( this.index, res );
       });
     }
+    // handle multiple token groups
     else {
-      reduceRight( [], [], group, null, done );
+
+      const res = new Result( group );
+      res.done = done;
+
+      reduce( this.index, res );
     }
-  });
+  }.bind(this));
 }
 
 module.exports.query = query;
