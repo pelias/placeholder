@@ -18,11 +18,6 @@ function tokenize(input, cb){
 
 // test if a phrase exists in the index
 function _indexContainsPhrase(phrase, cb){
-
-  // handle partial (autocomplete-style) tokens.
-  // var partialToken = phrase.slice(-1) === analysis.PARTIAL_TOKEN_SUFFIX;
-  // if( partialToken ){ phrase = phrase.slice(0, -1); } // remove suffix char
-
   this.index.hasSubject( phrase, function( bool ){
     return cb( null, bool );
   });
