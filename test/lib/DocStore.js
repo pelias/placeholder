@@ -16,7 +16,7 @@ module.exports.constructor = function(test, common) {
 module.exports.reset = function(test, common) {
   test('reset', function(t) {
     var db = new DocStore();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
     
     // ensure table has been created
     const sql = 'PRAGMA table_info(docs)';
@@ -29,10 +29,33 @@ module.exports.reset = function(test, common) {
   });
 };
 
+module.exports.checkSchema = function(test, common) {
+  test('checkSchema - empty', function(t) {
+    var db = new DocStore();
+    db.open('/tmp/db', { test: true });
+    t.throws(() => { db.checkSchema(); }, /schema invalid: table docs/);
+    t.end();
+  });
+  test('checkSchema - valid', function(t) {
+    var db = new DocStore();
+    db.open('/tmp/db', { test: true, reset: true });
+    t.doesNotThrow(() => { db.checkSchema(); });
+    t.end();
+  });
+  test('checkSchema - invalid', function(t) {
+    var db = new DocStore();
+    db.open('/tmp/db', { test: true });
+    db.db.exec('DROP TABLE IF EXISTS docs');
+    db.db.exec('CREATE TABLE docs( id INTEGER PRIMARY KEY, foo TEXT )');
+    t.throws(() => { db.checkSchema(); });
+    t.end();
+  });
+};
+
 module.exports.set = function(test, common) {
   test('set', function(t) {
     var db = new DocStore();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -54,7 +77,7 @@ module.exports.set = function(test, common) {
 module.exports.get = function(test, common) {
   test('get', function(t) {
     var db = new DocStore();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -75,7 +98,7 @@ module.exports.get = function(test, common) {
 module.exports.getMany = function(test, common) {
   test('getMany', function(t) {
     var db = new DocStore();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -95,7 +118,7 @@ module.exports.getMany = function(test, common) {
   });
   test('getMany - empty ids array', function(t) {
     var db = new DocStore();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 

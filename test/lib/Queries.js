@@ -16,7 +16,7 @@ module.exports.constructor = function(test, common) {
 module.exports.hasSubject = function(test, common) {
   test('hasSubject', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {
@@ -44,7 +44,7 @@ module.exports.hasSubject = function(test, common) {
 module.exports.hasSubjectAutocomplete = function(test, common) {
   test('hasSubject - autocomplete', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {
@@ -72,7 +72,7 @@ module.exports.hasSubjectAutocomplete = function(test, common) {
 module.exports.matchSubjectDistinctSubjectIds = function(test, common) {
   test('matchSubjectDistinctSubjectIds', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {
@@ -118,7 +118,7 @@ module.exports.matchSubjectDistinctSubjectIds = function(test, common) {
 module.exports.matchSubjectAutocompleteDistinctSubjectIds = function(test, common) {
   test('matchSubjectDistinctSubjectIds - autocomplete', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {
@@ -168,7 +168,7 @@ module.exports.matchSubjectAutocompleteDistinctSubjectIds = function(test, commo
 module.exports.matchSubjectObject = function(test, common) {
   test('matchSubjectObject', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {
@@ -221,7 +221,7 @@ module.exports.matchSubjectObject = function(test, common) {
 module.exports.matchSubjectObjectAutocomplete = function(test, common) {
   test('matchSubjectObject - autocomplete', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const tokens = {

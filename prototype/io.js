@@ -22,6 +22,13 @@ module.exports.optimize = function(){
   this.index.optimize();
 };
 
+// check schema of databases match
+// the schema expected by the codebase
+module.exports.checkSchema = function(){
+  this.store.checkSchema();
+  this.index.checkSchema();
+};
+
 // gracefully close connections
 module.exports.close = function(){
   this.store.close();

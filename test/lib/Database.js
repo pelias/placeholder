@@ -11,6 +11,7 @@ module.exports.constructor = function(test, common) {
     t.equal( typeof db.reset, 'function' );
     t.equal( typeof db.populate, 'function' );
     t.equal( typeof db.optimize, 'function' );
+    t.equal( typeof Database.assertSchema, 'function' );
     t.end();
   });
 };
@@ -27,14 +28,14 @@ module.exports.open = function(test, common) {
     db.optimize = t.end;
 
     // open connection
-    db.open('/tmp/db', { memory: true });
+    db.open('/tmp/db', { test: true });
     t.equal( db.db.constructor.name, 'Database' );
     t.deepEqual( db.db, {
       inTransaction: false,
       open: true,
       memory: true,
       readonly: false,
-      name: '/tmp/db'
+      name: db.db.name
     });
 
     t.end();
@@ -47,7 +48,7 @@ module.exports.open = function(test, common) {
     db.configure = t.end;
 
     // open connection
-    db.open('/tmp/db', { memory: true });
+    db.open('/tmp/db', { test: true });
   });
 
   test('open - runs reset', function(t) {
@@ -57,7 +58,7 @@ module.exports.open = function(test, common) {
     db.reset = t.end;
 
     // open connection
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
   });
 
   test('open - runs optimize', function(t) {
@@ -67,14 +68,14 @@ module.exports.open = function(test, common) {
     db.optimize = t.end;
 
     // open connection
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
   });
 };
 
 module.exports.close = function(test, common) {
   test('close', function(t) {
     var db = new Database();
-    db.open('/tmp/db', { memory: true });
+    db.open('/tmp/db', { test: true });
     t.true( db.db.open );
     db.close();
     t.false( db.db.open );
@@ -85,7 +86,7 @@ module.exports.close = function(test, common) {
 module.exports.prepare = function(test, common) {
   test('prepare', function(t) {
     var db = new Database();
-    db.open('/tmp/db', { memory: true });
+    db.open('/tmp/db', { test: true });
     
     t.equal(typeof db.stmt, 'undefined');
     
@@ -107,7 +108,7 @@ module.exports.prepare = function(test, common) {
 module.exports.configure = function(test, common) {
   test('configure', function(t) {
     var db = new Database();
-    db.open('/tmp/db', { memory: true });
+    db.open('/tmp/db', { test: true });
 
     // configure
     const pragma_checks = [

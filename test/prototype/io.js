@@ -14,6 +14,7 @@ module.exports.exports = function(test, common) {
     t.equal( typeof io.load, 'function' );
     t.equal( typeof io.populate, 'function' );
     t.equal( typeof io.optimize, 'function' );
+    t.equal( typeof io.checkSchema, 'function' );
     t.equal( typeof io.close, 'function' );
     t.end();
   });
@@ -24,7 +25,7 @@ module.exports.load = function(test, common) {
 
     const ph = new MockPlaceholder();
     const options = { foo: 'bar' };
-    
+
     t.plan(4);
 
     const expectedFilename = path.join(__dirname, '../../data/store.sqlite3');
@@ -47,7 +48,7 @@ module.exports.load = function(test, common) {
 
     const ph = new MockPlaceholder();
     const options = { foo: 'bar' };
-    
+
     t.plan(4);
 
     process.env.PLACEHOLDER_DATA = '/my_data_dir/';
@@ -75,7 +76,7 @@ module.exports.populate = function(test, common) {
   test('populate', function(t) {
 
     const ph = new MockPlaceholder();
-    
+
     t.plan(2);
 
     // run 'populate' on both dbs
@@ -90,7 +91,7 @@ module.exports.optimize = function(test, common) {
   test('optimize', function(t) {
 
     const ph = new MockPlaceholder();
-    
+
     t.plan(1);
 
     // only run 'optimize' on one db
@@ -101,11 +102,26 @@ module.exports.optimize = function(test, common) {
   });
 };
 
+module.exports.checkSchema = function(test, common) {
+  test('checkSchema', function(t) {
+
+    const ph = new MockPlaceholder();
+
+    t.plan(2);
+
+    // run 'checkSchema' on both dbs
+    ph.store.checkSchema = t.false;
+    ph.index.checkSchema = t.false;
+
+    ph.checkSchema();
+  });
+};
+
 module.exports.close = function(test, common) {
   test('close', function(t) {
 
     const ph = new MockPlaceholder();
-    
+
     t.plan(2);
 
     // run 'close' on both dbs

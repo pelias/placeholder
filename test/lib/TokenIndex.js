@@ -17,7 +17,7 @@ module.exports.constructor = function(test, common) {
 module.exports.reset = function(test, common) {
   test('reset', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
     
     // ensure table has been created
     var sql = 'PRAGMA table_info(lineage)';
@@ -55,10 +55,46 @@ module.exports.reset = function(test, common) {
   });
 };
 
+module.exports.checkSchema = function(test, common) {
+  test('checkSchema - empty', function(t) {
+    var db = new TokenIndex();
+    db.open('/tmp/db', { test: true });
+    t.throws(() => { db.checkSchema(); }, /schema invalid: table lineage/);
+    t.end();
+  });
+  test('checkSchema - valid', function(t) {
+    var db = new TokenIndex();
+    db.open('/tmp/db', { test: true, reset: true });
+    t.doesNotThrow(() => { db.checkSchema(); });
+    t.end();
+  });
+  test('checkSchema - invalid lineage', function(t) {
+    var db = new TokenIndex();
+    db.open('/tmp/db', { test: true, reset: true });
+    db.db.exec('DROP TABLE IF EXISTS lineage');
+    t.throws(() => { db.checkSchema(); }, /schema invalid: table lineage/);
+    t.end();
+  });
+  test('checkSchema - invalid tokens', function(t) {
+    var db = new TokenIndex();
+    db.open('/tmp/db', { test: true, reset: true });
+    db.db.exec('DROP TABLE IF EXISTS tokens');
+    t.throws(() => { db.checkSchema(); }, /schema invalid: table tokens/);
+    t.end();
+  });
+  test('checkSchema - invalid fulltext', function(t) {
+    var db = new TokenIndex();
+    db.open('/tmp/db', { test: true, reset: true });
+    db.db.exec('DROP TABLE IF EXISTS fulltext');
+    t.throws(() => { db.checkSchema(); }, /schema invalid: table fulltext/);
+    t.end();
+  });
+};
+
 module.exports.populate = function(test, common) {
   test('populate', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     // prepare some sql statments
     const fulltext = {
@@ -91,7 +127,7 @@ module.exports.populate = function(test, common) {
 module.exports.setLineage = function(test, common) {
   test('setLineage', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -111,7 +147,7 @@ module.exports.setLineage = function(test, common) {
   });
   test('setLineage - empty pids array', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -124,7 +160,7 @@ module.exports.setLineage = function(test, common) {
 module.exports.setTokens = function(test, common) {
   test('setTokens', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
@@ -147,7 +183,7 @@ module.exports.setTokens = function(test, common) {
   });
   test('setTokens - empty tokens array', function(t) {
     var db = new TokenIndex();
-    db.open('/tmp/db', { memory: true, reset: true });
+    db.open('/tmp/db', { test: true, reset: true });
 
     t.plan(1);
 
