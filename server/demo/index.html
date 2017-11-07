@@ -61,16 +61,16 @@
         'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'marinearea', 'country', 'empire', 'continent', 'ocean', 'planet'
       ];
 
-      function exec( text ){
+      function exec( args ){
 
         $('#results').empty();
         clearMap();
 
-        search( text, function( results ){
+        search( args, function( results ){
           results = results || [];
 
           // load token groups
-          tokenize( text, function( groups ){
+          tokenize( args, function( groups ){
             groups = groups || [];
 
             // render results
@@ -164,9 +164,8 @@
           .done(cb);
       };
 
-      function search( text, cb ){
-        console.info( 'search', text );
-        var args = { text: text };
+      function search( args, cb ){
+        console.info( 'search', args );
 
         // get language from url hash
         var hash = window.location.hash.substr(1);
@@ -174,7 +173,7 @@
           args.lang = hash;
         }
 
-        saveText( text );
+        saveText( args.text );
         request( '/parser/search', args, cb );
       }
 
@@ -188,9 +187,9 @@
       //   request( '/parser/findbyid', { ids: ids.join(',') }, cb );
       // }
 
-      function tokenize( text, cb ){
-        console.info( 'tokenize', text );
-        request( '/parser/tokenize', { text: text }, cb );
+      function tokenize( args, cb ){
+        console.info( 'tokenize', args );
+        request( '/parser/tokenize', args, cb );
       }
 
       function clearMap(){
@@ -229,15 +228,39 @@
 
       $(document).ready(function() {
 
-        $('#search').on( 'submit', function( e ){
-          exec( $('#text').val() );
+        var searchMode = function( e ){
+          exec({ text: $('#text').val() });
+          return false;
+        };
+
+        var liveMode = _.debounce( function( e ){
+          if( e.which === 13 ){ return false; } // not for enter key
+
+          var args = { text: $('#text').val() };
+
+          // live mode
+          if( $('#live').is(':checked') ){ args.mode = 'live'; }
+
+          exec( args );
+          return false;
+        }, 200 );
+
+        // button / keyup event handlers
+        $('#search').on( 'submit', searchMode );
+        $('#search').on( 'keyup', liveMode );
+
+        // checkbox change event handler
+        $('#live').change( function( e ) {
+
+          // enable/disable event handler
+          $('#search').off( 'keyup', liveMode );
+          if( e.target.checked ){
+            $('#search').on( 'keyup', liveMode );
+          }
+
+          refresh();
           return false;
         });
-
-        $('#search').on( 'keyup', _.debounce( function( e ){
-          exec( $('#text').val() );
-          return false;
-        }, 200));
 
         $('#go').on( 'click', function( e ){
           $('#search').submit();
@@ -282,6 +305,9 @@
           <div class="col-md-6">
 
             <div class="input-group">
+              <span class="input-group-addon">
+                <input id="live" type="checkbox" checked="checked" />
+              </span>
               <input id="text" type="text" class="form-control" placeholder="Search for...">
               <span class="input-group-btn">
                 <button id="go" class="btn btn-default" type="button">Parse!</button>
