@@ -32,31 +32,33 @@ module.exports = function( req, res ){
       if( !results || !results.length ){ return res.status(200).send([]); }
 
       // get a list of parent ids
-      var parentIds = getParentIds( results );
+      const parentIds = getParentIds( results );
 
       // load all the parents
-      ph.store.getMany( parentIds, function( err, parentResults ){
+      ph.store.getMany( parentIds, ( err, parentResults ) =>{
 
-        // @todo handle errors
-        // if( err ){ return res.status(500).send({}); }
-        // if( !parentResults || !parentResults.length ){ return res.status(404).send({}); }
+        // a database error occurred
+        if( err ){ console.error( 'error fetching parent ids', err ); }
+
+        // handle case where the database was unable to return any rows
         parentResults = parentResults || [];
 
         // create a map of parents
-        var parents = rowsToIdMap( parentResults );
+        const parents = rowsToIdMap( parentResults );
 
         // map documents to dict using id as key
-        var docs = results.map( function( result ){
+        const docs = results.map( function( result ){
           return mapResult( ph, result, parents, lang );
         });
 
         // sort results according to sorting rules
         docs.sort( sortingAlgorithm );
 
+        // send json
         res.status(200).json( docs );
       });
     });
-  }); // end query
+  });
 };
 
 /**
@@ -66,12 +68,12 @@ module.exports = function( req, res ){
 function sortingAlgorithm( a, b ){
 
   // condition 1 - population
-  var a1 = a.population || 0;
-  var b1 = b.population || 0;
+  const a1 = a.population || 0;
+  const b1 = b.population || 0;
 
   // condition 2 - geom.area
-  var a2 = a.geom && a.geom.area || 0;
-  var b2 = b.geom && b.geom.area || 0;
+  const a2 = a.geom && a.geom.area || 0;
+  const b2 = b.geom && b.geom.area || 0;
 
   if( a1 < b1 ){ return +1; }
   if( a1 > b1 ){ return -1; }
@@ -100,7 +102,7 @@ function mapResult( ph, result, parents, lang ){
 }
 
 function mapLineage( ph, lineage, parents, lang ){
-  var res = {};
+  const res = {};
 
   for( var attr in lineage ){
     var parent = parents[ lineage[ attr ] ];
@@ -132,7 +134,7 @@ function mapLineage( ph, lineage, parents, lang ){
 
 // convert array of results to map using id as key
 function rowsToIdMap( rows ){
-  var map = {};
+  const map = {};
   rows.forEach( function( row ){
     map[ row.id ] = row;
   });
@@ -141,7 +143,7 @@ function rowsToIdMap( rows ){
 
 // get a unique array of parent ids
 function getParentIds( results ){
-  var parentIds = {};
+  const parentIds = {};
   results.forEach( function( row ){
     row.lineage.forEach( function( lineage ){
       for( var attr in lineage ){
