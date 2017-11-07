@@ -1,6 +1,6 @@
 
 // plugin for whosonfirst
-var _ = require('lodash'),
+const _ = require('lodash'),
     dir = require('require-dir'),
     analysis = require('../lib/analysis'),
     language = dir('../config/language');
@@ -16,7 +16,7 @@ function insertWofRecord( wof, next ){
 
   // --- document which will be saved in the doc store ---
 
-  var doc = {
+  const doc = {
     id: id,
     name: wof['wof:label'] || wof['wof:name'],
     abbr: getAbbreviation( wof ),
@@ -30,10 +30,11 @@ function insertWofRecord( wof, next ){
       lat: wof['lbl:latitude'] || wof['geom:latitude'],
       lon: wof['lbl:longitude'] ||wof['geom:longitude']
     },
-    names: {},
-    tokens: [],
-    parentIds: []
+    names: {}
   };
+
+  var tokens = [];
+  var parentIds = [];
 
   // --- cast strings to numeric types ---
   // note: sometimes numeric properties in WOF can be encoded as strings.
@@ -51,36 +52,36 @@ function insertWofRecord( wof, next ){
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:label'] });
+    tokens.push({ lang: 'und', tag: 'label', body: wof['wof:label'] });
 
     // add 'wof:name'
-    doc.tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
+    tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
 
     // add 'wof:abbreviation'
-    doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
+    tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
-    // doc.tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
+    // tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
 
     // fields specific to countries & dependencies
     if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a2'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a2'] });
 
         // add 'ne:iso_a3'
-        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a3'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a3'] });
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country'] });
+        // tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country'] });
 
         // add 'iso:country'
-        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['iso:country'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['iso:country'] });
 
         // add 'wof:country_alpha3'
-        doc.tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country_alpha3'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country_alpha3'] });
       }
     }
 
@@ -96,7 +97,7 @@ function insertWofRecord( wof, next ){
 
         // index each alternative name
         for( var n in wof[ attr ] ){
-          doc.tokens.push({
+          tokens.push({
             lang: match[1],
             tag: match[2],
             body: wof[ attr ][ n ]
@@ -124,7 +125,7 @@ function insertWofRecord( wof, next ){
     parentId = wof['wof:parent_id'];
     if( 'string' === typeof parentId ){ parentId = parseInt( parentId, 10 ); }
     if( !isNaN( parentId ) && parentId !== id && parentId > 0 ){
-      doc.parentIds.push( parentId ); // is child of
+      parentIds.push( parentId ); // is child of
     }
   }
 
@@ -134,15 +135,15 @@ function insertWofRecord( wof, next ){
      var pid = wof['wof:hierarchy'][h][i];
      if( 'string' === typeof pid ){ pid = parseInt( pid, 10 ); }
      if( pid === id || pid <= 0 || pid === parentId ){ continue; }
-     //  doc.parentIds.push( id, pid, 'p' ); // has parent
-     doc.parentIds.push( pid ); // is child of
+     //  parentIds.push( id, pid, 'p' ); // has parent
+     parentIds.push( pid ); // is child of
    }
   }
 
   // ---- consume aggregates
 
   // normalize tokens
-  doc.tokens = doc.tokens.reduce(( res, token ) => {
+  tokens = tokens.reduce(( res, token ) => {
     analysis.normalize( token.body ).forEach( norm => {
       res.push({ lang: token.lang, tag: token.tag, body: norm });
     });
@@ -151,24 +152,16 @@ function insertWofRecord( wof, next ){
 
   // deduplicate tokens
   var seen = {};
-  doc.tokens = doc.tokens.filter( token => {
+  tokens = tokens.filter( token => {
     return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
   });
 
   // deduplicate parent ids
-  doc.parentIds = doc.parentIds.filter(( pid, pos ) => {
-    return doc.parentIds.indexOf( pid ) === pos;
+  parentIds = parentIds.filter(( pid, pos ) => {
+    return parentIds.indexOf( pid ) === pos;
   });
 
-  var tokens = doc.tokens;
-  var parentIds = doc.parentIds;
-
-  // --- delete fields
-  // @todo: consider improving this behavior
-  delete doc.tokens;
-  delete doc.parentIds;
-
-  // @todo: consider confusion of using both this.store and this.index
+  // save all data to the databases
   this.store.set( id, doc, ( err ) => {
     if( err ){ console.error( err ); }
     this.index.setTokens( id, tokens, ( err ) => {
@@ -195,13 +188,13 @@ function isValidWofRecord( id, wof ){
   if( id <= 0 ) { return false; }
 
   // skip deprecated records
-  var deprecated = _.trim( wof['edtf:deprecated'] );
+  const deprecated = _.trim( wof['edtf:deprecated'] );
   if( !_.isEmpty( deprecated ) && deprecated !== 'uuuu' ){
     return false;
   }
 
   // skip superseded records
-  var superseded = wof['wof:superseded_by'];
+  const superseded = wof['wof:superseded_by'];
   if( Array.isArray( superseded ) && superseded.length > 0 ){
     return false;
   }
@@ -215,7 +208,7 @@ function isValidWofRecord( id, wof ){
 
     note: we are considering -1 values as current (for now)
   **/
-  var isCurrent = wof['mz:is_current'];
+  const isCurrent = wof['mz:is_current'];
   if( isCurrent === '0' || isCurrent === 0 ){
     return false;
   }
