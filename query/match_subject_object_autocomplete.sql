@@ -5,7 +5,7 @@ FROM lineage AS l1
 WHERE t1.token = $subject
 AND t2.token LIKE $object
 AND t1.lang IN ( t2.lang, 'eng', 'und' )
-AND t1.tag NOT IN ( 'colloquial' )
-AND t2.tag NOT IN ( 'colloquial' )
+-- AND t1.tag NOT IN ( 'colloquial' )
+-- AND t2.tag NOT IN ( 'colloquial' )
 ORDER BY t1.id ASC, t2.id ASC
 LIMIT $limit
