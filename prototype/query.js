@@ -2,6 +2,7 @@
 var async = require('async');
 var util = require('util');
 var Result = require('../lib/Result');
+var sorted = require('../lib/sorted');
 
 var debug = false;
 
@@ -67,41 +68,86 @@ function reduce( index, res ){
   }
 }
 
+// query a single group
+function queryGroup( index, group, done ){
+
+  // handle empty group
+  if( !group || group.length <= 0 ){
+    console.error( 'group length <= 0' );
+    return done( null, [], [], [] );
+  }
+
+  // handle single token groups
+  if( 1 === group.length ){
+    index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, rows ) => {
+
+      if( err || !rows || !rows.length ){
+        return done( err, [], [], group );
+      }
+
+      const res = new Result( group );
+      res.ids = Result.subjectIdsFromRows( rows );
+      res.done = done;
+
+      reduce( index, res );
+    });
+  }
+  // handle multiple token groups
+  else {
+
+    const res = new Result( group );
+    res.done = done;
+
+    reduce( index, res );
+  }
+}
+
+// query many groups & merge the result
+function queryManyGroups( index, groups, done ){
+
+  // query each group in parallel
+  // note: parallel likely doesn't have much of a perf gain when
+  // using 'npm better-sqlite3'.
+  async.parallel( groups.map( group => cb => {
+    queryGroup( index, group, ( err, ids, mask, group ) => {
+      cb( null, { err: err, ids: ids, mask: mask, group: group });
+    });
+  }), function mergeQueryGroupResults( err, res ) {
+
+    var mergedIds = [];
+    const masks = [];
+    const groups = [];
+    res.forEach( r => {
+      if( r.err ){ return; }
+      if( Array.isArray( r.ids ) ){
+        mergedIds = sorted.merge( mergedIds, r.ids );
+      }
+      masks.push( r.mask );
+      groups.push( r.group );
+    });
+
+    // @todo find a way of returning all masks/groups
+    // instead of only the first element
+    return done( err, mergedIds, masks[0], groups[0] );
+  });
+}
+
 function query( text, done ){
   this.tokenize( text, function( err, groups ){
 
-    // @todo: handle multiple groups?
-    const group = groups[0];
+    switch( groups.length ){
 
-    // handle empty group
-    if( !group || group.length <= 0 ){
-      console.error( 'group length <= 0' );
-      return done( null, [], [], [] );
+      // in a failure case we didnt find any groups; abort now
+      case 0: return done( null, [], [], [] );
+
+      // in most cases there is only one group to query
+      case 1: return queryGroup( this.index, groups[0], done );
+
+      // for queries with multiple groups, we query each
+      // group and then merge the results together.
+      default: return queryManyGroups( this.index, groups, done );
     }
 
-    // handle single token groups
-    if( 1 === group.length ){
-      this.index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, rows ) => {
-
-        if( err || !rows || !rows.length ){
-          return done( err, [], [], group );
-        }
-
-        const res = new Result( group );
-        res.ids = Result.subjectIdsFromRows( rows );
-        res.done = done;
-
-        reduce( this.index, res );
-      });
-    }
-    // handle multiple token groups
-    else {
-
-      const res = new Result( group );
-      res.done = done;
-
-      reduce( this.index, res );
-    }
   }.bind(this));
 }
 
