@@ -49,7 +49,7 @@ $ npm run cli -- san fran
 
 san fran
 
-search: 3ms
+took: 3ms
  - 85922583	locality 	San Francisco
 ```
 
@@ -141,17 +141,6 @@ placeholder > id 85772991
       neighbourhood_id: 85772991,
       region_id: 85687233 },
    names: { eng: [ 'Kelburn' ] } }
-
-placeholder > edges 85632473
- [ 85675251,
-   85675259,
-   85675261,
-   85681309,
-   421182667,
-   421188405,
-   890430305,
-   890441225,
-   890441463 ]
 ```
 
 ---
