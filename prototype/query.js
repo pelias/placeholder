@@ -34,7 +34,8 @@ function reduce( index, res ){
       // we didn't match anything, so simply return the ids for
       // the rightmost token.
       if( !idsArray.length ){
-        return index.matchSubjectDistinctSubjectIds( res.group[ 1 ], ( err, rows ) => {
+        const lastToken = res.group[ res.group.length -1 ];
+        return index.matchSubjectDistinctSubjectIds( lastToken, ( err, rows ) => {
           const subjectIds = rows.map( row => { return row.subjectId; } );
           return res.done( null, subjectIds, [], res.group );
         });
@@ -45,8 +46,8 @@ function reduce( index, res ){
     }
   }
 
-  if( debug && res.reset ){ console.error( 'RESET!!' ); }
   if( debug ){
+    if( res.reset ){ console.error( 'RESET!!' ); }
     console.log( '---------------------------------------------------' );
     console.log( util.format( '"%s" >>> "%s"', res.getSubject(), res.getObject() ) );
   }
@@ -59,7 +60,8 @@ function reduce( index, res ){
       reduce( index, res );
     });
   }
-  // regular
+
+  // regular query
   else {
     index.matchSubjectObject( res.getSubject(), res.getObject(), (err, rows) => {
       res.intersect( err, rows );
@@ -69,47 +71,29 @@ function reduce( index, res ){
 }
 
 // query a single group
-function queryGroup( index, group, done ){
+function _queryGroup( index, group, done ){
 
   // handle empty group
-  if( !group || group.length <= 0 ){
-    console.error( 'group length <= 0' );
-    return done( null, [], [], [] );
+  if( !group || !group.length ){
+    return done( null, [], [], group );
   }
 
-  // handle single token groups
-  if( 1 === group.length ){
-    index.matchSubjectDistinctSubjectIds( group[ 0 ], ( err, rows ) => {
-
-      if( err || !rows || !rows.length ){
-        return done( err, [], [], group );
-      }
-
-      const res = new Result( group );
-      res.ids = Result.subjectIdsFromRows( rows );
-      res.done = done;
-
-      reduce( index, res );
-    });
-  }
-  // handle multiple token groups
-  else {
-
-    const res = new Result( group );
-    res.done = done;
-
-    reduce( index, res );
-  }
+  reduce( index, new Result( group, done ) );
 }
 
 // query many groups & merge the result
-function queryManyGroups( index, groups, done ){
+function _queryManyGroups( index, groups, done ){
+
+  // handle empty groups
+  if( !groups || !groups.length ){
+    return done( null, [], [], [] );
+  }
 
   // query each group in parallel
   // note: parallel likely doesn't have much of a perf gain when
   // using 'npm better-sqlite3'.
   async.parallel( groups.map( group => cb => {
-    queryGroup( index, group, ( err, ids, mask, group ) => {
+    _queryGroup( index, group, ( err, ids, mask, group ) => {
       cb( null, { err: err, ids: ids, mask: mask, group: group });
     });
   }), function mergeQueryGroupResults( err, res ) {
@@ -117,6 +101,7 @@ function queryManyGroups( index, groups, done ){
     var mergedIds = [];
     const masks = [];
     const groups = [];
+
     res.forEach( r => {
       if( r.err ){ return; }
       if( Array.isArray( r.ids ) ){
@@ -128,7 +113,7 @@ function queryManyGroups( index, groups, done ){
 
     // @todo find a way of returning all masks/groups
     // instead of only the first element
-    return done( err, mergedIds, masks[0], groups[0] );
+    return done( err, mergedIds, masks[0] || [], groups[0] || [] );
   });
 }
 
@@ -141,14 +126,16 @@ function query( text, done ){
       case 0: return done( null, [], [], [] );
 
       // in most cases there is only one group to query
-      case 1: return queryGroup( this.index, groups[0], done );
+      case 1: return _queryGroup( this.index, groups[0], done );
 
       // for queries with multiple groups, we query each
       // group and then merge the results together.
-      default: return queryManyGroups( this.index, groups, done );
+      default: return _queryManyGroups( this.index, groups, done );
     }
 
   }.bind(this));
 }
 
 module.exports.query = query;
+module.exports._queryGroup = _queryGroup;
+module.exports._queryManyGroups = _queryManyGroups;
