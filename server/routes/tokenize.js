@@ -11,8 +11,13 @@ module.exports = function( req, res ){
 
   // live mode (autocomplete-style search)
   // we append a byte indicating the last word is potentially incomplete.
+  // except where the last token is a space, then we simply trim the space.
   if( req.query.mode === 'live' ){
-    text += PARTIAL_TOKEN_SUFFIX;
+    if( ' ' === text.slice(-1) ){
+      text = text.trim();
+    } else {
+      text += PARTIAL_TOKEN_SUFFIX;
+    }
   }
 
   ph.tokenize( text, ( err, groups ) => {
