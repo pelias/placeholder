@@ -32,7 +32,6 @@ $ npm install
 
 ```bash
 $ mkdir data
-$ curl -s http://pelias-data.s3.amazonaws.com/placeholder/graph.json.gz | gunzip > data/graph.json;
 $ curl -s http://pelias-data.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
 ```
 
@@ -50,7 +49,7 @@ $ npm run cli -- san fran
 
 san fran
 
-search: 3ms
+took: 3ms
  - 85922583	locality 	San Francisco
 ```
 
@@ -142,17 +141,6 @@ placeholder > id 85772991
       neighbourhood_id: 85772991,
       region_id: 85687233 },
    names: { eng: [ 'Kelburn' ] } }
-
-placeholder > edges 85632473
- [ 85675251,
-   85675259,
-   85675261,
-   85681309,
-   421182667,
-   421188405,
-   890430305,
-   890441225,
-   890441463 ]
 ```
 
 ---
@@ -240,7 +228,7 @@ $ mkdir data
 $ curl -s http://pelias-data.s3.amazonaws.com/placeholder/wof.extract.gz | gunzip > data/wof.extract
 ```
 
-now you can rebuild the `data/graph.json` and `data/store.json` files with the following command:
+now you can rebuild the `data/store.json` file with the following command:
 
 this should take 2-3 minutes to run:
 
@@ -283,11 +271,9 @@ $ ./cmd/s3_upload.sh
 
 --- gzipping data files ---
 --- uploading archive ---
-upload: data/graph.json.gz to s3://pelias-data/placeholder/archive/2017-09-29/graph.json.gz
 upload: data/store.sqlite3.gz to s3://pelias-data/placeholder/archive/2017-09-29/store.sqlite3.gz
 upload: data/wof.extract.gz to s3://pelias-data/placeholder/archive/2017-09-29/wof.extract.gz
 --- list remote archive ---
-2017-09-29 14:52:20   15.3 MiB graph.json.gz
 2017-09-29 14:52:33   46.6 MiB store.sqlite3.gz
 2017-09-29 14:53:08   53.8 MiB wof.extract.gz
 

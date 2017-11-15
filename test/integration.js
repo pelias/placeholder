@@ -2,10 +2,10 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
-  './prototype/tokenize',
-  './prototype/query',
-  './prototype/wof',
+  './prototype/tokenize_integration',
+  './prototype/query_integration',
   './functional',
+  './functional_autocomplete',
 ];
 
 // test runner

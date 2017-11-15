@@ -5,8 +5,8 @@ set -euo pipefail
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # placetypes to download and extract
-PLACETYPES=( 'ocean' 'continent' 'marinearea' 'empire' 'country' 'dependency' 'disputed' 'macroregion' 'region',
-             'macrocounty' 'county' 'localadmin' 'locality' 'borough' 'macrohood' 'neighbourhood' )
+PLACETYPES=( 'neighbourhood' 'macrohood' 'borough' 'locality' 'localadmin' 'county' 'macrocounty' 'region'
+  'macroregion' 'disputed' 'dependency' 'country' 'empire' 'marinearea' 'continent' 'ocean' )
 
 # download and extract fields from contents of tar
 function extract {

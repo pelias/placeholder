@@ -10,36 +10,34 @@ ph.load();
 var commands = {
   search: function( input, cb ){
     console.time('took');
-    var tokens = ph.tokenize( input );
-    var results = ph.query( tokens );
-    ph.store.getMany( results, function( err, docs ){
-      if( err ){ return console.error( err ); }
-      docs.forEach( function( doc ){
-        console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+    ph.query( input, ( err, ids, mask, group ) => {
+      ph.store.getMany( ids, function( err, docs ){
+        if( err ){ return console.error( err ); }
+        docs.forEach( function( doc ){
+          console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
+        });
+        console.timeEnd('took');
+        cb();
       });
-      console.timeEnd('took');
-      cb();
     });
   },
   tokenize: function( input, cb ){
     console.time('took');
-    console.log( ph.tokenize( input ) );
-    console.timeEnd('took');
-    cb();
+    ph.tokenize( input, ( err, groups ) => {
+      console.timeEnd('took');
+      console.log( groups );
+      cb();
+    });
   },
   token: function( body, cb ){
     console.log( 'token', '"' + body + '"' );
     console.time('took');
-    console.log( ph.graph.getToken( body ) );
-    console.timeEnd('took');
-    cb();
-  },
-  edges: function( id, cb ){
-    console.log( 'edges', '"' + id + '"' );
-    console.time('took');
-    console.log( ph.graph.outEdges( id ) );
-    console.timeEnd('took');
-    cb();
+    ph.index.matchSubjectDistinctSubjectIds( body, ( err, rows ) => {
+      const subjectIds = rows.map( row => { return row.subjectId; } );
+      console.timeEnd('took');
+      console.log( subjectIds );
+      cb();
+    });
   },
   id: function( id, cb ){
     console.time('took');

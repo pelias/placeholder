@@ -2,10 +2,19 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
+  './lib/jsonParseStream',
   './lib/analysis',
   './lib/permutations',
   './lib/sorted',
-  './lib/TokenGraph',
+  './lib/Database',
+  './lib/DocStore',
+  './lib/TokenIndex',
+  './lib/Queries',
+  './lib/Result',
+  './prototype/wof',
+  './prototype/io',
+  './prototype/tokenize',
+  './prototype/query',
 ];
 
 // test runner

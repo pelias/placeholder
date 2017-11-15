@@ -62,6 +62,19 @@ console.error( 'loading data' );
 var ph = new Placeholder({ readonly: true });
 ph.load();
 
+// ensure the database schemas match what is expected by the codebase.
+try { ph.checkSchema(); }
+catch( e ){
+  console.info('------------------------------------------------------');
+  console.error('Database schema is out-of-date!');
+  console.info('Your database files do not match the expected schema.');
+  console.info('Please follow instructions in the README to obtain new database files.');
+  console.info('This is the expected behaviour for breaking schema updates.');
+  console.info('more info: https://github.com/pelias/placeholder');
+  console.info('------------------------------------------------------');
+  process.exit(1);
+}
+
 // store $ph on app
 app.locals.ph = ph;
 

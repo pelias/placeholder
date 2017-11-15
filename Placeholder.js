@@ -1,20 +1,18 @@
 
 var _ = require('lodash'),
-    TokenGraph = require('./lib/TokenGraph'),
-    DocStore = require('./lib/DocStore');
+    DocStore = require('./lib/DocStore'),
+    TokenIndex = require('./lib/TokenIndex');
 
 // constructor
-function Placeholder(){
-  this.graph = new TokenGraph();
-  this.store = new DocStore();
+function Placeholder( options ){
+  this.store = new DocStore( options );
+  this.index = new TokenIndex( options );
 }
 
 // load prototype methods from modules
 Placeholder.prototype = _.extend( Placeholder.prototype,
   require('./prototype/io.js'),
   require('./prototype/query.js'),
-  require('./prototype/statistics.js'),
-  require('./prototype/token.js'),
   require('./prototype/tokenize.js'),
   require('./prototype/wof.js')
 );

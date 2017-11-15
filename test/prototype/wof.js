@@ -10,17 +10,23 @@ var _ = require('lodash'),
   each function was called and which arguments were provided.
 **/
 var Mock = function(){
-  var calls = { addToken: [], setEdge: [], set: [] };
+  var calls = { set: [], setTokens: [], setLineage: [] };
   this._calls = calls;
 
   // mock methods
-  this.graph = {
-    addToken: function(){ calls.addToken.push( arguments ); },
-    setEdge: function(){ calls.setEdge.push( arguments ); }
-  };
   this.store = {
     set: function( _, __, next ){
       calls.set.push( Array.prototype.slice.call( arguments, 0, 2 ) );
+      next();
+    }
+  };
+  this.index = {
+    setTokens: function( _, __, next ){
+      calls.setTokens.push( Array.prototype.slice.call( arguments, 0, 2 ) );
+      next();
+    },
+    setLineage: function( _, __, next ){
+      calls.setLineage.push( Array.prototype.slice.call( arguments, 0, 2 ) );
       next();
     }
   };
@@ -43,8 +49,8 @@ module.exports.store_record = function(test, util) {
   test( 'empty data', function(t) {
     var mock = new Mock();
     mock.insertWofRecord({}, function(){
-      t.deepEqual( mock._calls.addToken, [] );
-      t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.setTokens, [] );
+      t.deepEqual( mock._calls.setLineage, [] );
       t.deepEqual( mock._calls.set, [] );
       t.end();
     });
@@ -55,8 +61,8 @@ module.exports.store_record = function(test, util) {
     mock.insertWofRecord({
       'wof:id': '1'
     }, function(){
-      t.deepEqual( mock._calls.addToken, [] );
-      t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.setTokens, [] );
+      t.deepEqual( mock._calls.setLineage, [] );
       t.deepEqual( mock._calls.set, []);
       t.end();
     });
@@ -65,8 +71,8 @@ module.exports.store_record = function(test, util) {
   test( 'id + lat/lon only', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({}), function(){
-      t.deepEqual( mock._calls.addToken, [] );
-      t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
+      t.deepEqual( mock._calls.setLineage, [[ 1, [] ]] );
       t.deepEqual( mock._calls.set, [[
         1, {
           id: 1,
@@ -601,7 +607,7 @@ module.exports.add_token = function(test, util) {
   test( 'empty data', function(t) {
     var mock = new Mock();
     mock.insertWofRecord({}, function(){
-      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setTokens, [] );
       t.end();
     });
   });
@@ -611,8 +617,10 @@ module.exports.add_token = function(test, util) {
     mock.insertWofRecord(params({
       'wof:abbreviation': 'EXAMPLE'
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 1 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
+      t.deepEqual( mock._calls.setTokens[0][0], 1 );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'und', tag: 'abbr', body: 'example' }
+      ]);
       t.end();
     });
   });
@@ -623,9 +631,11 @@ module.exports.add_token = function(test, util) {
       'wof:label': 'EXAMPLE',
       'wof:name': 'EXAMPLE2'
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 2 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'example' ] );
-      t.deepEqual( mock._calls.addToken[1][3], [ 'example2' ] );
+      t.deepEqual( mock._calls.setTokens[0][0], 1 );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'und', tag: 'label', body: 'example' },
+        { lang: 'und', tag: 'label', body: 'example2' }
+      ]);
       t.end();
     });
   });
@@ -638,7 +648,7 @@ module.exports.add_token = function(test, util) {
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
     }), function(){
-      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -652,11 +662,12 @@ module.exports.add_token = function(test, util) {
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 4 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
-      t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
-      t.deepEqual( mock._calls.addToken[2][3], [ 'ep' ] );
-      t.deepEqual( mock._calls.addToken[3][3], [ 'exp' ] );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'und', tag: 'abbr', body: 'ex' },
+        { lang: 'und', tag: 'abbr', body: 'exa' },
+        { lang: 'und', tag: 'abbr', body: 'ep' },
+        { lang: 'und', tag: 'abbr', body: 'exp' }
+      ]);
       t.end();
     });
   });
@@ -669,7 +680,7 @@ module.exports.add_token = function(test, util) {
       'ne:iso_a3': 'EXA',
       'wof:country_alpha3': 'EXP'
     }), function(){
-      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -683,11 +694,12 @@ module.exports.add_token = function(test, util) {
       'iso:country': 'EP',
       'wof:country_alpha3': 'EXP'
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 4 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'ex' ] );
-      t.deepEqual( mock._calls.addToken[1][3], [ 'exa' ] );
-      t.deepEqual( mock._calls.addToken[2][3], [ 'ep' ] );
-      t.deepEqual( mock._calls.addToken[3][3], [ 'exp' ] );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'und', tag: 'abbr', body: 'ex' },
+        { lang: 'und', tag: 'abbr', body: 'exa' },
+        { lang: 'und', tag: 'abbr', body: 'ep' },
+        { lang: 'und', tag: 'abbr', body: 'exp' }
+      ]);
       t.end();
     });
   });
@@ -700,7 +712,7 @@ module.exports.add_token = function(test, util) {
       'ne:iso_a3': 'EXA',
       'wof:country_alpha3': 'EXP'
     }), function(){
-      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -713,8 +725,9 @@ module.exports.add_token = function(test, util) {
       'wof:country': 'TEST',
       'ne:abbrev': 'TEST2'
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 1 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'ep' ] );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'und', tag: 'abbr', body: 'ep' }
+      ]);
       t.end();
     });
   });
@@ -725,7 +738,7 @@ module.exports.add_names = function(test, util) {
   test( 'no names', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({}), function(){
-      t.deepEqual( mock._calls.addToken, [] );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -739,13 +752,14 @@ module.exports.add_names = function(test, util) {
       'name:eng_x_unknown': [ 'G', 'H' ], // we don't import the 'unknown' language type
       'name:eng_x_foobar': [ 'I', 'J' ], // made-up name
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 6 );
-      t.deepEqual( mock._calls.addToken[0][3], [ 'a' ] );
-      t.deepEqual( mock._calls.addToken[1][3], [ 'b' ] );
-      t.deepEqual( mock._calls.addToken[2][3], [ 'c' ] );
-      t.deepEqual( mock._calls.addToken[3][3], [ 'd' ] );
-      t.deepEqual( mock._calls.addToken[4][3], [ 'e' ] );
-      t.deepEqual( mock._calls.addToken[5][3], [ 'f' ] );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'eng', tag: 'preferred', body: 'a' },
+        { lang: 'eng', tag: 'preferred', body: 'b' },
+        { lang: 'eng', tag: 'colloquial', body: 'c' },
+        { lang: 'eng', tag: 'colloquial', body: 'd' },
+        { lang: 'eng', tag: 'variant', body: 'e' },
+        { lang: 'eng', tag: 'variant', body: 'f' }
+      ]);
       t.end();
     });
   });
@@ -815,7 +829,7 @@ module.exports.add_names = function(test, util) {
   //     'name:tai_x_preferred': [ 'A' ],
   //     'name:tgl_x_preferred': [ 'A' ],
   //   }), function(){
-  //     t.deepEqual( mock._calls.addToken.length, 25 );
+  //     t.deepEqual( mock._calls.setTokens.length, 25 );
   //     t.end();
   //   });
   // });
@@ -828,7 +842,7 @@ module.exports.add_names = function(test, util) {
   //     'name:ron_x_preferred': [ 'Ușă' ],
   //     'name:unk_x_preferred': [ 'Kreuzberg' ],
   //   }), function(){
-  //     t.deepEqual( mock._calls.addToken.length, 0 );
+  //     t.deepEqual( mock._calls.setTokens.length, 0 );
   //     t.end();
   //   });
   // });
@@ -840,7 +854,7 @@ module.exports.add_names = function(test, util) {
       'name:unk_x_preferred': [ 'Kreuzberg' ],
       'name:vol_x_preferred': [ 'Example' ],
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 0 );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -852,7 +866,7 @@ module.exports.add_names = function(test, util) {
       'wof:placetype': 'empire',
       'name:eng_x_preferred': [ 'A', 'B' ]
     }), function(){
-      t.deepEqual( mock._calls.addToken.length, 0 );
+      t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -936,7 +950,7 @@ module.exports.set_edges = function(test, util) {
   test( 'no hierarchy', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({}), function(){
-      t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.setLineage, [[ 1, [] ]] );
       t.end();
     });
   });
@@ -947,9 +961,9 @@ module.exports.set_edges = function(test, util) {
       'wof:id': 100,
       'wof:parent_id': 200
     }), function(){
-      t.equal( mock._calls.setEdge.length, 1 );
-      t.equal( mock._calls.setEdge[0][0], 200 );
-      t.equal( mock._calls.setEdge[0][1], 100 );
+      t.equal( mock._calls.setLineage.length, 1 );
+      t.equal( mock._calls.setLineage[0][0], 100 );
+      t.deepEqual( mock._calls.setLineage[0][1], [200] );
       t.end();
     });
   });
@@ -960,7 +974,7 @@ module.exports.set_edges = function(test, util) {
       'wof:id': 100,
       'wof:parent_id': 100
     }), function(){
-      t.deepEqual( mock._calls.setEdge, [] );
+      t.deepEqual( mock._calls.setLineage, [[ 100, [] ]] );
       t.end();
     });
   });
@@ -981,11 +995,9 @@ module.exports.set_edges = function(test, util) {
         'region_id':        109
       }]
     }), function(){
-      t.deepEqual( mock._calls.setEdge.length, 9 );
-      mock._calls.setEdge.forEach( function( c, i ){
-        t.deepEqual( c[0], 101+i );
-        t.deepEqual( c[1], 100 );
-      });
+      t.deepEqual( mock._calls.setLineage.length, 1 );
+      t.deepEqual( mock._calls.setLineage[0][0], 100 );
+      t.deepEqual( mock._calls.setLineage[0][1], [ 101, 102, 103, 104, 105, 106, 107, 108, 109 ] );
       t.end();
     });
   });
@@ -1016,11 +1028,11 @@ module.exports.set_edges = function(test, util) {
         'region_id':        118
       }]
     }), function(){
-      t.deepEqual( mock._calls.setEdge.length, 18 );
-      mock._calls.setEdge.forEach( function( c, i ){
-        t.deepEqual( c[0], 101+i );
-        t.deepEqual( c[1], 100 );
-      });
+      t.deepEqual( mock._calls.setLineage.length, 1 );
+      t.deepEqual( mock._calls.setLineage[0][0], 100 );
+      t.deepEqual( mock._calls.setLineage[0][1], [
+        101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118
+      ]);
       t.end();
     });
   });
@@ -1035,7 +1047,7 @@ module.exports.set_edges = function(test, util) {
         'invalid_id':       -1
       }]
     }), function(){
-      t.deepEqual( mock._calls.setEdge.length, 0 );
+      t.deepEqual( mock._calls.setLineage, [[ 100, [] ]] );
       t.end();
     });
   });
