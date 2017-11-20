@@ -1,4 +1,6 @@
 
+const _ = require('lodash');
+const util = require('./_util');
 const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
 
 module.exports = function( req, res ){
@@ -8,6 +10,9 @@ module.exports = function( req, res ){
 
   // input text
   var text = req.query.text || '';
+
+  // placetype filter
+  var filter = { placetype: util.arrayParam( req.query.placetype ) };
 
   // live mode (autocomplete-style search)
   // we append a byte indicating the last word is potentially incomplete.
@@ -35,6 +40,11 @@ module.exports = function( req, res ){
     ph.store.getMany( ids, function( err, results ){
       if( err ){ return res.status(500).send(err); }
       if( !results || !results.length ){ return res.status(200).send([]); }
+
+      // placetype filter
+      if( Array.isArray( filter.placetype ) && filter.placetype.length ){
+        results = results.filter(res => _.includes( filter.placetype, res.placetype ));
+      }
 
       // get a list of parent ids
       const parentIds = getParentIds( results );
