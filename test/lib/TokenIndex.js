@@ -18,7 +18,7 @@ module.exports.reset = function(test, common) {
   test('reset', function(t) {
     var db = new TokenIndex();
     db.open('/tmp/db', { test: true, reset: true });
-    
+
     // ensure table has been created
     var sql = 'PRAGMA table_info(lineage)';
     t.deepEqual( db.prepare(sql).all(), [
@@ -30,9 +30,10 @@ module.exports.reset = function(test, common) {
     sql = 'PRAGMA table_info(tokens)';
     t.deepEqual( db.prepare(sql).all(), [
       { cid: 0, name: 'id', type: 'INTEGER', notnull: 0, dflt_value: null, pk: 0 },
-      { cid: 1, name: 'lang', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 },
-      { cid: 2, name: 'tag', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 },
-      { cid: 3, name: 'token', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 }
+      { cid: 1, name: 'layer', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 },
+      { cid: 2, name: 'lang', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 },
+      { cid: 3, name: 'tag', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 },
+      { cid: 4, name: 'token', type: 'STRING', notnull: 0, dflt_value: null, pk: 0 }
     ]);
 
     // ensure table has been created
@@ -43,13 +44,13 @@ module.exports.reset = function(test, common) {
 
     // ensure fts table has been created with the correct options
     sql = 'select * from sqlite_master where type="table" and name="fulltext"';
-    const expected = 
+    const expected =
       'CREATE VIRTUAL TABLE fulltext USING fts5( token, ' + [
       `tokenize="unicode61 remove_diacritics 0 tokenchars '_'"`,
       `prefix='1 2 3 4 5 6 7 8 9 10 11 12'`,
       'columnsize=0'
     ].join(', ') + ')';
-    
+
     t.deepEqual( db.prepare(sql).get().sql, expected );
     t.end();
   });
@@ -175,8 +176,8 @@ module.exports.setTokens = function(test, common) {
       // ensure rows have been created
       const sql = 'SELECT * FROM tokens';
       t.deepEqual( db.prepare(sql).all(), [
-        { id: 100, lang: 'en', tag: 'abbr', token: 'test1' },
-        { id: 100, lang: 'fr', tag: 'variant', token: 'test2' }
+        { id: 100, layer: null, lang: 'en', tag: 'abbr', token: 'test1' },
+        { id: 100, layer: null, lang: 'fr', tag: 'variant', token: 'test2' }
       ]);
 
     });
