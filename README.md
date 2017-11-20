@@ -271,23 +271,31 @@ $ npm run build
 
 ---
 
-## publishing
+## Using the Docker image
 
 ### rebuild the image
 
 you can rebuild the image on any system with the following command:
 
 ```bash
-$ docker build -t mapzen/pelias-placeholder .
+$ docker build -t pelias/placeholder .
 ```
 
-### push image
+### download pre-built image
 
-if you have push access you can upload your new image to dockerhub:
+Up to date Docker images are built and automatically pushed to Docker Hub from our continuous integration pipeline
+
+You can pull the latest stable image with
 
 ```bash
-$ docker push mapzen/pelias-placeholder
+$ docker pull pelias/placeholder
 ```
+
+### download custom image tags
+
+We publish each commit and the latest of each branch to separate tags
+
+A list of all available tags to download can be found at https://hub.docker.com/r/pelias/placeholder/tags/
 
 ---
 
