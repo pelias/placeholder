@@ -9,15 +9,19 @@ node_js:
 matrix:
   fast_finish: true
 script: npm run travis
+env:
+  - BUCKET=http://pelias-data.s3.amazonaws.com/placeholder
 before_install:
   - npm i -g npm@^3.0.0
 before_script:
   - npm prune
   - mkdir data
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/graph.json.gz | gunzip > data/graph.json;
-  - curl -s http://pelias-data.s3.amazonaws.com/placeholder/archive/$(date +%Y-%m-%d)/store.sqlite3.gz | gunzip > data/store.sqlite3;
+  - 'curl -sfo data/store.sqlite3.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/store.sqlite3.gz || true'
+  - '[ -e data/store.sqlite3.gz ] || curl -so data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz'
+  - gunzip data/store.sqlite3.gz
 after_success:
-  - npm run semantic-release
+  - npm install -g npx
+  - npx -p node@8 npm run semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/

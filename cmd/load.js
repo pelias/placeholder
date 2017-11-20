@@ -1,26 +1,25 @@
 
 var split = require('split2'),
     through = require('through2'),
-    parse = require('../lib/parse'),
+    parser = require('../lib/jsonParseStream'),
     Placeholder = require('../Placeholder'),
     ph = new Placeholder();
 
 // run import pipeline
-console.error('importing...');
+console.error('import...');
 ph.load({ reset: true });
 
 // run import
 process.stdin.pipe( split() )
-             .pipe( parse() )
+             .pipe( parser() )
              .pipe( through.obj( function insert( row, _, next ){
                ph.insertWofRecord( row, next );
-             }, function flush( next ){
-               ph.printStatistics();
-               console.error('sorting...');
-               ph.graph.sort(); // sort all arrays
-               console.error('vacuuming sqlite db...');
-               ph.store.db.run('VACUUM;');
-               console.error('saving...');
-               ph.save();
-               next();
+             }, function flush( done ){
+               console.error('populate fts...');
+               ph.populate();
+               console.error('optimize...');
+               ph.optimize();
+               console.error('close...');
+               ph.close();
+               done();
              }));

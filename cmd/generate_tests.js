@@ -1,7 +1,7 @@
 
 var split = require('split2'),
     through = require('through2'),
-    parse = require('../lib/parse'),
+    parser = require('../lib/jsonParseStream'),
     Placeholder = require('../Placeholder'),
     ph = new Placeholder();
 
@@ -33,7 +33,7 @@ var order = [
 
 // run test generation pipeline
 process.stdin.pipe( split() )
-             .pipe( parse() )
+             .pipe( parser() )
              .pipe( through.obj( function insert( wof, _, next ){
 
               var id = wof['wof:id'];

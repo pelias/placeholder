@@ -4,7 +4,7 @@
 890441875 The Valley, Anguilla
 421182367 Yerevan, Armenia
 890432155 Luanda, Angola
-890449627 Pago Pago, American Samoa
+101734459 Pago Pago, American Samoa
 890432017 Oranjestad, Aruba
 85667871 Mariehamn, Aland Islands
 890518775 Sarajevo, Bosnia and Herzegovina

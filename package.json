@@ -7,7 +7,9 @@
   "scripts": {
     "test": "npm run units",
     "units": "node test/units.js | tap-spec",
+    "integration": "node test/integration.js | tap-spec",
     "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
+    "all": "npm run units && npm run integration && npm run funcs",
     "start": "node server/http.js",
     "extract": "bash ./cmd/extract.sh",
     "build": "bash ./cmd/build.sh",
@@ -19,7 +21,7 @@
     "check-dependencies": "node_modules/.bin/npm-check --skip-unused --production",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
-    "travis": "npm run check-dependencies && npm test"
+    "travis": "npm run check-dependencies && npm run all"
   },
   "repository": {
     "type": "git",
@@ -30,16 +32,17 @@
   },
   "homepage": "https://github.com/pelias/placeholder#readme",
   "dependencies": {
+    "async": "^2.5.0",
+    "better-sqlite3": "^4.0.3",
     "express": "^4.15.2",
     "lodash": "^4.17.4",
     "lower-case": "^1.1.4",
     "morgan": "^1.9.0",
-    "pelias-logger": "0.2.0",
+    "pelias-logger": "0.3.0",
     "remove-accents": "^0.4.0",
     "require-dir": "^0.3.1",
     "sorted-intersect": "^0.1.4",
     "split2": "^2.1.1",
-    "sqlite3": "^3.1.8",
     "through2": "^2.0.3"
   },
   "devDependencies": {
@@ -47,9 +50,9 @@
     "jshint": "^2.5.6",
     "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
-    "semantic-release": "^6.3.2",
+    "semantic-release": "^8.2.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "tape": "^4.8.0"
   },
   "pre-commit": [
     "lint",

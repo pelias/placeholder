@@ -3,7 +3,7 @@ FROM pelias/baseimage
 
 # downloader apt dependencies
 # note: this is done in one command in order to keep down the size of intermediate containers
-RUN apt-get update && apt-get install -y jq && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential python jq && rm -rf /var/lib/apt/lists/*
 
 # clone repo
 RUN git clone https://github.com/pelias/placeholder.git /code/pelias/placeholder
