@@ -1,5 +1,6 @@
 
 const _ = require('lodash');
+const util = require('./_util');
 const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
 
 module.exports = function( req, res ){
@@ -11,12 +12,7 @@ module.exports = function( req, res ){
   var text = req.query.text || '';
 
   // placetype filter
-  var filter = {
-      placetype: ( req.query.placetype || '' )
-                    .split(',')
-                    .map(a => a.trim())
-                    .filter(a => a.length)
-  };
+  var filter = { placetype: util.arrayParam( req.query.placetype ) };
 
   // live mode (autocomplete-style search)
   // we append a byte indicating the last word is potentially incomplete.
