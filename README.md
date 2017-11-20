@@ -102,6 +102,39 @@ the demo is also able to serve responses in different languages by providing the
 ... etc.
 ```
 
+### filtering by placetype
+
+the `/parser/search` endpoint accepts a `?placetype=xxx` parameter which can be used to control the placetype of records which are returned.
+
+the API does not provide any performance benefits, it is simply a convenience API to filter by a whitelist.
+
+you may specify multiple placetypes using a comma to separate them, such as `?placetype=xxx,yyy`, these are matched as OR conditions. eg: (xxx OR yyy)
+
+for example:
+
+the query `search?text=luxemburg` will return results for the `country`, `region`, `locality` etc.
+
+you can use the placetype filter to control which records are returned:
+
+```
+# all matching results
+search?text=luxemburg
+
+# only return matching country records
+search?text=luxemburg&placetype=country
+
+# return matching country or region records
+search?text=luxemburg&placetype=country,region
+```
+
+### live mode (BETA)
+
+the `/parser/search` endpoint accepts a `?mode=live` parameter pair which can be used to enable an autocomplete-style API.
+
+in this mode the final token of each input text is considered as 'incomplete', meaning that the user has potentially only typed part of a token.
+
+this mode is currently in BETA, the interface and behaviour may change over time.
+
 ---
 
 ## run the interactive shell
