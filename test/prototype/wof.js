@@ -871,6 +871,21 @@ module.exports.add_names = function(test, util) {
     });
   });
 
+  // deduplicate tokens within the same language
+  test( 'token deduplication', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:eng_x_preferred': [ 'A', 'B' ],
+      'name:eng_x_variant': [ 'A', 'B' ],
+      'name:ita_x_preferred': [ 'A', 'B' ],
+      'name:ita_x_variant': [ 'A', 'B' ]
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'A', 'B' ], ita: [ 'A', 'B' ] });
+      t.end();
+    });
+  });
+
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.

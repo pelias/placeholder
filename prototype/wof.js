@@ -154,7 +154,8 @@ function insertWofRecord( wof, next ){
   // deduplicate tokens
   var seen = {};
   tokens = tokens.filter( token => {
-    return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
+    const key = token.lang + ':' + token.body;
+    return seen.hasOwnProperty( key ) ? false : ( seen[ key ] = true );
   });
 
   // deduplicate parent ids

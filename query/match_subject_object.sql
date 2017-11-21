@@ -7,5 +7,6 @@ AND t2.token = $object
 AND t1.lang IN ( t2.lang, 'eng', 'und' )
 -- AND t1.tag NOT IN ( 'colloquial' )
 -- AND t2.tag NOT IN ( 'colloquial' )
+GROUP BY t1.id, t2.id
 ORDER BY t1.id ASC, t2.id ASC
 LIMIT $limit
