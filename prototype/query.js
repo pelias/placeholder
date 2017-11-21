@@ -36,8 +36,8 @@ function reduce( index, res ){
       if( !idsArray.length ){
         const lastToken = res.group[ res.group.length -1 ];
         return index.matchSubjectDistinctSubjectIds( lastToken, ( err, rows ) => {
-          const subjectIds = rows.map( row => { return row.subjectId; } );
-          return res.done( null, subjectIds, [], res.group );
+          res.intersect( err, rows );
+          return res.done( null, res.getIdsAsArray(), [], res.group );
         });
       }
 
