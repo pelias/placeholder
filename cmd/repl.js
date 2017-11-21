@@ -10,10 +10,10 @@ ph.load();
 var commands = {
   search: function( input, cb ){
     console.time('took');
-    ph.query( input, ( err, ids, mask, group ) => {
-      ph.store.getMany( ids, function( err, docs ){
+    ph.query( input, ( err, res ) => {
+      ph.store.getMany( res.getIdsAsArray(), ( err, docs ) => {
         if( err ){ return console.error( err ); }
-        docs.forEach( function( doc ){
+        docs.forEach( doc => {
           console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
         });
         console.timeEnd('took');
@@ -33,7 +33,7 @@ var commands = {
     console.log( 'token', '"' + body + '"' );
     console.time('took');
     ph.index.matchSubjectDistinctSubjectIds( body, ( err, rows ) => {
-      const subjectIds = rows.map( row => { return row.subjectId; } );
+      const subjectIds = rows.map( row => row.subjectId );
       console.timeEnd('took');
       console.log( subjectIds );
       cb();
@@ -41,7 +41,7 @@ var commands = {
   },
   id: function( id, cb ){
     console.time('took');
-    ph.store.get( id, function( err, doc ){
+    ph.store.get( id, ( err, doc ) => {
       if( err ){ return console.error( err ); }
       // console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
       console.log( doc );

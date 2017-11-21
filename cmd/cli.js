@@ -11,11 +11,11 @@ console.log( input + '\n' );
 
 // -- search --
 console.time('took');
-ph.query( input, ( err, ids, mask, group ) => {
+ph.query( input, ( err, res ) => {
   console.timeEnd('took');
 
   // print results
-  ph.store.getMany( ids, (err, docs) => {
+  ph.store.getMany( res.getIdsAsArray(), (err, docs) => {
     docs.forEach( doc => {
       console.log( ' -', [ doc.id, doc.placetype + ' ', doc.name ].join('\t') );
     });

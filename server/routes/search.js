@@ -27,7 +27,7 @@ module.exports = function( req, res ){
 
   // perform query
   console.time('took');
-  ph.query( text, ( err, ids, mask, group ) => {
+  ph.query( text, ( err, res ) => {
     console.timeEnd('took');
 
     // language property
@@ -37,7 +37,7 @@ module.exports = function( req, res ){
     }
 
     // fetch all result docs by id
-    ph.store.getMany( ids, function( err, results ){
+    ph.store.getMany( res.getIdsAsArray(), function( err, results ){
       if( err ){ return res.status(500).send(err); }
       if( !results || !results.length ){ return res.status(200).send([]); }
 
@@ -50,7 +50,7 @@ module.exports = function( req, res ){
       const parentIds = getParentIds( results );
 
       // load all the parents
-      ph.store.getMany( parentIds, ( err, parentResults ) =>{
+      ph.store.getMany( parentIds, ( err, parentResults ) => {
 
         // a database error occurred
         if( err ){ console.error( 'error fetching parent ids', err ); }

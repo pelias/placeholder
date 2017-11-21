@@ -45,8 +45,9 @@ stream.pipe( split() )
 
 // convenience function for writing quick 'n easy test cases
 function runner( ph, actual, expected, next ){
-  ph.query( actual, ( err, ids, mask, group ) => {
+  ph.query( actual, ( err, res ) => {
 
+    const ids = res.getIdsAsArray();
     process.stderr.write('.');
 
     try {
