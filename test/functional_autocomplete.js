@@ -23,8 +23,8 @@ module.exports.functional = function(test, util) {
 // convenience function for writing quick 'n easy test cases
 function runner( test, ph, actual, expected ){
   test( actual, function(t) {
-    ph.query( actual, ( err, ids, mask, group ) => {
-      t.deepEqual( ids, expected );
+    ph.query( actual, ( err, res ) => {
+      t.deepEqual( res.getIdsAsArray(), expected );
       t.end();
     });
   });
