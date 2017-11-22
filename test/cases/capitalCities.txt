@@ -49,7 +49,7 @@
 101751659 Zagreb, Croatia
 101751703 Budapest, Hungary
 101751737 Dublin, Ireland
-85632641 Diego Garcia, British Indian Ocean Territory
+1125918569 Diego Garcia, British Indian Ocean Territory
 101751753 Reykjavik, Iceland
 1125783915 Saint Helier, Jersey
 421186515 Kingston, Jamaica
