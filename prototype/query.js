@@ -98,11 +98,19 @@ function _queryManyGroups( index, groups, done ){
     merged.group = batch[0].res.group;
     merged.mask = batch[0].res.mask;
 
+    // merge results
     batch.forEach( b => {
       if( b.err ){ return; }
+
+      // merge ids
       for( var attr in b.res.ids ){
         merged.ids[ attr ] = b.res.ids[ attr ];
       }
+
+      // merge mask
+      b.res.mask.forEach(( bool, pos ) => {
+        if( true === bool ){ merged.mask[ pos ] = bool; }
+      });
     });
 
     // @todo find a way of returning all masks/groups
