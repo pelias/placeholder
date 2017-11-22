@@ -4,7 +4,11 @@ FROM lineage AS l1
   JOIN tokens AS t2 ON t2.id = l1.pid
 WHERE t1.token = $subject
 AND t2.token LIKE $object
-AND t1.lang IN ( t2.lang, 'eng', 'und' )
+AND (
+  t1.lang = t2.lang OR
+  t1.lang IN ( 'eng', 'und' ) OR
+  t2.lang IN ( 'eng', 'und' )
+)
 -- AND t1.tag NOT IN ( 'colloquial' )
 -- AND t2.tag NOT IN ( 'colloquial' )
 GROUP BY t1.id, t2.id

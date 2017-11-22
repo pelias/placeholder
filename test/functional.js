@@ -1,7 +1,7 @@
 
 var Placeholder = require('../Placeholder');
 
-module.exports.tokenize = function(test, util) {
+module.exports.functional = function(test, util) {
 
   // load data
   var ph = new Placeholder();
@@ -29,6 +29,17 @@ module.exports.tokenize = function(test, util) {
 
   // should not include county: 102081377, or localadmin: 404482867
   assert('lancaster lancaster pa', [ 101718643, 404487183, 404487185 ]);
+
+  // assertions from pelias acceptance-test suite
+  assert('灣仔, 香港', [85671779, 421187171]);
+  assert('new york city, usa', [85977539]);
+  assert('sendai, japan', [102031919, 1108739995, 1125901991]);
+  assert('Észak-Alföld', [404227483]);
+  assert('Comunidad Foral De Navarra, ES', [404227391]);
+  assert('Île-De-France, France', [404227465]);
+  assert('Dél-Dunántúl, HU', [404227491]);
+  assert('Sardegna, Italy', [404227535]);
+  assert('Közép-Magyarország, Hungary', [404227489]);
 };
 
 // convenience function for writing quick 'n easy test cases
