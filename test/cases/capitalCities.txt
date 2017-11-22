@@ -51,7 +51,7 @@
 101751737 Dublin, Ireland
 85632641 Diego Garcia, British Indian Ocean Territory
 101751753 Reykjavik, Iceland
-85632593 Saint Helier, Jersey
+1125783915 Saint Helier, Jersey
 421186515 Kingston, Jamaica
 85672817 Tokyo, Japan
 890440079 Basseterre, Saint Kitts and Nevis
