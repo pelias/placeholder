@@ -619,7 +619,7 @@ module.exports.add_token = function(test, util) {
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][0], 1 );
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'und', layer: undefined, tag: 'abbr', body: 'example' }
+        { lang: 'und', tag: 'abbr', body: 'example' }
       ]);
       t.end();
     });
@@ -633,8 +633,8 @@ module.exports.add_token = function(test, util) {
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][0], 1 );
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'und', layer: undefined, tag: 'label', body: 'example' },
-        { lang: 'und', layer: undefined, tag: 'label', body: 'example2' }
+        { lang: 'und', tag: 'label', body: 'example' },
+        { lang: 'und', tag: 'label', body: 'example2' }
       ]);
       t.end();
     });
@@ -663,10 +663,10 @@ module.exports.add_token = function(test, util) {
       'wof:country_alpha3': 'EXP'
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'und', layer: 'country', tag: 'abbr', body: 'ex' },
-        { lang: 'und', layer: 'country', tag: 'abbr', body: 'exa' },
-        { lang: 'und', layer: 'country', tag: 'abbr', body: 'ep' },
-        { lang: 'und', layer: 'country', tag: 'abbr', body: 'exp' }
+        { lang: 'und', tag: 'abbr', body: 'ex' },
+        { lang: 'und', tag: 'abbr', body: 'exa' },
+        { lang: 'und', tag: 'abbr', body: 'ep' },
+        { lang: 'und', tag: 'abbr', body: 'exp' }
       ]);
       t.end();
     });
@@ -695,10 +695,10 @@ module.exports.add_token = function(test, util) {
       'wof:country_alpha3': 'EXP'
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'und', layer: 'dependency', tag: 'abbr', body: 'ex' },
-        { lang: 'und', layer: 'dependency', tag: 'abbr', body: 'exa' },
-        { lang: 'und', layer: 'dependency', tag: 'abbr', body: 'ep' },
-        { lang: 'und', layer: 'dependency', tag: 'abbr', body: 'exp' }
+        { lang: 'und', tag: 'abbr', body: 'ex' },
+        { lang: 'und', tag: 'abbr', body: 'exa' },
+        { lang: 'und', tag: 'abbr', body: 'ep' },
+        { lang: 'und', tag: 'abbr', body: 'exp' }
       ]);
       t.end();
     });
@@ -726,7 +726,28 @@ module.exports.add_token = function(test, util) {
       'ne:abbrev': 'TEST2'
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'und', layer: 'dependency', tag: 'abbr', body: 'ep' }
+        { lang: 'und', tag: 'abbr', body: 'ep' }
+      ]);
+      t.end();
+    });
+  });
+
+
+  // deduplicate tokens within the same language
+  test( 'token deduplication', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:eng_x_preferred': [ 'A', 'B' ],
+      'name:eng_x_variant': [ 'A', 'D' ],
+      'name:ita_x_preferred': [ 'A', 'B', 'C' ],
+      'name:ita_x_variant': [ 'A', 'B', 'D' ]
+    }), function(){
+      t.deepEqual( mock._calls.setTokens.length, 1 );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'eng', tag: 'preferred', body: 'a' },
+        { lang: 'eng', tag: 'preferred', body: 'b' },
+        { lang: 'eng', tag: 'variant', body: 'd' },
+        { lang: 'ita', tag: 'preferred', body: 'c' }
       ]);
       t.end();
     });
@@ -753,12 +774,12 @@ module.exports.add_names = function(test, util) {
       'name:eng_x_foobar': [ 'I', 'J' ], // made-up name
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][1], [
-        { lang: 'eng', layer: undefined, tag: 'preferred', body: 'a' },
-        { lang: 'eng', layer: undefined, tag: 'preferred', body: 'b' },
-        { lang: 'eng', layer: undefined, tag: 'colloquial', body: 'c' },
-        { lang: 'eng', layer: undefined, tag: 'colloquial', body: 'd' },
-        { lang: 'eng', layer: undefined, tag: 'variant', body: 'e' },
-        { lang: 'eng', layer: undefined, tag: 'variant', body: 'f' }
+        { lang: 'eng', tag: 'preferred', body: 'a' },
+        { lang: 'eng', tag: 'preferred', body: 'b' },
+        { lang: 'eng', tag: 'variant', body: 'e' },
+        { lang: 'eng', tag: 'variant', body: 'f' },
+        { lang: 'eng', tag: 'colloquial', body: 'c' },
+        { lang: 'eng', tag: 'colloquial', body: 'd' }
       ]);
       t.end();
     });
@@ -870,22 +891,6 @@ module.exports.add_names = function(test, util) {
       t.end();
     });
   });
-
-  // deduplicate tokens within the same language
-  test( 'token deduplication', function(t) {
-    var mock = new Mock();
-    mock.insertWofRecord(params({
-      'name:eng_x_preferred': [ 'A', 'B' ],
-      'name:eng_x_variant': [ 'A', 'B' ],
-      'name:ita_x_preferred': [ 'A', 'B' ],
-      'name:ita_x_variant': [ 'A', 'B' ]
-    }), function(){
-      t.deepEqual( mock._calls.set.length, 1 );
-      t.deepEqual( mock._calls.set[0][1].names, { eng: [ 'A', 'B' ], ita: [ 'A', 'B' ] });
-      t.end();
-    });
-  });
-
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
