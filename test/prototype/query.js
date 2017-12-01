@@ -93,7 +93,7 @@ module.exports._queryGroup = function(test, common) {
     const done = ( _err, _ids, _mask, _group ) => {
       t.deepEqual(_err, null);
       t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, []);
+      t.deepEqual(_mask, [ true, true, false ]);
       t.equal(_group, group);
     };
 
@@ -130,7 +130,7 @@ module.exports._queryGroup = function(test, common) {
     const done = ( _err, _ids, _mask, _group ) => {
       t.deepEqual(_err, null);
       t.deepEqual(_ids, [ 100 ]);
-      t.deepEqual(_mask, []);
+      t.deepEqual(_mask, [ true, true, true ]);
       t.equal(_group, group);
     };
 
