@@ -2,6 +2,7 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
+  './lib/Queries',
   './prototype/tokenize_integration',
   './prototype/query_integration',
   './functional',

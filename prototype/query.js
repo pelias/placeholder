@@ -3,7 +3,6 @@ var async = require('async');
 var util = require('util');
 var Result = require('../lib/Result');
 var sorted = require('../lib/sorted');
-
 var debug = false;
 
 function reduce( index, res ){

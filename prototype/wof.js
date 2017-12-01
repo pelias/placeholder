@@ -5,6 +5,10 @@ const _ = require('lodash'),
     analysis = require('../lib/analysis'),
     language = dir('../config/language');
 
+// list of languages / tags we favour in cases of deduplication
+const LANG_PREFS = ['eng','und'];
+const TAG_PREFS = ['preferred','abbr','label','variant','colloquial'];
+
 // insert a wof record in to index
 function insertWofRecord( wof, next ){
 
@@ -52,36 +56,36 @@ function insertWofRecord( wof, next ){
   if( 'empire' !== doc.placetype ){
 
     // add 'wof:label'
-    tokens.push({ lang: 'und', layer: doc.placetype, tag: 'label', body: wof['wof:label'] });
+    tokens.push({ lang: 'und', tag: 'label', body: wof['wof:label'] });
 
     // add 'wof:name'
-    tokens.push({ lang: 'und', layer: doc.placetype, tag: 'label', body: wof['wof:name'] });
+    tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
 
     // add 'wof:abbreviation'
-    tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['wof:abbreviation'] });
+    tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
-    // tokens.push({ lang: 'und', layer: doc.placetype, body: wof['ne:abbrev'] });
+    // tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
 
     // fields specific to countries & dependencies
     if( 'country' === doc.placetype || 'dependency' === doc.placetype ) {
       if( wof['iso:country'] && wof['iso:country'] !== 'XX' ){
 
         // add 'ne:iso_a2'
-        tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['ne:iso_a2'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a2'] });
 
         // add 'ne:iso_a3'
-        tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['ne:iso_a3'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['ne:iso_a3'] });
 
         // add 'wof:country'
         // warning: eg. FR for 'French Guiana'
-        // tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['wof:country'] });
+        // tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country'] });
 
         // add 'iso:country'
-        tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['iso:country'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['iso:country'] });
 
         // add 'wof:country_alpha3'
-        tokens.push({ lang: 'und', layer: doc.placetype, tag: 'abbr', body: wof['wof:country_alpha3'] });
+        tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:country_alpha3'] });
       }
     }
 
@@ -98,7 +102,6 @@ function insertWofRecord( wof, next ){
         // index each alternative name
         for( var n in wof[ attr ] ){
           tokens.push({
-            layer: doc.placetype,
             lang: match[1],
             tag: match[2],
             body: wof[ attr ][ n ]
@@ -146,15 +149,42 @@ function insertWofRecord( wof, next ){
   // normalize tokens
   tokens = tokens.reduce(( res, token ) => {
     analysis.normalize( token.body ).forEach( norm => {
-      res.push({ lang: token.lang, layer: token.layer, tag: token.tag, body: norm });
+      res.push({ lang: token.lang, tag: token.tag, body: norm });
     });
     return res;
   }, []);
 
+  // sort tokens (for optimal deduplication)
+  tokens.sort((i1, i2) => {
+
+    // sort by language
+    const l1 = LANG_PREFS.indexOf(i1.lang);
+    const l2 = LANG_PREFS.indexOf(i2.lang);
+
+    if (l1 === -1){ return +1; }
+    if (l2 === -1){ return -1; }
+    if (l1 > l2){ return +1; }
+    if (l1 < l2){ return -1; }
+
+    // sort by tag
+    const t1 = TAG_PREFS.indexOf(i1.tag);
+    const t2 = TAG_PREFS.indexOf(i2.tag);
+
+    if (t1 === -1){ return +1; }
+    if (t2 === -1){ return -1; }
+    if (t1 > t2){ return +1; }
+    if (t1 < t2){ return -1; }
+
+    return 0;
+  });
+
   // deduplicate tokens
   var seen = {};
   tokens = tokens.filter( token => {
-    return seen.hasOwnProperty( token.body ) ? false : ( seen[ token.body ] = true );
+    if( seen.hasOwnProperty( 'eng:' + token.body ) ){ return false; }
+    if( seen.hasOwnProperty( 'und:' + token.body ) ){ return false; }
+    const key = token.lang + ':' + token.body;
+    return seen.hasOwnProperty( key ) ? false : ( seen[ key ] = true );
   });
 
   // deduplicate parent ids

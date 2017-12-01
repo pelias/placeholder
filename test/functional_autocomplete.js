@@ -1,7 +1,7 @@
 
 var Placeholder = require('../Placeholder');
 
-module.exports.tokenize = function(test, util) {
+module.exports.functional = function(test, util) {
 
   // load data
   var ph = new Placeholder();

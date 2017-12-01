@@ -9,7 +9,6 @@ var tests = [
   './lib/Database',
   './lib/DocStore',
   './lib/TokenIndex',
-  './lib/Queries',
   './lib/Result',
   './prototype/wof',
   './prototype/io',
