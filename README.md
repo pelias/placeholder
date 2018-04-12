@@ -321,7 +321,7 @@ other organizations may elect to change the bucket name in the config and utiliz
 the script takes care of creating a date stamped archive and promoting the most recent build to the root of the bucket (with a public ACL).
 
 ```bash
-$ ./cmd/s3_upload.sh
+$ AWS_PROFILE=nextzen ./cmd/s3_upload.sh
 
 --- gzipping data files ---
 --- uploading archive ---

@@ -4,7 +4,7 @@ set -euo pipefail
 # directory of this file
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DATA_DIR=${PLACEHOLDER_DATA:-"${DIR}/../data"}
-BUCKET='s3://pelias-data/placeholder'
+BUCKET='s3://pelias-data.nextzen.org/placeholder'
 TODAY=`date +%Y-%m-%d`
 
 echo '--- gzipping data files ---'
