@@ -4,13 +4,13 @@ language: node_js
 notifications:
   email: false
 node_js:
-  - 4
   - 6
+  - 8
 matrix:
   fast_finish: true
 script: npm run travis
 env:
-  - BUCKET=http://pelias-data.s3.amazonaws.com/placeholder
+  - BUCKET=http://pelias-data.nextzen.org.s3.amazonaws.com/placeholder
 before_install:
   - npm i -g npm@^3.0.0
 before_script:

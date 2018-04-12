@@ -21,6 +21,19 @@ Placeholder supports searching on and retrieving tokens in different languages a
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
 
+## nodejs version
+
+nodejs `v6.11.4` or greater is required, running the library on an older version of node will result in an error:
+
+```bash
+bash-3.2$ node --version
+v4.9.1
+
+bash-3.2$ node -e 'require("better-sqlite3")'
+FATAL ERROR: v8::ToLocalChecked Empty MaybeLocal.
+Abort trap: 6
+```
+
 ## install
 
 ```bash
