@@ -1,6 +1,9 @@
 {
   "name": "pelias-placeholder",
   "version": "0.0.0-semantic-release",
+  "engines": {
+    "node": ">=6.11.4"
+  },
   "author": "mapzen",
   "license": "MIT",
   "main": "server.js",
