@@ -325,8 +325,8 @@ $ AWS_PROFILE=nextzen ./cmd/s3_upload.sh
 
 --- gzipping data files ---
 --- uploading archive ---
-upload: data/store.sqlite3.gz to s3://pelias-data/placeholder/archive/2017-09-29/store.sqlite3.gz
-upload: data/wof.extract.gz to s3://pelias-data/placeholder/archive/2017-09-29/wof.extract.gz
+upload: data/store.sqlite3.gz to s3://pelias-data.nextzen.org/placeholder/archive/2017-09-29/store.sqlite3.gz
+upload: data/wof.extract.gz to s3://pelias-data.nextzen.org/placeholder/archive/2017-09-29/wof.extract.gz
 --- list remote archive ---
 2017-09-29 14:52:33   46.6 MiB store.sqlite3.gz
 2017-09-29 14:53:08   53.8 MiB wof.extract.gz
