@@ -45,7 +45,7 @@ $ npm install
 
 ```bash
 $ mkdir data
-$ curl -s http://pelias-data.nextzen.org.s3.amazonaws.com/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
+$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
 ```
 
 ### confirm the build was successful
@@ -271,7 +271,7 @@ alternatively you can download the extract file from our s3 bucket:
 
 ```bash
 $ mkdir data
-$ curl -s http://pelias-data.nextzen.org.s3.amazonaws.com/placeholder/wof.extract.gz | gunzip > data/wof.extract
+$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/wof.sqlite3.gz | gunzip > data/wof.sqlite3;
 ```
 
 now you can rebuild the `data/store.json` file with the following command:
