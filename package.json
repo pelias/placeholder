@@ -1,6 +1,6 @@
 {
   "name": "pelias-placeholder",
-  "version": "0.0.0-semantic-release",
+  "version": "0.0.0-development",
   "engines": {
     "node": ">=6.11.4"
   },
@@ -20,15 +20,13 @@
     "repl": "node cmd/repl.js",
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "check-dependencies": "node_modules/.bin/npm-check --skip-unused --production",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
-    "travis": "npm run check-dependencies && npm run all"
+    "travis": "npm run all"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pelias/placeholder.git"
+    "url": "https://github.com/pelias/placeholder.git"
   },
   "bugs": {
     "url": "https://github.com/pelias/placeholder/issues"
@@ -51,7 +49,6 @@
   "devDependencies": {
     "istanbul": "^0.4.2",
     "jshint": "^2.5.6",
-    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
     "semantic-release": "^15.0.0",
     "tap-spec": "^4.1.1",
@@ -60,7 +57,10 @@
   "pre-commit": [
     "lint",
     "validate",
-    "check-dependencies",
     "test"
-  ]
+  ],
+  "release": {
+    "branch": "production",
+    "success": []
+  }
 }

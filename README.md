@@ -1,3 +1,12 @@
+>This repository is part of the [Pelias](https://github.com/pelias/pelias)
+>project. Pelias is an open-source, open-data geocoder originally sponsored by
+>[Mapzen](https://www.mapzen.com/). Our official user documentation is
+>[here](https://github.com/pelias/documentation).
+
+# Pelias Placeholder Service
+[![NPM](https://nodei.co/npm/pelias-placeholder.png?downloads=true&stars=true)](https://nodei.co/npm/pelias-placeholder)
+[![Build Status](https://travis-ci.org/pelias/placeholder.png?branch=master)](https://travis-ci.org/pelias/placeholder)
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
 
 ## natural language parser for geographic text
 
@@ -18,8 +27,6 @@ The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/w
 Placeholder supports searching on and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
 
 ---
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
 
 ## nodejs version
 
