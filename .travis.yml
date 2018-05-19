@@ -1,5 +1,4 @@
 sudo: false
-dist: trusty
 language: node_js
 notifications:
   email: false
@@ -12,16 +11,14 @@ script: npm run travis
 env:
   - BUCKET=http://pelias-data.nextzen.org.s3.amazonaws.com/placeholder
 before_install:
-  - npm i -g npm@^3.0.0
+  - npm i -g npm
 before_script:
-  - npm prune
   - mkdir data
   - 'curl -sfo data/store.sqlite3.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/store.sqlite3.gz || true'
   - '[ -e data/store.sqlite3.gz ] || curl -so data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz'
   - gunzip data/store.sqlite3.gz
 after_success:
-  - npm install -g npx
-  - npx -p node@8 npm run semantic-release
+  - npx semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
