@@ -28,8 +28,6 @@ Placeholder supports searching on and retrieving tokens in different languages a
 
 ---
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
-
 ## nodejs version
 
 nodejs `v6.11.4` or greater is required, running the library on an older version of node will result in an error:
