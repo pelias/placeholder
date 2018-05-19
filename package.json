@@ -20,7 +20,6 @@
     "repl": "node cmd/repl.js",
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "coverage": "node_modules/.bin/istanbul cover test/unit/run.js",
     "validate": "npm ls",
     "travis": "npm run all"
