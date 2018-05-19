@@ -1,6 +1,6 @@
 {
   "name": "pelias-placeholder",
-  "version": "0.0.0-semantic-release",
+  "version": "0.0.0-development",
   "engines": {
     "node": ">=6.11.4"
   },
