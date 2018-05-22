@@ -43,7 +43,7 @@ module.exports.constructor = function(test, common) {
 
   test('constructor - set done - invalid', function(t) {
     const res = new Result(undefined, {});
-    t.equal( res.done.toString(), 'function (){}' );
+    t.equal( typeof res.done, 'function' );
     t.end();
   });
 };
