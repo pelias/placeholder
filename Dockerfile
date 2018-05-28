@@ -21,6 +21,4 @@ ENV PLACEHOLDER_DATA '/data/placeholder'
 # install npm dependencies
 RUN npm install
 
-RUN export extract_file=${PLACEHOLDER_DATA}/wof.extract
-
 CMD [ "npm", "start" ]
