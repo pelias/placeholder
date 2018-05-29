@@ -278,7 +278,7 @@ alternatively you can download the extract file from our s3 bucket:
 
 ```bash
 $ mkdir data
-$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/wof.sqlite3.gz | gunzip > data/wof.sqlite3;
+$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/wof.extract.gz | gunzip > data/wof.extract;
 ```
 
 now you can rebuild the `data/store.json` file with the following command:
