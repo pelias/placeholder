@@ -9,12 +9,12 @@ var tests = [
   './lib/Database',
   './lib/DocStore',
   './lib/TokenIndex',
-  './lib/Queries',
   './lib/Result',
   './prototype/wof',
   './prototype/io',
   './prototype/tokenize',
   './prototype/query',
+  './server/routes/_util.js',
 ];
 
 // test runner

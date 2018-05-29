@@ -731,6 +731,27 @@ module.exports.add_token = function(test, util) {
       t.end();
     });
   });
+
+
+  // deduplicate tokens within the same language
+  test( 'token deduplication', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:eng_x_preferred': [ 'A', 'B' ],
+      'name:eng_x_variant': [ 'A', 'D' ],
+      'name:ita_x_preferred': [ 'A', 'B', 'C' ],
+      'name:ita_x_variant': [ 'A', 'B', 'D' ]
+    }), function(){
+      t.deepEqual( mock._calls.setTokens.length, 1 );
+      t.deepEqual( mock._calls.setTokens[0][1], [
+        { lang: 'eng', tag: 'preferred', body: 'a' },
+        { lang: 'eng', tag: 'preferred', body: 'b' },
+        { lang: 'eng', tag: 'variant', body: 'd' },
+        { lang: 'ita', tag: 'preferred', body: 'c' }
+      ]);
+      t.end();
+    });
+  });
 };
 
 module.exports.add_names = function(test, util) {
@@ -755,10 +776,10 @@ module.exports.add_names = function(test, util) {
       t.deepEqual( mock._calls.setTokens[0][1], [
         { lang: 'eng', tag: 'preferred', body: 'a' },
         { lang: 'eng', tag: 'preferred', body: 'b' },
-        { lang: 'eng', tag: 'colloquial', body: 'c' },
-        { lang: 'eng', tag: 'colloquial', body: 'd' },
         { lang: 'eng', tag: 'variant', body: 'e' },
-        { lang: 'eng', tag: 'variant', body: 'f' }
+        { lang: 'eng', tag: 'variant', body: 'f' },
+        { lang: 'eng', tag: 'colloquial', body: 'c' },
+        { lang: 'eng', tag: 'colloquial', body: 'd' }
       ]);
       t.end();
     });
@@ -870,7 +891,6 @@ module.exports.add_names = function(test, util) {
       t.end();
     });
   });
-
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.

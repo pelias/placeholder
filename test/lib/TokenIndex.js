@@ -18,7 +18,7 @@ module.exports.reset = function(test, common) {
   test('reset', function(t) {
     var db = new TokenIndex();
     db.open('/tmp/db', { test: true, reset: true });
-    
+
     // ensure table has been created
     var sql = 'PRAGMA table_info(lineage)';
     t.deepEqual( db.prepare(sql).all(), [
@@ -43,13 +43,13 @@ module.exports.reset = function(test, common) {
 
     // ensure fts table has been created with the correct options
     sql = 'select * from sqlite_master where type="table" and name="fulltext"';
-    const expected = 
+    const expected =
       'CREATE VIRTUAL TABLE fulltext USING fts5( token, ' + [
       `tokenize="unicode61 remove_diacritics 0 tokenchars '_'"`,
       `prefix='1 2 3 4 5 6 7 8 9 10 11 12'`,
       'columnsize=0'
     ].join(', ') + ')';
-    
+
     t.deepEqual( db.prepare(sql).get().sql, expected );
     t.end();
   });

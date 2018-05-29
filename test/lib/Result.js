@@ -8,6 +8,7 @@ module.exports.constructor = function(test, common) {
     t.equal( typeof res.getObject, 'function' );
     t.equal( typeof res.getPreviousObject, 'function' );
     t.equal( typeof res.getIdsAsArray, 'function' );
+    t.equal( typeof res.setMask, 'function' );
     t.equal( typeof res.intersect, 'function' );
 
     t.deepEqual( res.group, [] );
@@ -23,6 +24,7 @@ module.exports.constructor = function(test, common) {
   test('constructor - set group', function(t) {
     const res = new Result(['a','b','c']);
     t.deepEqual( res.group, ['a','b','c'] );
+    t.deepEqual( res.mask, [false, false, false] );
     t.end();
   });
 
@@ -41,7 +43,7 @@ module.exports.constructor = function(test, common) {
 
   test('constructor - set done - invalid', function(t) {
     const res = new Result(undefined, {});
-    t.equal( res.done.toString(), 'function (){}' );
+    t.equal( typeof res.done, 'function' );
     t.end();
   });
 };
@@ -103,6 +105,73 @@ module.exports.getIdsAsArray = function(test, common) {
     res2.ids = { '200': true, '201': true, '202': true };
     t.deepEqual(res2.getIdsAsArray(), [200, 201, 202]);
 
+    t.end();
+  });
+};
+
+module.exports.setMask = function(test, common) {
+  test('default mask', function(t) {
+    const res = new Result(['a','b','c']);
+    t.deepEqual(res.mask, [false, false, false]);
+    t.end();
+  });
+  test('setMask - invalid property', function(t) {
+    const res = new Result(['a','b','c']);
+    t.deepEqual(res.mask, [false, false, false]);
+    res.setMask('invalidproperty', true);
+    t.deepEqual(res.mask, [false, false, false]);
+    t.end();
+  });
+  test('setMask - subject - true', function(t) {
+    const res = new Result(['a','b','c']);
+    res.setMask('subject', true);
+    t.deepEqual(res.mask, [false, true, false]);
+    t.end();
+  });
+  test('setMask - subject - truthy', function(t) {
+    const res = new Result(['a','b','c']);
+    res.setMask('subject', 'non null string');
+    t.deepEqual(res.mask, [false, true, false]);
+    t.end();
+  });
+  test('setMask - subject - false', function(t) {
+    const res = new Result(['a','b','c']);
+    res.mask = [true, true, true];
+    res.setMask('subject', false);
+    t.deepEqual(res.mask, [true, false, true]);
+    t.end();
+  });
+  test('setMask - subject - falsy', function(t) {
+    const res = new Result(['a','b','c']);
+    res.mask = [true, true, true];
+    res.setMask('subject', null);
+    t.deepEqual(res.mask, [true, false, true]);
+    t.end();
+  });
+  test('setMask - object - true', function(t) {
+    const res = new Result(['a','b','c']);
+    res.setMask('object', true);
+    t.deepEqual(res.mask, [false, false, true]);
+    t.end();
+  });
+  test('setMask - object - truthy', function(t) {
+    const res = new Result(['a','b','c']);
+    res.setMask('object', 'non null string');
+    t.deepEqual(res.mask, [false, false, true]);
+    t.end();
+  });
+  test('setMask - object - false', function(t) {
+    const res = new Result(['a','b','c']);
+    res.mask = [true, true, true];
+    res.setMask('object', false);
+    t.deepEqual(res.mask, [true, true, false]);
+    t.end();
+  });
+  test('setMask - object - falsy', function(t) {
+    const res = new Result(['a','b','c']);
+    res.mask = [true, true, true];
+    res.setMask('object', null);
+    t.deepEqual(res.mask, [true, true, false]);
     t.end();
   });
 };
