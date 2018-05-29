@@ -4,7 +4,7 @@
 890441875 The Valley, Anguilla
 421182367 Yerevan, Armenia
 890432155 Luanda, Angola
-890449627 Pago Pago, American Samoa
+101734459 Pago Pago, American Samoa
 890432017 Oranjestad, Aruba
 85667871 Mariehamn, Aland Islands
 890518775 Sarajevo, Bosnia and Herzegovina
@@ -36,7 +36,7 @@
 101750367 London, United Kingdom
 890451719 St. George's, Grenada
 1091680781 Cayenne, French Guiana
-85632547 St Peter Port, Guernsey
+1125821075 St Peter Port, Guernsey
 421168965 Accra, Ghana
 101753853 Gibraltar, Gibraltar
 101870623 Nuuk, Greenland
@@ -49,9 +49,9 @@
 101751659 Zagreb, Croatia
 101751703 Budapest, Hungary
 101751737 Dublin, Ireland
-85632641 Diego Garcia, British Indian Ocean Territory
+1125918569 Diego Garcia, British Indian Ocean Territory
 101751753 Reykjavik, Iceland
-85632593 Saint Helier, Jersey
+1125783915 Saint Helier, Jersey
 421186515 Kingston, Jamaica
 85672817 Tokyo, Japan
 890440079 Basseterre, Saint Kitts and Nevis

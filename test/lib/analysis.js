@@ -80,6 +80,10 @@ module.exports.normalize = function(test, common) {
   assert( '22nd', ['22nd'] );
   assert( 'a12', ['a12'] );
   assert( '-1', [] ); // special case: handle '-1' values
+  assert( '1 -1', [] );
+  assert( '1 --1', [] );
+  assert( '1 (foo)', [] );
+  assert( '1 [foo]', [] );
 };
 
 module.exports.tokenize = function(test, common) {

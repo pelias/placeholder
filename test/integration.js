@@ -2,19 +2,11 @@ var tape = require('tape');
 var path = require('path');
 
 var tests = [
-  './lib/jsonParseStream',
-  './lib/analysis',
-  './lib/permutations',
-  './lib/sorted',
-  './lib/Database',
-  './lib/DocStore',
-  './lib/TokenIndex',
-  './lib/Result',
-  './prototype/wof',
-  './prototype/io',
-  './prototype/tokenize',
-  './prototype/query',
-  './server/routes/_util.js',
+  './lib/Queries',
+  './prototype/tokenize_integration',
+  './prototype/query_integration',
+  './functional',
+  './functional_autocomplete',
 ];
 
 // test runner

@@ -16,7 +16,7 @@
   "quotmark": "single",
   "undef": true,
   "unused": false,
-  "maxparams": 4,
+  "maxparams": 5,
   "maxdepth": 4,
   "maxlen": 140
 }
