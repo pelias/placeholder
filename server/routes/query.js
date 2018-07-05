@@ -22,8 +22,8 @@ module.exports = function( req, res ){
 
   // perform query
   console.time('took');
-  ph.query( text, ( err, res ) => {
+  ph.query( text, ( err, result ) => {
     console.timeEnd('took');
-    res.status(200).json( res.getIdsAsArray() );
+    res.status(200).json( result.getIdsAsArray() );
   });
 };
