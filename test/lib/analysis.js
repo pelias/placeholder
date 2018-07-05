@@ -112,6 +112,28 @@ module.exports.tokenize = function(test, common) {
   assert( 'Sendai-shi', [[ 'sendaishi' ], [ 'sendai', 'shi' ]] );
 };
 
+module.exports.minor_to_major = function(test, common) {
+
+  var isMajorToMinor = function( str ){
+    return analysis.REGEX_MAJOR_TO_MINOR.test( str );
+  };
+
+  test( 'minor-to-major', function(t) {
+    t.false( isMajorToMinor('London, UK'), 'English' );
+    t.false( isMajorToMinor('Köln Deutschland'), 'German' );
+    t.false( isMajorToMinor('Orléans Nîmes Besançon'), 'French' );
+    t.end();
+  });
+
+  test( 'major-to-minor', function(t) {
+    t.true( isMajorToMinor('г.Москва'), 'Russian' );
+    t.true( isMajorToMinor('경기도 광명시'), 'Korean' );
+    t.true( isMajorToMinor('ישראל'), 'Hebrew' );
+    t.true( isMajorToMinor('دبي'), 'Arabic' );
+    t.end();
+  });
+};
+
 // convenience function for writing quick 'n easy test cases
 function runner( test, method, actual, expected ){
   test( actual, function(t) {

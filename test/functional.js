@@ -15,8 +15,8 @@ module.exports.functional = function(test, util) {
   assert('ケープタウン 南アフリカ', [101928027]);
   assert('경기도 광명시', [890472589]);
   assert('서울 마포구', [890473201]);
-  assert('부산광역시 부산진구', [102026581]);
-  assert('전라북도 전주시 완산구', [890476473]);
+  assert('부산광역시 부산진구', [890475779]);
+  assert('전라북도 전주시 완산구', [102026471]);
 
   assert('london on', [ 101735809 ]);
   assert('paris, tx', [ 101725293 ]);

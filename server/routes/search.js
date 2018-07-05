@@ -110,6 +110,9 @@ function mapResult( ph, result, parents, lang ){
   // delete language properties
   delete result.names;
 
+  // delete rank properties
+  delete result.rank;
+
   result.lineage = result.lineage.map( function( lineage ){
     return mapLineage( ph, lineage, parents, lang );
   });

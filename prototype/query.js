@@ -60,8 +60,20 @@ function reduce( index, res ){
   // regular query
   else {
     index.matchSubjectObject( res.getSubject(), res.getObject(), (err, rows) => {
-      res.intersect( err, rows );
-      reduce( index, res );
+
+      // perform a query for nearby features and include them in the results
+      if( !rows || rows.length === 0 ){
+        index.matchSubjectObjectGeomIntersects( res.getSubject(), res.getObject(), (err2, rows2) => {
+          res.intersect( err2, rows2 );
+          reduce( index, res );
+        });
+      }
+
+      // do not perform a nearby search
+      else {
+        res.intersect( err, rows );
+        reduce( index, res );
+      }
     });
   }
 }

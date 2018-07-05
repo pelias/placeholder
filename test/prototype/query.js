@@ -77,20 +77,24 @@ module.exports._queryGroup = function(test, common) {
   test('_queryGroup - multiple tokens - no matches', function(t) {
 
     const group = ['hello world', 'test', 'foo bar'];
-    t.plan(8);
+    t.plan(10);
 
     const index = {
       matchSubjectObject: ( subject, object, cb ) => {
         t.ok(true);
-        return cb( null, new Result() );
+        return cb( null, [] );
       },
-      matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-        t.equal(phrase, 'foo bar');
+      matchSubjectDistinctSubjectIds: ( subject, cb ) => {
+        t.equal(subject, 'foo bar');
         return cb( null, [
           { subjectId: 100 },
           { subjectId: 200 },
           { subjectId: 300 },
         ]);
+      },
+      matchSubjectObjectGeomIntersects: ( subject, object, cb ) => {
+        t.ok(true);
+        return cb( null, [] );
       }
     };
 
@@ -129,6 +133,10 @@ module.exports._queryGroup = function(test, common) {
               { subjectId: 900, objectId: 990 },
             ]);
         }
+      },
+      matchSubjectObjectGeomIntersects: ( subject, object, cb ) => {
+        t.ok(true);
+        return cb( null, [] );
       }
     };
 
