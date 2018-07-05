@@ -79,6 +79,7 @@ module.exports.store_record = function(test, util) {
           name: undefined,
           names: {},
           placetype: undefined,
+          rank: { min: -1, max: 0 },
           population: undefined,
           popularity: undefined,
           abbr: undefined,

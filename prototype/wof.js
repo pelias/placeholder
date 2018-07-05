@@ -25,6 +25,7 @@ function insertWofRecord( wof, next ){
     name: wof['wof:label'] || wof['wof:name'],
     abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
+    rank: getRank( wof['wof:placetype'] ),
     population: getPopulation( wof ),
     popularity: wof['qs:photo_sum'],
     lineage: wof['wof:hierarchy'],
@@ -281,6 +282,21 @@ function getAbbreviation( wof ) {
   } else if( wof['wof:abbreviation'] ) {
     return wof['wof:abbreviation'];
   }
+}
+
+const PLACETYPE_RANK = [
+  'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'borough', 'postalcode',
+  'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'marinearea',
+  'disputed', 'dependency', 'country', 'empire', 'continent', 'ocean', 'planet'
+];
+
+// this function returns an integer representation of the placetype,
+function getRank( placetype ){
+  var rank = PLACETYPE_RANK.indexOf((placetype || '').toLowerCase().trim());
+  return {
+    min: rank,
+    max: rank +1
+  };
 }
 
 module.exports.insertWofRecord = insertWofRecord;
