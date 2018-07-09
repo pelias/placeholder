@@ -216,7 +216,7 @@ module.exports.store_popularity = function(test, util) {
   test( 'popularity: exists', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'misc:photo_sum': 100
+      'qs:photo_sum': 100
     }), function(){
       t.deepEqual( mock._calls.set[0][1].popularity, 100);
       t.end();
@@ -226,7 +226,7 @@ module.exports.store_popularity = function(test, util) {
   test( 'popularity: exists - as string', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'misc:photo_sum': '100'
+      'qs:photo_sum': '100'
     }), function(){
       t.deepEqual( mock._calls.set[0][1].popularity, 100);
       t.end();
