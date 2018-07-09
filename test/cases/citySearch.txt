@@ -22,7 +22,7 @@
 85872885 Allen
 404485941 Allentown
 421176003 Almaty
-101751877 Almere Stad
+1158787353 Almere Stad
 85937153 Alpharetta
 85883945 Alvaro Obregon
 101752081 Amadora
@@ -534,7 +534,7 @@
 404227469 Irvine, England
 101725697 Irving
 85827089 Irvington
-85866373 Islington
+1158857275 Islington
 85679237 Istanbul
 102002763 Ivanovo
 102031971 Iwaki
@@ -734,7 +734,7 @@
 404492091 Milwaukee
 85969169 Minneapolis
 85834583 Minnetonka Mills
-85834609 Miramar
+85932323 Miramar
 101751725 Miskolc
 85923083 Mission Viejo
 101735893 Mississauga
@@ -757,7 +757,7 @@
 102003033 Moscow
 85835611 Mount Pleasant
 85940777 Mount Prospect
-85835705 Mount Vernon
+101730487 Mount Vernon
 85922355 Mountain View
 102025093 Mueang Nonthaburi
 101725681 Muenster
@@ -1033,7 +1033,6 @@
 404497587 Schaumburg
 85977841 Schenectady
 85917475 Scottsdale
-85847473 Scranton
 101750557 Scunthorpe
 101730401 Seattle
 102019121 Semarang
