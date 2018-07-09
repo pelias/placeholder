@@ -41,4 +41,8 @@ function placetypeFilter {
 }
 
 # extract only the json properies from each file (eg: excluding zs:*)
-find "${WOF_DIR}" -type f -name '*.geojson' | placetypeFilter | ${XARGS_CMD} ${JQ_BIN} -c -M -f "${DIR}/jq.filter";
+# note: excludes 'alt' geometeries
+find "${WOF_DIR}" -type f -name '*.geojson' |\
+  grep -E '/[0-9]+\.geojson$' |\
+  placetypeFilter |\
+  ${XARGS_CMD} ${JQ_BIN} -c -M -f "${DIR}/jq.filter";

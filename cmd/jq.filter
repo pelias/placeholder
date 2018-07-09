@@ -9,11 +9,10 @@
     test("^mz:(is_current|population)$"),
     test("^gn:(population|pop)$"),
     test("^zs:(pop10)$"),
-    test("^qs:(pop|gn_pop)$"),
+    test("^qs:(pop|gn_pop|photo_sum)$"),
     test("^wk:(population)$"),
     test("^meso:(pop)$"),
     test("^statoids:(population)$"),
-    test("^misc:(photo_sum)$"),
     test("^name:")
   )
 )
