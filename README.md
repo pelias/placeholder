@@ -9,7 +9,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
 
 Placeholder is a parser for text inputs that understands relationships. It
-knows, for example, that Paris is a `city` in a `country` called France.
+knows, for example, that Paris is a `city` in a `country` called France, and a completely separate Paris in a `region` called Texas, in a `country` called The United States.
 
 This allows for Placeholder to assist Pelias in parsing queries that might be
 ambiguous without that understanding. Placeholder can also serve as a fully
