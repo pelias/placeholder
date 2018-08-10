@@ -280,7 +280,7 @@ $ docker-compose up -d
     - use the download script in [pelias/whosonfirst](https://github.com/pelias/whosonfirst#downloading-the-data)
 
 ### steps
-the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.mapzen.com/) project.
+the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.org/) project.
 
 the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
 
