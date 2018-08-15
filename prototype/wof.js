@@ -96,6 +96,8 @@ function insertWofRecord( wof, next ){
       // names: preferred|colloquial|variant|unknown
       var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
       if( match ){
+        // Fix for https://github.com/pelias/placeholder/pull/126
+        // Transform iso codes 639-2/B to 639-2/T
         const lang = language.alternatives[match[1]] || match[1];
 
         // skip languages in the blacklist, see config file for more info

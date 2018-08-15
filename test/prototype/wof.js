@@ -892,6 +892,19 @@ module.exports.add_names = function(test, util) {
       t.end();
     });
   });
+
+  test( 'pelias/placeholder#126: move iso639-2B to iso639-2T when iso639-2T is not found', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:fre_x_preferred':['Normandie'],
+      'name:dut_x_preferred':['Normandië'],
+      'name:eng_x_preferred':['Normandy']
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: ['Normandy'], fra: [ 'Normandie' ], nld: [ 'Normandië' ] });
+      t.end();
+    });
+  });
 };
 
 // In the USA we would like to favor the 'wof:label' property over the 'name:eng_x_preferred' property.
