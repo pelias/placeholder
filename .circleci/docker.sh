@@ -22,11 +22,10 @@ DOCKER_TAG_IMAGE_VERSION="${BRANCH}-${DATE}-${CIRCLE_SHA1}"
 DOCKER_TAG_IMAGE_NAME="${DOCKER_PROJECT}:${DOCKER_TAG_IMAGE_VERSION}"
 
 # build image and login to docker hub
-docker build -t $DOCKER_PROJECT .
+docker build -t $DOCKER_BRANCH_IMAGE_NAME .
 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 # copy the image to each of the two tags, and push
-docker tag $DOCKER_PROJECT $DOCKER_BRANCH_IMAGE_NAME
-docker tag $DOCKER_PROJECT $DOCKER_TAG_IMAGE_NAME
+docker tag $DOCKER_BRANCH_IMAGE_NAME $DOCKER_TAG_IMAGE_NAME
 docker push $DOCKER_BRANCH_IMAGE_NAME
 docker push $DOCKER_TAG_IMAGE_NAME
