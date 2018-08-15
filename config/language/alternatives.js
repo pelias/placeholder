@@ -1,0 +1,22 @@
+module.exports = {
+  'tib': 'bod',
+  'cze': 'ces',
+  'wel': 'cym',
+  'ger': 'deu',
+  'gre': 'ell',
+  'baq': 'eus',
+  'per': 'fas',
+  'fre': 'fra',
+  'arm': 'hye',
+  'ice': 'isl',
+  'geo': 'kat',
+  'mac': 'mkd',
+  'mao': 'mri',
+  'may': 'msa',
+  'bur': 'mya',
+  'dut': 'nld',
+  'rum': 'ron',
+  'slo': 'slk',
+  'alb': 'sqi',
+  'chi': 'zho'
+};

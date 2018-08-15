@@ -96,6 +96,7 @@ function insertWofRecord( wof, next ){
       // names: preferred|colloquial|variant|unknown
       var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
       if( match ){
+        const lang = language.alternatives[match[1]] || match[1];
 
         // skip languages in the blacklist, see config file for more info
         if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
@@ -103,7 +104,7 @@ function insertWofRecord( wof, next ){
         // index each alternative name
         for( var n in wof[ attr ] ){
           tokens.push({
-            lang: match[1],
+            lang: lang,
             tag: match[2],
             body: wof[ attr ][ n ]
           });
@@ -111,7 +112,7 @@ function insertWofRecord( wof, next ){
 
         // doc - only store 'preferred' strings
         if( match[2] === 'preferred' ){
-          doc.names[ match[1] ] = wof[ attr ];
+          doc.names[ lang ] = wof[ attr ];
         }
       }
     }
