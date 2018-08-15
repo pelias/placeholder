@@ -103,6 +103,9 @@ function insertWofRecord( wof, next ){
         // skip languages in the blacklist, see config file for more info
         if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
 
+        // skip if both iso codes 639-2/B and 639-2/T are present and the current iso is 639-2/B
+        if ( lang !== match[1] && wof[ 'name:' + lang + '_x_' + match[2] ]) { continue; }
+
         // index each alternative name
         for( var n in wof[ attr ] ){
           tokens.push({
