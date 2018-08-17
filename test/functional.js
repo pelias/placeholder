@@ -31,7 +31,7 @@ module.exports.functional = function(test, util) {
   assert('lancaster lancaster pa', [ 101718643, 404487183, 404487185 ]);
 
   // assertions from pelias acceptance-test suite
-  assert('灣仔, 香港', [85671779, 421187171]);
+  assert('灣仔, 香港', [85671779]);
   assert('new york city, usa', [85977539]);
   assert('sendai, japan', [102031919, 1108739995, 1125901991]);
   assert('Észak-Alföld', [404227483]);
