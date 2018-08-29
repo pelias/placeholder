@@ -19,4 +19,4 @@ ADD . ${WORKDIR}
 ENV WOF_DIR '/data/whosonfirst/data'
 ENV PLACEHOLDER_DATA '/data/placeholder'
 
-CMD [ "npm", "start" ]
+CMD [ "./cmd/server.sh" ]
