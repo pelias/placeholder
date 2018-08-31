@@ -114,6 +114,15 @@ for example, the following urls will return strings in Japanese / Russian where 
 
 documents returned by `/parser/search` contain a boolean property named `languageDefaulted` which indicates if the service was able to find a translation in the language you request (false) or whether it returned the default language (true).
 
+The `/parser/findbyid` endpoint also accepts a `?lang=xxx` property which will return the selected lang if the translation exists and all translations otherwise.
+
+for example, the following url will return strings in French / Korean where available:
+
+```javascript
+/parser/findbyid?ids=85633147,102191581,85862899&lang=fra
+/parser/findbyid?ids=85633147,102191581,85862899&lang=kor
+```
+
 the demo is also able to serve responses in different languages by providing the language code in the URL anchor:
 
 ```bash

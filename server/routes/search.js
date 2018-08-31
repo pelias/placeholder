@@ -33,7 +33,7 @@ module.exports = function( req, res ){
     // language property
     var lang;
     if( req.query.lang && req.query.lang.length === 3 ){
-      lang = req.query.lang;
+      lang = req.query.lang.toLowerCase();
     }
 
     // fetch all result docs by id
@@ -100,7 +100,7 @@ function sortingAlgorithm( a, b ){
 function mapResult( ph, result, parents, lang ){
 
   // swap languages
-  if( lang && Array.isArray( result.names[lang] ) && result.names[lang].length ){
+  if( Array.isArray( result.names[lang] ) && result.names[lang].length ){
     result.name = result.names[lang][0];
     result.languageDefaulted = false;
   } else {
@@ -134,7 +134,7 @@ function mapLineage( ph, lineage, parents, lang ){
     var languageDefaulted = true;
 
     // swap languages
-    if( lang && Array.isArray( parent.names[lang] ) && parent.names[lang].length ){
+    if( Array.isArray( parent.names[lang] ) && parent.names[lang].length ){
       languageDefaulted = false;
       name = parent.names[lang][0];
     }
