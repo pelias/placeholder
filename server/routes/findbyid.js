@@ -12,7 +12,7 @@ module.exports = function( req, res ){
 
   var lang;
   if( req.query.lang && req.query.lang.length === 3 ){
-    lang = req.query.lang;
+    lang = req.query.lang.toLowerCase();
   }
 
   // load docs
@@ -25,7 +25,7 @@ module.exports = function( req, res ){
       var result = documents[i];
       // Send only wanted lang
       const translation = result.names[lang];
-      if ( lang && Array.isArray(translation) ) {
+      if ( Array.isArray(translation) ) {
         result.names = {};
         result.names[lang] = translation;
       }
