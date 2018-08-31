@@ -13,7 +13,7 @@
     "integration": "node test/integration.js | tap-spec",
     "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
     "all": "npm run units && npm run integration && npm run funcs",
-    "start": "node server/http.js",
+    "start": "./cmd/server.sh",
     "extract": "bash ./cmd/extract.sh",
     "build": "bash ./cmd/build.sh",
     "gentests": "cat data/wof.extract | node cmd/generate_tests.js > test/cases/generated.txt",
