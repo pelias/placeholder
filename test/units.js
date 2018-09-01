@@ -15,6 +15,7 @@ var tests = [
   './prototype/tokenize',
   './prototype/query',
   './server/routes/_util.js',
+  './server/routes/findbyid.js',
 ];
 
 // test runner
