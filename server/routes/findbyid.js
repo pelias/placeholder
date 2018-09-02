@@ -11,13 +11,13 @@ module.exports = function( req, res ){
   });
 
   // load docs
-  ph.store.getMany( ids, function( err, results ){
+  ph.store.getMany( ids, function( err, documents ){
     if( err ){ return res.status(500).send({}); }
-    if( !results || !results.length ){ return res.status(404).send({}); }
+    if( !documents || !documents.length ){ return res.status(404).send({}); }
 
     var docs = {};
-    for( var i=0; i<results.length; i++ ){
-      var result = results[i];
+    for( var i=0; i<documents.length; i++ ){
+      var result = documents[i];
       docs[ result.id ] = result;
     }
 

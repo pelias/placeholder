@@ -25,6 +25,7 @@ function insertWofRecord( wof, next ){
     name: wof['wof:label'] || wof['wof:name'],
     abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
+    rank: getRank( wof['wof:placetype'] ),
     population: getPopulation( wof ),
     popularity: wof['qs:photo_sum'],
     lineage: wof['wof:hierarchy'],
@@ -95,14 +96,20 @@ function insertWofRecord( wof, next ){
       // names: preferred|colloquial|variant|unknown
       var match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
       if( match ){
+        // Fix for https://github.com/pelias/placeholder/pull/126
+        // Transform iso codes 639-2/B to 639-2/T
+        const lang = language.alternatives[match[1]] || match[1];
 
         // skip languages in the blacklist, see config file for more info
         if( language.blacklist.hasOwnProperty( match[1] ) ){ continue; }
 
+        // skip if both iso codes 639-2/B and 639-2/T are present and the current iso is 639-2/B
+        if ( lang !== match[1] && wof[ 'name:' + lang + '_x_' + match[2] ]) { continue; }
+
         // index each alternative name
         for( var n in wof[ attr ] ){
           tokens.push({
-            lang: match[1],
+            lang: lang,
             tag: match[2],
             body: wof[ attr ][ n ]
           });
@@ -110,7 +117,7 @@ function insertWofRecord( wof, next ){
 
         // doc - only store 'preferred' strings
         if( match[2] === 'preferred' ){
-          doc.names[ match[1] ] = wof[ attr ];
+          doc.names[ lang ] = wof[ attr ];
         }
       }
     }
@@ -281,6 +288,21 @@ function getAbbreviation( wof ) {
   } else if( wof['wof:abbreviation'] ) {
     return wof['wof:abbreviation'];
   }
+}
+
+const PLACETYPE_RANK = [
+  'venue', 'address', 'building', 'campus', 'microhood', 'neighbourhood', 'macrohood', 'borough', 'postalcode',
+  'locality', 'metro area', 'localadmin', 'county', 'macrocounty', 'region', 'macroregion', 'marinearea',
+  'disputed', 'dependency', 'country', 'empire', 'continent', 'ocean', 'planet'
+];
+
+// this function returns an integer representation of the placetype,
+function getRank( placetype ){
+  var rank = PLACETYPE_RANK.indexOf((placetype || '').toLowerCase().trim());
+  return {
+    min: rank,
+    max: rank +1
+  };
 }
 
 module.exports.insertWofRecord = insertWofRecord;

@@ -27,21 +27,18 @@ function reduce( index, res ){
     // we have run out of tokens (all object tokens used up)
     else {
 
-      // convert the internal hashmap to a sorted array of integers
-      const idsArray = res.getIdsAsArray();
-
       // we didn't match anything, so simply return the ids for
       // the rightmost token.
-      if( !idsArray.length ){
+      if( !Object.keys(res.ids).length ){
         const lastToken = res.group[ res.group.length -1 ];
         return index.matchSubjectDistinctSubjectIds( lastToken, ( err, rows ) => {
           res.intersect( err, rows );
-          return res.done( null, res.getIdsAsArray(), [], res.group );
+          return res.done( null, res );
         });
       }
 
       // we are done, return the result
-      return res.done( null, idsArray, res.mask, res.group );
+      return res.done( null, res );
     }
   }
 
@@ -63,8 +60,20 @@ function reduce( index, res ){
   // regular query
   else {
     index.matchSubjectObject( res.getSubject(), res.getObject(), (err, rows) => {
-      res.intersect( err, rows );
-      reduce( index, res );
+
+      // perform a query for nearby features and include them in the results
+      if( !rows || rows.length === 0 ){
+        index.matchSubjectObjectGeomIntersects( res.getSubject(), res.getObject(), (err2, rows2) => {
+          res.intersect( err2, rows2 );
+          reduce( index, res );
+        });
+      }
+
+      // do not perform a nearby search
+      else {
+        res.intersect( err, rows );
+        reduce( index, res );
+      }
     });
   }
 }
@@ -74,7 +83,7 @@ function _queryGroup( index, group, done ){
 
   // handle empty group
   if( !group || !group.length ){
-    return done( null, [], [], group );
+    return done( null, new Result() );
   }
 
   reduce( index, new Result( group, done ) );
@@ -85,34 +94,40 @@ function _queryManyGroups( index, groups, done ){
 
   // handle empty groups
   if( !groups || !groups.length ){
-    return done( null, [], [], [] );
+    return done( null, new Result() );
   }
 
   // query each group in parallel
   // note: parallel likely doesn't have much of a perf gain when
   // using 'npm better-sqlite3'.
   async.parallel( groups.map( group => cb => {
-    _queryGroup( index, group, ( err, ids, mask, group ) => {
-      cb( null, { err: err, ids: ids, mask: mask, group: group });
+    _queryGroup( index, group, ( err, res ) => {
+      cb( null, { err: err, res: res });
     });
-  }), function mergeQueryGroupResults( err, res ) {
+  }), function mergeQueryGroupResults( err, batch ) {
 
-    var mergedIds = [];
-    const masks = [];
-    const groups = [];
+    var merged = new Result();
+    merged.group = batch[0].res.group;
+    merged.mask = batch[0].res.mask;
 
-    res.forEach( r => {
-      if( r.err ){ return; }
-      if( Array.isArray( r.ids ) ){
-        mergedIds = sorted.merge( mergedIds, r.ids );
+    // merge results
+    batch.forEach( b => {
+      if( b.err ){ return; }
+
+      // merge ids
+      for( var attr in b.res.ids ){
+        merged.ids[ attr ] = b.res.ids[ attr ];
       }
-      masks.push( r.mask );
-      groups.push( r.group );
+
+      // merge mask
+      b.res.mask.forEach(( bool, pos ) => {
+        if( true === bool ){ merged.mask[ pos ] = bool; }
+      });
     });
 
     // @todo find a way of returning all masks/groups
     // instead of only the first element
-    return done( err, mergedIds, masks[0] || [], groups[0] || [] );
+    return done( err, merged );
   });
 }
 
@@ -122,7 +137,7 @@ function query( text, done ){
     switch( groups.length ){
 
       // in a failure case we didnt find any groups; abort now
-      case 0: return done( null, [], [], [] );
+      case 0: return done( null, new Result() );
 
       // in most cases there is only one group to query
       case 1: return _queryGroup( this.index, groups[0], done );

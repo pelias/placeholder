@@ -1,3 +1,4 @@
+const Result = require('../../lib/Result');
 const query = require('../../prototype/query');
 
 module.exports.exports = function(test, common) {
@@ -14,11 +15,12 @@ module.exports._queryGroup = function(test, common) {
 
     const group = [];
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, []);
-      t.deepEqual(_mask, []);
-      t.equal(_group, group);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), []);
+      t.deepEqual(res.mask, []);
+      t.deepEqual(res.group, group);
       t.end();
     };
 
@@ -27,20 +29,21 @@ module.exports._queryGroup = function(test, common) {
   test('_queryGroup - single token - no matches', function(t) {
 
     const group = ['hello world'];
-    t.plan(5);
+    t.plan(6);
 
     const index = {
       matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-        t.equals(phrase, 'hello world');
-        return cb( null, [] );
+        t.equal(phrase, 'hello world');
+        return cb( null, new Result() );
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, []);
-      t.deepEqual(_mask, []);
-      t.equal(_group, group);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), []);
+      t.deepEqual(res.mask, [ false ]);
+      t.deepEqual(res.group, group);
     };
 
     query._queryGroup(index, group, done);
@@ -48,11 +51,11 @@ module.exports._queryGroup = function(test, common) {
   test('_queryGroup - single token - with matches', function(t) {
 
     const group = ['hello world'];
-    t.plan(5);
+    t.plan(6);
 
     const index = {
       matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-        t.equals(phrase, 'hello world');
+        t.equal(phrase, 'hello world');
         return cb( null, [
           { subjectId: 100 },
           { subjectId: 200 },
@@ -61,11 +64,12 @@ module.exports._queryGroup = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, []);
-      t.equal(_group, group);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300 ]);
+      t.deepEqual(res.mask, [ true ]);
+      t.deepEqual(res.group, group);
     };
 
     query._queryGroup(index, group, done);
@@ -73,28 +77,33 @@ module.exports._queryGroup = function(test, common) {
   test('_queryGroup - multiple tokens - no matches', function(t) {
 
     const group = ['hello world', 'test', 'foo bar'];
-    t.plan(7);
+    t.plan(10);
 
     const index = {
       matchSubjectObject: ( subject, object, cb ) => {
         t.ok(true);
         return cb( null, [] );
       },
-      matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-        t.equals(phrase, 'foo bar');
+      matchSubjectDistinctSubjectIds: ( subject, cb ) => {
+        t.equal(subject, 'foo bar');
         return cb( null, [
           { subjectId: 100 },
           { subjectId: 200 },
           { subjectId: 300 },
         ]);
+      },
+      matchSubjectObjectGeomIntersects: ( subject, object, cb ) => {
+        t.ok(true);
+        return cb( null, [] );
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, [ true, true, false ]);
-      t.equal(_group, group);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300 ]);
+      t.deepEqual(res.mask, [ true, true, false ]);
+      t.deepEqual(res.group, group);
     };
 
     query._queryGroup(index, group, done);
@@ -102,7 +111,7 @@ module.exports._queryGroup = function(test, common) {
   test('_queryGroup - multiple tokens - matches', function(t) {
 
     const group = ['hello world', 'test', 'foo bar'];
-    t.plan(6);
+    t.plan(7);
 
     const index = {
       matchSubjectObject: ( subject, object, cb ) => {
@@ -124,14 +133,19 @@ module.exports._queryGroup = function(test, common) {
               { subjectId: 900, objectId: 990 },
             ]);
         }
+      },
+      matchSubjectObjectGeomIntersects: ( subject, object, cb ) => {
+        t.ok(true);
+        return cb( null, [] );
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100 ]);
-      t.deepEqual(_mask, [ true, true, true ]);
-      t.equal(_group, group);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100 ]);
+      t.deepEqual(res.mask, [ true, true, true ]);
+      t.deepEqual(res.group, group);
     };
 
     query._queryGroup(index, group, done);
@@ -143,11 +157,12 @@ module.exports._queryManyGroups = function(test, common) {
 
     const groups = [];
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, []);
-      t.deepEqual(_mask, []);
-      t.deepEqual(_group, []);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), []);
+      t.deepEqual(res.mask, []);
+      t.deepEqual(res.group, []);
       t.end();
     };
 
@@ -155,14 +170,14 @@ module.exports._queryManyGroups = function(test, common) {
   });
   test('_queryManyGroups - single group', function(t) {
 
-    t.plan(5);
+    t.plan(6);
     const groups = [
       ['hello world'],
     ];
 
     const index = {
       matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-        t.equals(phrase, 'hello world');
+        t.equal(phrase, 'hello world');
         return cb( null, [
           { subjectId: 100 },
           { subjectId: 200 },
@@ -171,18 +186,19 @@ module.exports._queryManyGroups = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, []);
-      t.equal(_group, groups[0]);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300 ]);
+      t.deepEqual(res.mask, [ true ]);
+      t.deepEqual(res.group, groups[0]);
     };
 
     query._queryManyGroups(index, groups, done);
   });
   test('_queryManyGroups - multiple groups', function(t) {
 
-    t.plan(6);
+    t.plan(7);
     const groups = [
       ['hello world'],
       ['hallo welt'],
@@ -211,11 +227,12 @@ module.exports._queryManyGroups = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300, 400 ]);
-      t.deepEqual(_mask, []);
-      t.equal(_group, groups[0]);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300, 400 ]);
+      t.deepEqual(res.mask, [ true ]);
+      t.deepEqual(res.group, groups[0]);
     };
 
     query._queryManyGroups(index, groups, done);
@@ -232,11 +249,12 @@ module.exports.query = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, []);
-      t.deepEqual(_mask, []);
-      t.deepEqual(_group, []);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), []);
+      t.deepEqual(res.mask, []);
+      t.deepEqual(res.group, []);
       t.end();
     };
 
@@ -244,7 +262,7 @@ module.exports.query = function(test, common) {
   });
   test('query - single group', function(t) {
 
-    t.plan(5);
+    t.plan(6);
     const text = 'hello world';
     const mock = {
       tokenize: ( t, cb ) => {
@@ -252,7 +270,7 @@ module.exports.query = function(test, common) {
       },
       index: {
         matchSubjectDistinctSubjectIds: ( phrase, cb ) => {
-          t.equals(phrase, 'hello world');
+          t.equal(phrase, 'hello world');
           return cb( null, [
             { subjectId: 100 },
             { subjectId: 200 },
@@ -262,18 +280,19 @@ module.exports.query = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, []);
-      t.deepEqual(_group, [ 'hello world' ]);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300 ]);
+      t.deepEqual(res.mask, [ true ]);
+      t.deepEqual(res.group, [ 'hello world' ]);
     };
 
     query.query.call(mock, text, done);
   });
   test('query - multiple groups', function(t) {
 
-    t.plan(6);
+    t.plan(7);
     const text = 'hello world';
     const mock = {
       tokenize: ( t, cb ) => {
@@ -291,11 +310,12 @@ module.exports.query = function(test, common) {
       }
     };
 
-    const done = ( _err, _ids, _mask, _group ) => {
-      t.deepEqual(_err, null);
-      t.deepEqual(_ids, [ 100, 200, 300 ]);
-      t.deepEqual(_mask, []);
-      t.deepEqual(_group, [ 'hello world' ]);
+    const done = (err, res) => {
+      t.deepEqual(err, null);
+      t.deepEqual(res.constructor.name, 'Result');
+      t.deepEqual(res.getIdsAsArray(), [ 100, 200, 300 ]);
+      t.deepEqual(res.mask, [ true ]);
+      t.deepEqual(res.group, [ 'hello world' ]);
     };
 
     query.query.call(mock, text, done);

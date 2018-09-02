@@ -79,6 +79,7 @@ module.exports.store_record = function(test, util) {
           name: undefined,
           names: {},
           placetype: undefined,
+          rank: { min: -1, max: 0 },
           population: undefined,
           popularity: undefined,
           abbr: undefined,
@@ -888,6 +889,34 @@ module.exports.add_names = function(test, util) {
       'name:eng_x_preferred': [ 'A', 'B' ]
     }), function(){
       t.deepEqual( mock._calls.setTokens, [[ 1, [] ]] );
+      t.end();
+    });
+  });
+
+  test( 'pelias/placeholder#126: move iso639-2B to iso639-2T when iso639-2T is not found', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:fre_x_preferred':['Normandie'],
+      'name:dut_x_preferred':['Normandië'],
+      'name:eng_x_preferred':['Normandy']
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: ['Normandy'], fra: [ 'Normandie' ], nld: [ 'Normandië' ] });
+      t.end();
+    });
+  });
+
+  test( 'pelias/placeholder#126: select iso639-2T when both iso639-2T and iso639-2B are present', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:fre_x_preferred':['iso639-2B Normandie'],
+      'name:fra_x_preferred':['iso639-2T Normandie'],
+      'name:dut_x_preferred':['iso639-2B Normandië'],
+      'name:nld_x_preferred':['iso639-2T Normandië'],
+      'name:eng_x_preferred':['Normandy']
+    }), function(){
+      t.deepEqual( mock._calls.set.length, 1 );
+      t.deepEqual( mock._calls.set[0][1].names, { eng: ['Normandy'], fra: [ 'iso639-2T Normandie' ], nld: [ 'iso639-2T Normandië' ] });
       t.end();
     });
   });

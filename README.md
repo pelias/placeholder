@@ -26,6 +26,8 @@ The data is sourced from the [whosonfirst](https://github.com/whosonfirst-data/w
 
 Placeholder supports searching on and retrieving tokens in different languages and also offers support for synonyms and abbreviations.
 
+The engine includes a rudimentary language detection algorithm which attempts to detect right-to-left languages and languages which write their addresses in major-to-minor format. It will then reverse the tokens to re-order them in to minor-to-major ordering.
+
 ---
 
 ## nodejs version
@@ -155,6 +157,22 @@ in this mode the final token of each input text is considered as 'incomplete', m
 
 this mode is currently in BETA, the interface and behaviour may change over time.
 
+### configuring the rtree threshold
+
+the default matching strategy uses the `lineage` table to ensure that token pairs represent a valid child->parent relationship. this ensures that queries like 'London France' do not match, because there is no entry in the lineage table linking those two places together.
+
+in some cases it's preferable to fall back to a matching strategy which considers geographically nearby places with a matching name, even if that relationship does not explicitly exist in the lineage table.
+
+for example, 'Basel France' will return 'Basel Switzerland'. this is useful for handling user input errors and errors and omissions from the lineage table.
+
+in the example above, 'Basel France' only matches because the bounding box of 'Basel' overlaps the bounding box of 'France' and no other valid entry for 'Basel France' exists.
+
+the definition of what is 'nearby' is configurable, the bbox for the minor term (left token) is expanded by a threshold (the threshold is added or subtracted to each of the bbox vertices).
+
+by default the threshold is set as `0.2` (degrees), any float value between 0 and 1 may be specified via the enviornment variable `RTREE_THRESHOLD`.
+
+a setting of less than 0 will disable the rtree functionality completely. disabling the rtree will result in nearby queries such as 'Basel France' returning 'France' instead of 'Basel Switzerland'.
+
 ---
 
 ## run the interactive shell
@@ -262,7 +280,7 @@ $ docker-compose up -d
     - use the download script in [pelias/whosonfirst](https://github.com/pelias/whosonfirst#downloading-the-data)
 
 ### steps
-the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.mapzen.com/) project.
+the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.org/) project.
 
 the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
 

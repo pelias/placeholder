@@ -27,7 +27,7 @@ module.exports = function( req, res ){
 
   // perform query
   console.time('took');
-  ph.query( text, ( err, ids, mask, group ) => {
+  ph.query( text, ( err, result ) => {
     console.timeEnd('took');
 
     // language property
@@ -37,20 +37,20 @@ module.exports = function( req, res ){
     }
 
     // fetch all result docs by id
-    ph.store.getMany( ids, function( err, results ){
+    ph.store.getMany( result.getIdsAsArray(), function( err, documents ){
       if( err ){ return res.status(500).send(err); }
-      if( !results || !results.length ){ return res.status(200).send([]); }
+      if( !documents || !documents.length ){ return res.status(200).send([]); }
 
       // placetype filter
       if( Array.isArray( filter.placetype ) && filter.placetype.length ){
-        results = results.filter(res => _.includes( filter.placetype, res.placetype ));
+        documents = documents.filter(res => _.includes( filter.placetype, res.placetype ));
       }
 
       // get a list of parent ids
-      const parentIds = getParentIds( results );
+      const parentIds = getParentIds( documents );
 
       // load all the parents
-      ph.store.getMany( parentIds, ( err, parentResults ) =>{
+      ph.store.getMany( parentIds, ( err, parentResults ) => {
 
         // a database error occurred
         if( err ){ console.error( 'error fetching parent ids', err ); }
@@ -62,11 +62,11 @@ module.exports = function( req, res ){
         const parents = rowsToIdMap( parentResults );
 
         // map documents to dict using id as key
-        const docs = results.map( function( result ){
+        const docs = documents.map( function( result ){
           return mapResult( ph, result, parents, lang );
         });
 
-        // sort results according to sorting rules
+        // sort documents according to sorting rules
         docs.sort( sortingAlgorithm );
 
         // send json
@@ -109,6 +109,9 @@ function mapResult( ph, result, parents, lang ){
 
   // delete language properties
   delete result.names;
+
+  // delete rank properties
+  delete result.rank;
 
   result.lineage = result.lineage.map( function( lineage ){
     return mapLineage( ph, lineage, parents, lang );
