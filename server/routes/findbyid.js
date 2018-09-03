@@ -11,7 +11,7 @@ module.exports = function( req, res ){
   });
 
   var lang;
-  if( req.query.lang && req.query.lang.length === 3 ){
+  if( 'string' === typeof req.query.lang && req.query.lang.length === 3 ){
     lang = req.query.lang.toLowerCase();
   }
 
@@ -23,7 +23,10 @@ module.exports = function( req, res ){
     var docs = {};
     for( var i=0; i<documents.length; i++ ){
       var result = documents[i];
-      // Send only wanted lang
+
+      // return only the single language requested by the user
+      // or, if not available, return all languages.
+      // ref: https://github.com/pelias/placeholder/pull/128
       const translation = result.names[lang];
       if ( Array.isArray(translation) ) {
         result.names = {};
