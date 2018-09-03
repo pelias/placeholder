@@ -32,7 +32,7 @@ module.exports = function( req, res ){
 
     // language property
     var lang;
-    if( req.query.lang && req.query.lang.length === 3 ){
+    if( 'string' === typeof req.query.lang && req.query.lang.length === 3 ){
       lang = req.query.lang.toLowerCase();
     }
 
