@@ -19,4 +19,6 @@ ADD . ${WORKDIR}
 ENV WOF_DIR '/data/whosonfirst/data'
 ENV PLACEHOLDER_DATA '/data/placeholder'
 
+USER pelias
+
 CMD [ "./cmd/server.sh" ]
