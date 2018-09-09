@@ -8,6 +8,9 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd );
 # note: set WOF_DIR env var to override
 WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data/data'};
 
+# Set number of cores used by xargs. Default is host number of cpu cores
+NB_CORES=${NB_CORES:-$(getconf _NPROCESSORS_ONLN)}
+
 # requires command: jq - Command-line JSON processor
 # on ubuntu: sudo apt-get install jq
 
@@ -24,13 +27,7 @@ if [[ ! -f "${JQ_BIN}" || ! -x "${JQ_BIN}" ]]; then
   exit 1;
 fi
 
-# parellize execution on systems which support it
-XARGS_CMD='xargs';
-PARALLEL_BIN=$(which parallel) || true
-if [[ -f "${PARALLEL_BIN}" || -x "${PARALLEL_BIN}" ]]; then
-  echo "info: using parallel execution" 1>&2;
-  XARGS_CMD='parallel --no-notice --group --keep-order --jobs +0';
-fi
+XARGS_CMD="xargs -n 1 -P ${NB_CORES}";
 
 # filter records by placetype
 # removing any file names from the stream whose body does not match the pattern
