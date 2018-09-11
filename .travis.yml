@@ -18,8 +18,12 @@ before_script:
   - 'curl -sfo data/store.sqlite3.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/store.sqlite3.gz || true'
   - '[ -e data/store.sqlite3.gz ] || curl -so data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz'
   - gunzip data/store.sqlite3.gz
-after_success:
-  - npx semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
+jobs:
+  include:
+    - stage: release
+      node_js: 10
+      script: curl "https://raw.githubusercontent.com/pelias/ci-tools/master/semantic-release.sh" | bash -
+      if: branch = production
