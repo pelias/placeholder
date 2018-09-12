@@ -9,8 +9,8 @@
   "main": "server.js",
   "scripts": {
     "test": "npm run units",
-    "units": "node test/units.js | tap-spec",
-    "integration": "node test/integration.js | tap-spec",
+    "units": "./cmd/units",
+    "integration": "./cmd/integration",
     "funcs": "for case in test/cases/*.txt; do node test/case.js $case; done",
     "all": "npm run units && npm run integration && npm run funcs",
     "start": "./cmd/server.sh",
