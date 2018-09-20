@@ -144,7 +144,7 @@ module.exports.store_abbr = function(test, util) {
     mock.insertWofRecord(params({
       'wof:placetype': 'country',
       'wof:country_alpha3': 'TEST',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }), function(){
       t.deepEqual( mock._calls.set[0][1].abbr, 'TEST');
       t.end();
@@ -461,50 +461,65 @@ module.exports.getAbbreviation = function(test, util) {
 
     t.equal( undefined, wof.getAbbreviation({
       'wof:placetype': 'country',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
     t.equal( undefined, wof.getAbbreviation({
       'wof:placetype': 'dependency',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
 
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'country',
       'wof:country_alpha3': 'TEST',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'dependency',
       'wof:country_alpha3': 'TEST',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
 
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'country',
       'ne:iso_a3': 'TEST',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'dependency',
       'ne:iso_a3': 'TEST',
-      'wof:abbreviation': 'TEST2'
+      'wof:shortcode': 'TEST2'
     }));
 
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'country',
       'wof:country_alpha3': 'TEST',
       'ne:iso_a3': 'TEST2',
-      'wof:abbreviation': 'TEST3'
+      'wof:shortcode': 'TEST3'
     }));
     t.equal( 'TEST', wof.getAbbreviation({
       'wof:placetype': 'dependency',
       'wof:country_alpha3': 'TEST',
       'ne:iso_a3': 'TEST2',
-      'wof:abbreviation': 'TEST3'
+      'wof:shortcode': 'TEST3'
     }));
     t.end();
   });
 
+  test( 'wof:shortcode', function(t) {
+    t.equal( 'TEST2', wof.getAbbreviation({
+      'ne:iso_a3': 'TEST',
+      'wof:shortcode': 'TEST2'
+    }));
+    t.equal( 'TEST2', wof.getAbbreviation({
+      'ne:iso_a3': 'TEST',
+      'wof:shortcode': 'TEST2'
+    }));
+    t.end();
+  });
+
+  // backwards compatibility for wof:abbreviation
+  // note: this property is deprecated, the code can be
+  // removed in the future.
   test( 'wof:abbreviation', function(t) {
     t.equal( 'TEST2', wof.getAbbreviation({
       'ne:iso_a3': 'TEST',
@@ -613,10 +628,10 @@ module.exports.add_token = function(test, util) {
     });
   });
 
-  test( 'wof:abbreviation', function(t) {
+  test( 'wof:shortcode', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'wof:abbreviation': 'EXAMPLE'
+      'wof:shortcode': 'EXAMPLE'
     }), function(){
       t.deepEqual( mock._calls.setTokens[0][0], 1 );
       t.deepEqual( mock._calls.setTokens[0][1], [

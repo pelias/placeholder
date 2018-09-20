@@ -62,8 +62,9 @@ function insertWofRecord( wof, next ){
     // add 'wof:name'
     tokens.push({ lang: 'und', tag: 'label', body: wof['wof:name'] });
 
-    // add 'wof:abbreviation'
-    tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:abbreviation'] });
+    // add 'wof:shortcode'
+    // @todo: wof:abbreviation is deprecated, remove references to it
+    tokens.push({ lang: 'und', tag: 'abbr', body: wof['wof:shortcode'] || wof['wof:abbreviation'] });
 
     // add 'ne:abbrev'
     // tokens.push({ lang: 'und', body: wof['ne:abbrev'] });
@@ -282,11 +283,12 @@ function getPopulation( wof ) {
 
 // abbreviations and ISO codes
 // logic copied from: pelias/whosonfirst src/components/extractFields.js (since modified)
+// @todo: wof:abbreviation is deprecated, remove references to it
 function getAbbreviation( wof ) {
   if( 'country' === wof['wof:placetype'] || 'dependency' === wof['wof:placetype'] ) {
     return wof['wof:country_alpha3'] || wof['ne:iso_a3'];
-  } else if( wof['wof:abbreviation'] ) {
-    return wof['wof:abbreviation'];
+  } else if( wof['wof:shortcode'] || wof['wof:abbreviation'] ) {
+    return wof['wof:shortcode'] || wof['wof:abbreviation'];
   }
 }
 
