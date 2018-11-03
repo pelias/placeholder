@@ -25,4 +25,4 @@ jobs:
     - stage: release
       node_js: 10
       script: curl "https://raw.githubusercontent.com/pelias/ci-tools/master/semantic-release.sh" | bash -
-      if: branch = production
+      if: branch = master
