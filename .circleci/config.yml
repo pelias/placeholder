@@ -3,10 +3,10 @@ jobs:
   build:
     working_directory: /app
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:18.06.1-ce-git
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build and push image to Docker Hub
-          command: sh .circleci/docker.sh
+          command: apk --no-cache add curl bash && curl "https://raw.githubusercontent.com/pelias/ci-tools/master/build-docker-images.sh" | bash -
