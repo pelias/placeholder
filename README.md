@@ -30,18 +30,11 @@ The engine includes a rudimentary language detection algorithm which attempts to
 
 ---
 
-## nodejs version
+## requirements
 
-nodejs `v6.11.4` or greater is required, running the library on an older version of node will result in an error:
+Placeholder requires Node.js and SQLite
 
-```bash
-bash-3.2$ node --version
-v4.9.1
-
-bash-3.2$ node -e 'require("better-sqlite3")'
-FATAL ERROR: v8::ToLocalChecked Empty MaybeLocal.
-Abort trap: 6
-```
+See [Pelias software requirements](https://github.com/pelias/documentation/blob/master/requirements.md) for required and recommended versions.
 
 ## install
 
