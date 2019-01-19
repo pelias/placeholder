@@ -2,6 +2,8 @@
 // plugin for whosonfirst
 const _ = require('lodash'),
     dir = require('require-dir'),
+    util = require('util'),
+    blacklist = require('pelias-blacklist-stream/loader')(),
     analysis = require('../lib/analysis'),
     language = dir('../config/language');
 
@@ -17,6 +19,10 @@ function insertWofRecord( wof, next ){
 
   // sanity check; because WOF
   if( !isValidWofRecord( id, wof ) ) { return next(); }
+
+  // enforce pelias/blacklist-stream exclusions
+  let peliasGID = util.format('whosonfirst:%s:%d', wof['wof:placetype'], id);
+  if( blacklist && blacklist.hasOwnProperty( peliasGID ) ) { return next(); }
 
   // --- document which will be saved in the doc store ---
 
