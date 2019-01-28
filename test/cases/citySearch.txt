@@ -270,7 +270,7 @@
 85936243 Columbus, GA
 101712381 Columbus, OH
 85923663 Compton
-890444429 Conakry
+421189675 Conakry
 102017759 Concepcion
 85922187 Concord, CA
 85981159 Concord, NC
@@ -373,7 +373,7 @@
 101748709 Essen
 101716261 Eugene
 101723683 Euless
-85818323 Evanston
+1126087807 Evanston
 85818327 Evansville
 85867883 Everett
 85818511 Fairfield
@@ -601,7 +601,7 @@
 101752117 Krakow
 102015579 Krasnodar
 102013953 Krasnoyarsk
-101748683 Krefeld
+1175611403 Krefeld
 85784291 Kuala Lumpur
 85672703 Kumamoto
 421168961 Kumasi
@@ -644,7 +644,7 @@
 85894325 Lexington
 85947137 Lexington-Fayette
 101750277 Lille
-85675925 Lima
+1175613121 Lima
 101749501 Limoges
 85830585 Lincoln
 101752291 Linkoping
@@ -687,7 +687,7 @@
 102010515 Magnitogorsk
 101750341 Maidstone
 102018665 Makassar
-102016749 Makhachkala
+1175613531 Makhachkala
 101748185 Malaga
 85950349 Malden
 85675495 Managua
@@ -766,7 +766,7 @@
 102030609 Mumbai
 85941463 Muncie
 101723111 Murfreesboro
-102001881 Murmansk
+1175613487 Murmansk
 85923375 Murrieta
 85679655 Mwanza
 102009155 Naberezhnyye Chelny
@@ -816,7 +816,7 @@
 85838305 Northridge
 85923497 Norwalk
 101750483 Norwich
-101750491 Nottingham
+1175612705 Nottingham
 101953095 Nova Iguacu
 85922017 Novato
 404508281 Novi
@@ -884,7 +884,7 @@
 101751663 Pecs
 85932299 Pembroke Pines
 85933005 Pensacola
-102004419 Penza
+1175613505 Penza
 85917343 Peoria
 102008455 Perm
 85923353 Perris
@@ -940,14 +940,14 @@
 85923937 Rancho Cucamonga
 101749161 Randers
 101721605 Rapid City
-101914059 Reading, England
+1175612721 Reading, England
 85950649 Reading, MA
 102056781 Recife
 101748751 Recklinghausen
 85923859 Redding
 101750455 Redditch
 85844131 Redlands
-85844149 Redmond
+1126067701 Redmond
 85923467 Redondo Beach
 85922447 Redwood City
 101751377 Reims
@@ -991,7 +991,7 @@
 101750835 Saint-Etienne
 85672807 Saitama
 102031413 Sakai
-101750555 Salford
+1175612693 Salford
 85922603 Salinas
 101728075 Salt Lake City
 102000871 Saltillo
@@ -1027,7 +1027,7 @@
 101996369 Santiago de Queretaro
 85670553 Santo Domingo
 890518775 Sarajevo
-102010031 Saransk
+1175613527 Saransk
 85932709 Sarasota
 102011123 Saratov
 85936939 Savannah
@@ -1071,7 +1071,7 @@
 101728055 South Jordan
 85849939 South Peabody
 101750613 South Shields
-102018849 South Tangerang
+1276601603 South Tangerang
 1125818773 South Vineland
 85850209 South Whittier
 101913905 Southampton
@@ -1102,7 +1102,7 @@
 101913969 Stockport
 85923257 Stockton
 101750603 Stockton-on-Tees
-101913981 Stoke-on-Trent
+1175612703 Stoke-on-Trent
 101751113 Strasbourg
 101912539 Subotica
 102031367 Suita
@@ -1244,7 +1244,7 @@
 85877207 Whittier
 404504929 Wichita
 101748579 Wiesbaden
-890442073 Willemstad
+421187435 Willemstad
 85931573 Wilmington, DE
 85950663 Wilmington, MA
 85871353 Windsor
