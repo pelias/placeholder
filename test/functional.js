@@ -10,7 +10,7 @@ module.exports.functional = function(test, util) {
   var assert = runner.bind(null, test, ph);
 
   assert('Kelburn Wellington New Zealand', [85772991]);
-  assert('North Sydney', [85771181, 85784821, 101931469, 102048877, 404225393]);
+  assert('North Sydney', [85771181, 85784821, 101931469, 102048877, 404225393, 1310698409]);
   assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357]);
   assert('ケープタウン 南アフリカ', [101928027]);
   assert('경기도 광명시', [890472589]);
@@ -31,9 +31,9 @@ module.exports.functional = function(test, util) {
   assert('lancaster lancaster pa', [ 101718643, 404487183, 404487185 ]);
 
   // assertions from pelias acceptance-test suite
-  assert('灣仔, 香港', [85671779]);
+  assert('灣仔, 香港', [85671779, 1243098523]);
   assert('new york city, usa', [85977539]);
-  assert('sendai, japan', [102031919, 1108739995, 1125901991]);
+  assert('sendai, japan', [102031919, 1108739995, 1125901991, 1243269829]);
   assert('Észak-Alföld', [404227483]);
   assert('Comunidad Foral De Navarra, ES', [404227391]);
   assert('Île-De-France, France', [404227465]);

@@ -15,17 +15,17 @@
 890442097 Hamilton, Bermuda
 421188863 Bandar Seri Begawan, Brunei
 101964877 Brasilia, Brazil
-421174929 Gaborone, Botswana
+85669631 Gaborone, Botswana
 890442105 Belmopan, Belize
 101735873 Ottawa, Canada
-890417321 West Island, Cocos Islands
+101938929 West Island, Cocos Islands
 421181445 Bangui, Central African Republic
 85670067 Brazzaville, Republic of the Congo
 101748453 Bern, Switzerland
 421168957 Yamoussoukro, Ivory Coast
 102016915 Santiago, Chile
 85670331 Praia, Cape Verde
-890442073 Willemstad, Curacao
+421187435 Willemstad, Curacao
 101748799 Berlin, Germany
 101749159 Copenhagen, Denmark
 890442101 Roseau, Dominica
@@ -35,13 +35,13 @@
 101748417 Helsinki, Finland
 101750367 London, United Kingdom
 890451719 St. George's, Grenada
-1091680781 Cayenne, French Guiana
+890442055 Cayenne, French Guiana
 1125821075 St Peter Port, Guernsey
 421168965 Accra, Ghana
 101753853 Gibraltar, Gibraltar
 101870623 Nuuk, Greenland
 421167921 Banjul, Gambia
-890444429 Conakry, Guinea
+421189675 Conakry, Guinea
 890420199 Basse-Terre, Guadeloupe
 421178347 Malabo, Equatorial Guinea
 421197943 Bissau, Guinea-Bissau
@@ -74,7 +74,7 @@
 85674093 Male, Maldives
 421168781 Lilongwe, Malawi
 102023407 Kuala Lumpur, Malaysia
-421172081 Windhoek, Namibia
+1141909361 Windhoek, Namibia
 890413117 Noumea, New Caledonia
 890440179 Kingston, Norfolk Island
 101751893 Amsterdam, Netherlands

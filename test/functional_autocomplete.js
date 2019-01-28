@@ -9,8 +9,8 @@ module.exports.functional = function(test, util) {
 
   var assert = runner.bind(null, test, ph);
 
-  assert('Kelbur\x26', [85772991]);
-  assert('Kelburn\x26', [85772991]);
+  assert('Kelbur\x26', [85772991, 1326645067]);
+  assert('Kelburn\x26', [85772991, 1326645067]);
   assert('Kelburn W\x26', [85772991]);
   assert('Kelburn Well\x26', [85772991]);
   assert('Kelburn Wellington\x26', [85772991]);
