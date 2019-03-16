@@ -44,7 +44,7 @@
     "remove-accents": "^0.4.0",
     "require-dir": "^1.0.0",
     "sorted-intersect": "^0.1.4",
-    "split2": "^3.0.0",
+    "split2": "^3.1.1",
     "through2": "^3.0.0"
   },
   "devDependencies": {
