@@ -8,6 +8,10 @@ mkdir -p ${PLACEHOLDER_DATA};
 
 echo "Creating extract at ${PLACEHOLDER_DATA}/wof.extract"
 
-${DIR}/wof_extract.sh > ${PLACEHOLDER_DATA}/wof.extract;
+if [ "$1" = "sqlite" ]; then
+  exec node --max_old_space_size=4096 ${DIR}/wof_extract_sqlite.js > ${PLACEHOLDER_DATA}/wof.extract;
+else
+  ${DIR}/wof_extract.sh > ${PLACEHOLDER_DATA}/wof.extract;
+fi
 
 echo 'Done!'
