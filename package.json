@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/pelias/placeholder#readme",
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^3.0.1",
     "better-sqlite3": "^4.0.3",
     "express": "^4.15.2",
     "lodash": "^4.17.4",
