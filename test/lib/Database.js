@@ -96,7 +96,7 @@ module.exports.prepare = function(test, common) {
     t.true(typeof db.stmt, 'object');
     t.true(db.stmt.hasOwnProperty(sql));
     t.deepEqual(db.stmt[sql], {
-      returnsData: true,
+      reader: true,
       source: 'SELECT * FROM sqlite_master',
       database: db.db
     });
