@@ -35,6 +35,12 @@ var PORT = process.env.PORT || 3000;
 var HOST = process.env.HOST || undefined;
 var app = express();
 
+// store the express http server so it can be terminated gracefully later
+let server;
+
+//record whether the service is terminating to control what events are worth logging
+let terminating = false;
+
 function log() {
   morgan.token('url', (req, res) => {
     // if there's a DNT header, just return '/' as the URL
@@ -58,7 +64,6 @@ function log() {
 app.use(log());
 
 // init placeholder
-console.error( 'loading data' );
 var ph = new Placeholder({ readonly: true });
 ph.load();
 
@@ -95,25 +100,41 @@ app.get( '/parser/tokenize', require( './routes/tokenize' ) );
 app.use('/demo', express.static( __dirname + '/demo' ));
 app.use('/', (req, res) => { res.redirect('/demo#eng'); });
 
-// handle SIGTERM (required for fast docker restarts)
-process.on('SIGTERM', () => {
+// handle SIGINT and SIGTERM (required for fast docker restarts)
+function handler() {
   ph.close();
-  app.close();
-});
+
+  terminating = true;
+  if (cluster.isMaster) {
+    logger.info('Placeholder service shutting down');
+    for (const id in cluster.workers) {
+      cluster.workers[id].kill('SIGINT');
+    }
+  }
+
+  if (server) {
+    server.close();
+  }
+}
+
+process.on('SIGINT', handler);
+process.on('SIGTERM', handler);
 
 // start multi-threaded server
 if( cpus > 1 ){
   if( cluster.isMaster ){
-    console.error('[master] using %d cpus', cpus);
+    logger.info('[master] using %d cpus', cpus);
 
     // worker exit event
     cluster.on('exit', (worker, code, signal) => {
-      console.error('[master] worker died', worker.process.pid);
+      if (!terminating) {
+        logger.error('[master] worker died', worker.process.pid);
+      }
     });
 
     // worker fork event
     cluster.on('fork', (worker, code, signal) => {
-      console.error('[master] worker forked', worker.process.pid);
+      logger.info('[master] worker forked', worker.process.pid);
     });
 
     // fork workers
@@ -122,17 +143,17 @@ if( cpus > 1 ){
     }
 
   } else {
-    app.listen( PORT, HOST, () => {
-      console.error('[worker %d] listening on %s:%s', process.pid, HOST||'0.0.0.0', PORT);
+    server = app.listen( PORT, HOST, () => {
+      logger.info('[worker %d] listening on %s:%s', process.pid, HOST||'0.0.0.0', PORT);
     });
   }
 }
 
 // start single-threaded server
 else {
-  console.error('[master] using %d cpus', cpus);
+  logger.info('[master] using %d cpus', cpus);
 
-  app.listen( PORT, HOST, () => {
-    console.log('[master] listening on %s:%s', HOST||'0.0.0.0', PORT);
+  server = app.listen( PORT, HOST, () => {
+    logger.info('[master] listening on %s:%s', HOST||'0.0.0.0', PORT);
   });
 }
