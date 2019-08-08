@@ -341,7 +341,7 @@ A list of all available tags to download can be found at https://hub.docker.com/
 
 ### uploading a new build to s3
 
-this section is applicable to mapzen employees only and requires s3 credentials and the `aws` command to be installed and configured prior to running.
+this section is applicable to Pelias maintainers only and requires s3 credentials and the `aws` command to be installed and configured prior to running.
 
 other organizations may elect to change the bucket name in the config and utilize the same script.
 
