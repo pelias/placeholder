@@ -5,5 +5,5 @@ node_modules
 .gitattributes
 Dockerfile
 README.md
-data/wof.extract
+data/*
 test/cases/generated.txt
