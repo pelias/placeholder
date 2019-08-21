@@ -10,7 +10,7 @@ matrix:
   fast_finish: true
 script: npm run travis
 env:
-  - BUCKET=http://pelias-data.nextzen.org.s3.amazonaws.com/placeholder
+  - BUCKET=https://storage.googleapis.com/pelias-data.geocode.earth/placeholder
 before_install:
   - npm i -g npm
 before_script:
