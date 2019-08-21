@@ -5,6 +5,7 @@ notifications:
 node_js:
   - 8
   - 10
+  - 12
 matrix:
   fast_finish: true
 script: npm run travis
@@ -23,6 +24,6 @@ branches:
 jobs:
   include:
     - stage: release
-      node_js: 10
+      node_js: 12
       script: curl "https://raw.githubusercontent.com/pelias/ci-tools/master/semantic-release.sh" | bash -
       if: (branch = master) AND ( type = push )
