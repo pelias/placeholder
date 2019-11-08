@@ -35,9 +35,8 @@ function _eachSynonym(synonym, cb){
 
   // expand token permutations
   const phrases = _permutations(synonym);
-  
+
   // filter out permutations which do not match phrases in the index
-  //async.filterSeries( phrases, _indexContainsPhrase.bind(this), (err, matchedPhrases) => {
   _indexFindMatchingPhrases.bind(this)(phrases, (err, matchedPhrases) => {  
     return cb( null, _groups(synonym, matchedPhrases) );
   });
