@@ -8,7 +8,8 @@ mkdir -p ${PLACEHOLDER_DATA};
 
 echo "Creating extract at ${PLACEHOLDER_DATA}/wof.extract"
 
-if [ "$1" = "sqlite" ]; then
+SQLITE="$(node -e "console.log(require('pelias-config').generate().imports.whosonfirst.sqlite === true)")"
+if [ "$SQLITE" = "true" ]; then
   exec node --max_old_space_size=8000 ${DIR}/wof_extract_sqlite.js > ${PLACEHOLDER_DATA}/wof.extract;
 else
   ${DIR}/wof_extract.sh > ${PLACEHOLDER_DATA}/wof.extract;
