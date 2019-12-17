@@ -2,7 +2,7 @@
   "name": "pelias-placeholder",
   "version": "0.0.0-development",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "author": "mapzen",
   "license": "MIT",
