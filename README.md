@@ -297,13 +297,6 @@ this process can take 30-60 minutes to run and consumes ~350MB of disk space, yo
 $ WOF_DIR=/data/whosonfirst-data/data npm run extract
 ```
 
-alternatively you can download the extract file from our s3 bucket:
-
-```bash
-$ mkdir data
-$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/wof.extract.gz | gunzip > data/wof.extract;
-```
-
 now you can rebuild the `data/store.json` file with the following command:
 
 this should take 2-3 minutes to run:
