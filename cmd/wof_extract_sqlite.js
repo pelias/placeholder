@@ -40,7 +40,7 @@ const output = () => {
 };
 
 new SQLiteStream(
-  path.join(WOF_DIR, 'whosonfirst-data-latest.db'),
+  path.join(WOF_DIR, 'sqlite', 'whosonfirst-data-latest.db'),
   SQLiteStream.findGeoJSONByPlacetype(layers)
 )
   .pipe(whosonfirst.toJSONStream())

@@ -16,7 +16,7 @@ RUN npm install
 # copy code from local checkout
 ADD . ${WORKDIR}
 
-ENV WOF_DIR '/data/whosonfirst/data'
+ENV WOF_DIR '/data/whosonfirst'
 ENV PLACEHOLDER_DATA '/data/placeholder'
 
 USER pelias

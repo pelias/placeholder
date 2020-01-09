@@ -6,7 +6,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd );
 
 # location of whosonfirst data dir
 # note: set WOF_DIR env var to override
-WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data/data'};
+WOF_DIR=${WOF_DIR:-'/data/whosonfirst-data'};
 
 # requires command: jq - Command-line JSON processor
 # on ubuntu: sudo apt-get install jq
@@ -42,7 +42,7 @@ function placetypeFilter {
 
 # extract only the json properies from each file (eg: excluding zs:*)
 # note: excludes 'alt' geometeries
-find "${WOF_DIR}" -type f -name '*.geojson' |\
+find "${WOF_DIR}/data" -type f -name '*.geojson' |\
   grep -E '/[0-9]+\.geojson$' |\
   placetypeFilter |\
   ${XARGS_CMD} ${JQ_BIN} -c -M -f "${DIR}/jq.filter";
