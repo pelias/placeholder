@@ -45,9 +45,12 @@ $ npm install
 
 ### download the required database files
 
+Data hosting is provided by [Geocode Earth](https://geocode.earth). Other
+Pelias related downloads are available at https://geocode.earth/data.
+
 ```bash
 $ mkdir data
-$ curl -s https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
+$ curl -s https://data.geocode.earth/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
 ```
 
 ### confirm the build was successful
