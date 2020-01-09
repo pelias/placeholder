@@ -336,29 +336,3 @@ $ docker pull pelias/placeholder
 We publish each commit and the latest of each branch to separate tags
 
 A list of all available tags to download can be found at https://hub.docker.com/r/pelias/placeholder/tags/
-
----
-
-### uploading a new build to s3
-
-this section is applicable to Pelias maintainers only and requires s3 credentials and the `aws` command to be installed and configured prior to running.
-
-other organizations may elect to change the bucket name in the config and utilize the same script.
-
-the script takes care of creating a date stamped archive and promoting the most recent build to the root of the bucket (with a public ACL).
-
-```bash
-$ AWS_PROFILE=nextzen ./cmd/s3_upload.sh
-
---- gzipping data files ---
---- uploading archive ---
-upload: data/store.sqlite3.gz to s3://pelias-data.nextzen.org/placeholder/archive/2017-09-29/store.sqlite3.gz
-upload: data/wof.extract.gz to s3://pelias-data.nextzen.org/placeholder/archive/2017-09-29/wof.extract.gz
---- list remote archive ---
-2017-09-29 14:52:33   46.6 MiB store.sqlite3.gz
-2017-09-29 14:53:08   53.8 MiB wof.extract.gz
-
-> would you like to promote this build to production (yes/no)?
-no
-you did not answer yes, the build was not promoted to production
-```
