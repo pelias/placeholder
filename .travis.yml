@@ -9,7 +9,7 @@ matrix:
   fast_finish: true
 script: npm run travis
 env:
-  - BUCKET=https://storage.googleapis.com/pelias-data.geocode.earth/placeholder
+  - BUCKET=https://data.geocode.earth/placeholder/2019-01-28
 before_install:
   - npm i -g npm
 before_script:
