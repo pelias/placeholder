@@ -42,7 +42,7 @@ module.exports.reset = function(test, common) {
     ]);
 
     // ensure fts table has been created with the correct options
-    sql = 'select * from sqlite_master where type="table" and name="fulltext"';
+    sql = `SELECT * FROM sqlite_master WHERE type='table' AND name='fulltext'`;
     const expected =
       'CREATE VIRTUAL TABLE fulltext USING fts5( token, ' + [
       `tokenize="unicode61 remove_diacritics 0 tokenchars '_'"`,
