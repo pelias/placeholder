@@ -11,7 +11,11 @@ PLACETYPES=( 'neighbourhood' 'macrohood' 'borough' 'locality' 'localadmin' 'coun
 # download and extract fields from contents of tar
 function extract {
   curl -so "/tmp/wof-${1}-latest-bundle.tar.bz2" "https://whosonfirst.mapzen.com/bundles/wof-${1}-latest-bundle.tar.bz2"
-  tar --wildcards '*.geojson' -jx --to-command 'jq -cMf "${DIR}/jq.filter"' -f "/tmp/wof-${1}-latest-bundle.tar.bz2"
+  if hash lbzip2 2>/dev/null; then
+    tar --wildcards '*.geojson' -x --use-compress-program=lbzip2 --to-command 'jq -cMf "${DIR}/jq.filter"' -f "/tmp/wof-${1}-latest-bundle.tar.bz2"
+  else
+    tar --wildcards '*.geojson' -jx --to-command 'jq -cMf "${DIR}/jq.filter"' -f "/tmp/wof-${1}-latest-bundle.tar.bz2"
+  fi
   rc=$?; if [[ $rc != 0 ]]; then
     >&2 echo "/tmp/wof-${1}-latest-bundle.tar.bz2"
     >&2 echo "command exited with status: $rc"
