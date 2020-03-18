@@ -4,6 +4,9 @@ const whosonfirst = require('pelias-whosonfirst');
 const SQLiteStream = whosonfirst.SQLiteStream;
 const through = require('through2');
 const Placeholder = require('../Placeholder');
+const combinedStream = require('combined-stream');
+
+const SQLITE_REGEX = /whosonfirst-data-[a-z0-9-]+\.db$/;
 
 const WOF_DIR = process.env.WOF_DIR || '/data/whosonfirst-data/sqlite';
 
@@ -39,10 +42,17 @@ const output = () => {
   }
 };
 
-new SQLiteStream(
-  path.join(WOF_DIR, 'whosonfirst-data-latest.db'),
-  SQLiteStream.findGeoJSONByPlacetype(layers)
-)
+const sqliteStream = combinedStream.create();
+fs.readdirSync(WOF_DIR)
+  .filter(file => SQLITE_REGEX.test(file))
+  .map(file => path.join(WOF_DIR, file))
+  .forEach(dbPath => {
+    sqliteStream.append(next => {
+      next(new SQLiteStream(dbPath, SQLiteStream.findGeoJSONByPlacetype(layers)));
+    });
+  });
+
+sqliteStream
   .pipe(whosonfirst.toJSONStream())
   .pipe(through.obj((row, _, next) => {
     Object.keys(row.properties)
