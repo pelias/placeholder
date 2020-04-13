@@ -5,8 +5,6 @@ notifications:
 node_js:
   - 10
   - 12
-matrix:
-  fast_finish: true
 script: npm run travis
 env:
   - BUCKET=https://data.geocode.earth/placeholder/2019-01-28
