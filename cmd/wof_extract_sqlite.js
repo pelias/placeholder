@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const whosonfirst = require('pelias-whosonfirst');
+const config = require('pelias-config').generate().imports.whosonfirst;
 const SQLiteStream = whosonfirst.SQLiteStream;
 const through = require('through2');
 const Placeholder = require('../Placeholder');
@@ -48,7 +49,12 @@ fs.readdirSync(WOF_DIR)
   .map(file => path.join(WOF_DIR, file))
   .forEach(dbPath => {
     sqliteStream.append(next => {
-      next(new SQLiteStream(dbPath, SQLiteStream.findGeoJSONByPlacetype(layers)));
+      next(new SQLiteStream(
+        dbPath,
+        config.importPlace ?
+        SQLiteStream.findGeoJSONByPlacetypeAndWOFId(layers, config.importPlace) :
+        SQLiteStream.findGeoJSONByPlacetype(layers)
+      ));
     });
   });
 
