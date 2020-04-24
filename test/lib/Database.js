@@ -1,5 +1,5 @@
-
-var Database = require('../../lib/Database');
+const _ = require('lodash');
+const Database = require('../../lib/Database');
 
 module.exports.constructor = function(test, common) {
   test('constructor', function(t) {
@@ -87,12 +87,12 @@ module.exports.prepare = function(test, common) {
   test('prepare', function(t) {
     var db = new Database();
     db.open('/tmp/db', { test: true });
-    
+
     t.equal(typeof db.stmt, 'undefined');
-    
+
     const sql = 'SELECT * FROM sqlite_master';
     db.prepare(sql);
-    
+
     t.true(typeof db.stmt, 'object');
     t.true(db.stmt.hasOwnProperty(sql));
     t.deepEqual(db.stmt[sql], {
@@ -100,7 +100,7 @@ module.exports.prepare = function(test, common) {
       source: 'SELECT * FROM sqlite_master',
       database: db.db
     });
-    
+
     t.end();
   });
 };
@@ -111,19 +111,19 @@ module.exports.configure = function(test, common) {
     db.open('/tmp/db', { test: true });
 
     // configure
-    const pragma_checks = [
-      { foreign_keys: 0 },
-      { page_size: 4096 },
-      { cache_size: -2000 },
-      { synchronous: 0 },
-      // { journal_mode: 0 },
-      { temp_store: 2 }
-    ];
+    const pragma_checks = {
+      foreign_keys: 0,
+      page_size: 4096,
+      cache_size: -2000,
+      synchronous: 0,
+      // journal_mode: 'memory',
+      temp_store: 2
+    };
 
-    t.plan( pragma_checks.length );
-    pragma_checks.forEach( pragma => {
-      var sql = 'PRAGMA ' + Object.keys(pragma)[0] + ';';
-      t.deepEqual( db.db.prepare(sql).get(), pragma );
+    t.plan(_.size(pragma_checks));
+    _.forEach(pragma_checks, (value, key) => {
+      const stmt = db.db.prepare(`PRAGMA ${key};`);
+      t.deepEqual(stmt.get(), { [key]: value });
     });
   });
 };

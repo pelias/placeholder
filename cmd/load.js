@@ -1,9 +1,8 @@
-
-var split = require('split2'),
-    through = require('through2'),
-    parser = require('../lib/jsonParseStream'),
-    Placeholder = require('../Placeholder'),
-    ph = new Placeholder();
+const split = require('split2');
+const through = require('through2');
+const parser = require('../lib/jsonParseStream');
+const Placeholder = require('../Placeholder');
+const ph = new Placeholder();
 
 // run import pipeline
 console.error('import...');
