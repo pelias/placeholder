@@ -7,7 +7,7 @@ node_js:
   - 12
 script: npm run travis
 env:
-  - BUCKET=https://data.geocode.earth/placeholder/2019-01-28
+  - BUCKET=https://data.geocode.earth/placeholder/2020-05-05
 before_install:
   - npm i -g npm
 before_script:
