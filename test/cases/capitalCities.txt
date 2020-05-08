@@ -84,7 +84,7 @@
 890445081 Panama City, Panama
 890435983 Saint-Pierre, Saint Pierre and Miquelon
 85676471 Melekeok, Palau
-890441607 Doha, Qatar
+421190363 Doha, Qatar
 102003033 Moscow, Russia
 890444217 Honiara, Solomon Islands
 421202159 Victoria, Seychelles
