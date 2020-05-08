@@ -78,7 +78,7 @@
 890413117 Noumea, New Caledonia
 890440179 Kingston, Norfolk Island
 101751893 Amsterdam, Netherlands
-101751917 Oslo, Norway
+1495123997 Oslo, Norway
 85675677 Yaren, Nauru
 1141909453 Alofi, Niue
 890445081 Panama City, Panama
