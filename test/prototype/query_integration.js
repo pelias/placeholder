@@ -11,7 +11,7 @@ module.exports.query = function(test, util) {
 
   assert([['kelburn', 'wellington', 'new zealand']], [85772991]);
   assert([['north sydney']], [85771181, 85784821, 101931469, 102048877, 404225393, 1310698409]);
-  assert([['sydney', 'new south wales', 'australia']], [101932003, 102049151, 404226357]);
+  assert([['sydney', 'new south wales', 'australia']], [101932003, 102049151, 404226357, 1376953385, 1377004395]);
   assert([['ケープタウン', '南アフリカ']], [101928027]);
 };
 
