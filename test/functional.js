@@ -10,7 +10,7 @@ module.exports.functional = function(test, util) {
   var assert = runner.bind(null, test, ph);
 
   assert('Kelburn Wellington New Zealand', [85772991]);
-  assert('North Sydney', [85771181, 85784821, 101931469, 102048877, 404225393, 1310698409]);
+  assert('North Sydney', [85784821, 101931469, 102048877, 404225393, 1310698409]);
   assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357, 1376953385, 1377004395]);
   assert('ケープタウン 南アフリカ', [101928027]);
   assert('경기도 광명시', [890472589]);
