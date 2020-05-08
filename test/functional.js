@@ -22,7 +22,7 @@ module.exports.functional = function(test, util) {
   assert('paris, tx', [ 101725293 ]);
 
   assert('123 apple bay ave neutral bay north sydney new south wales au',
-    [ 85774601, 101931387, 404225267 ]
+    [ 101931387, 404225267 ]
   );
 
   assert('30 w 26th st ny nyc 10117 ny usa', [ 85977539 ]);
