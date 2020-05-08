@@ -13,9 +13,13 @@ module.exports.functional = function(test, util) {
   assert('North Sydney', [85784821, 101931469, 102048877, 404225393, 1310698409]);
   assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357, 1376953385, 1377004395]);
   assert('ケープタウン 南アフリカ', [101928027]);
-  assert('경기도 광명시', [890472589]);
+
+  // possible duplicates
+  // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1841
+  assert('경기도 광명시', [102026551, 890472589]);
+  assert('부산광역시 부산진구', [890475779, 890476045]);
+
   assert('서울 마포구', [890473201]);
-  assert('부산광역시 부산진구', [890475779]);
   assert('전라북도 전주시 완산구', [102026471]);
 
   assert('london on', [ 101735809 ]);
