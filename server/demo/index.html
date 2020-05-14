@@ -269,12 +269,13 @@
 
         // create map
         var map = L.map('map');
-        var tiles = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var tiles = '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
 
         L.tileLayer( tiles, {
           scrollWheelZoom: true,
           zoomControl: true,
-          attributionControl: false,
+          attribution:'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>' ,
+          maxZoom: 22
         }).addTo(map);
 
         map.setView( new L.LatLng( 52.52, 13.40 ), 14 );
