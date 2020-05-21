@@ -1,16 +1,38 @@
->This repository is part of the [Pelias](https://github.com/pelias/pelias)
->project. Pelias is an open-source, open-data geocoder originally sponsored by
->[Mapzen](https://www.mapzen.com/). Our official user documentation is
->[here](https://github.com/pelias/documentation).
+<p align="center">
+  <img height="100" src="https://raw.githubusercontent.com/pelias/design/master/logo/pelias_github/Github_markdown_hero.png">
+</p>
+<h3 align="center">A modular, open-source search engine for our world.</h3>
+<p align="center">Pelias is a geocoder powered completely by open data, available freely to everyone.</p>
+<p align="center">
+<a href="https://en.wikipedia.org/wiki/MIT_License"><img src="https://img.shields.io/github/license/pelias/api?style=flat&color=orange" /></a>
+<a href="https://hub.docker.com/u/pelias"><img src="https://img.shields.io/docker/pulls/pelias/api?style=flat&color=informational" /></a>
+<a href="https://gitter.im/pelias/pelias"><img src="https://img.shields.io/gitter/room/pelias/pelias?style=flat&color=yellow" /></a>
+</p>
+<p align="center">
+	<a href="https://github.com/pelias/docker">Local Installation</a> ·
+        <a href="https://geocode.earth">Cloud Webservice</a> ·
+	<a href="https://github.com/pelias/documentation">Documentation</a> ·
+	<a href="https://gitter.im/pelias/pelias">Community Chat</a>
+</p>
+<details open>
+<summary>What is Pelias?</summary>
+<br />
+Pelias is a search engine for places worldwide, powered by open data. It turns addresses and place names into geographic coordinates, and turns geographic coordinates into places and addresses. With Pelias, you’re able to turn your users’ place searches into actionable geodata and transform your geodata into real places.
+<br /><br />
+We think open data, open source, and open strategy win over proprietary solutions at any part of the stack and we want to ensure the services we offer are in line with that vision. We believe that an open geocoder improves over the long-term only if the community can incorporate truly representative local knowledge.
+</details>
 
-# Pelias Placeholder Service
-[![NPM](https://nodei.co/npm/pelias-placeholder.png?downloads=true&stars=true)](https://nodei.co/npm/pelias-placeholder)
-[![Build Status](https://travis-ci.org/pelias/placeholder.png?branch=master)](https://travis-ci.org/pelias/placeholder)
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/placeholder.svg)](https://greenkeeper.io/)
+# Pelias coarse geocoder
 
-## natural language parser for geographic text
+This repository provides all the code & geographic data you'll need to run your own coarse geocoder.
 
-This engine takes unstructured input text, such as 'Neutral Bay North Sydney New South Wales' and attempts to deduce the geographic area the user is referring to.
+Read our [An (almost) one line coarse geocoder with Docker](https://geocode.earth/blog/2019/almost-one-line-coarse-geocoding) blog post for a quick start guide and [check out our demo](https://placeholder.demo.geocode.earth).
+
+This service is intended to be run as part of the [Pelias Gecoder](https://github.com/pelias/pelias) but can just as easily be run independently as it has no external dependencies.
+
+## Natural language parser for geographic text
+
+The engine takes unstructured input text, such as 'Neutral Bay North Sydney New South Wales' and attempts to deduce the geographic area the user is referring to.
 
 Human beings (familiar with Australian geography) are able to quickly scan the text and establish that there 3 distinct token groups: 'Neutral Bay', 'North Sydney' & 'New South Wales'.
 
@@ -30,20 +52,20 @@ The engine includes a rudimentary language detection algorithm which attempts to
 
 ---
 
-## requirements
+## Requirements
 
 Placeholder requires Node.js and SQLite
 
 See [Pelias software requirements](https://github.com/pelias/documentation/blob/master/requirements.md) for required and recommended versions.
 
-## install
+## Install
 
 ```bash
 $ git clone git@github.com:pelias/placeholder.git && cd placeholder
 $ npm install
 ```
 
-### download the required database files
+### Download the required database files
 
 Data hosting is provided by [Geocode Earth](https://geocode.earth). Other
 Pelias related downloads are available at https://geocode.earth/data.
@@ -53,7 +75,7 @@ $ mkdir data
 $ curl -s https://data.geocode.earth/placeholder/store.sqlite3.gz | gunzip > data/store.sqlite3;
 ```
 
-### confirm the build was successful
+### Confirm the build was successful
 
 ```bash
 $ npm test
@@ -73,13 +95,13 @@ took: 3ms
 
 ---
 
-## run server
+## Run server
 
 ```bash
 $ PORT=6100 npm start;
 ```
 
-### open browser
+### Open browser
 
 the server should now be running and you should be able to access the http API:
 
@@ -97,7 +119,7 @@ try the following paths:
 /parser/tokenize?text=sydney new south wales
 ```
 
-### changing languages
+### Changing languages
 
 the `/parser/search` endpoint accepts a `?lang=xxx` property which can be used to vary the language of data returned.
 
@@ -129,7 +151,7 @@ the demo is also able to serve responses in different languages by providing the
 ... etc.
 ```
 
-### filtering by placetype
+### Filtering by placetype
 
 the `/parser/search` endpoint accepts a `?placetype=xxx` parameter which can be used to control the placetype of records which are returned.
 
@@ -154,7 +176,7 @@ search?text=luxemburg&placetype=country
 search?text=luxemburg&placetype=country,region
 ```
 
-### live mode (BETA)
+### Live mode (BETA)
 
 the `/parser/search` endpoint accepts a `?mode=live` parameter pair which can be used to enable an autocomplete-style API.
 
@@ -162,7 +184,7 @@ in this mode the final token of each input text is considered as 'incomplete', m
 
 this mode is currently in BETA, the interface and behaviour may change over time.
 
-### configuring the rtree threshold
+### Configuring the rtree threshold
 
 the default matching strategy uses the `lineage` table to ensure that token pairs represent a valid child->parent relationship. this ensures that queries like 'London France' do not match, because there is no entry in the lineage table linking those two places together.
 
@@ -180,7 +202,7 @@ a setting of less than 0 will disable the rtree functionality completely. disabl
 
 ---
 
-## run the interactive shell
+## Run the interactive shell
 
 ```bash
 $ npm run repl
@@ -221,7 +243,7 @@ placeholder > id 85772991
 
 ---
 
-## configuration for pelias API
+## Configuration for pelias API
 
 While Placeholder can be used as a stand-alone application or included with other geographic software / search engines, it is designed for the [Pelias geocoder](https://github.com/pelias/pelias).
 
@@ -229,7 +251,7 @@ To connect Placeholder service to the Pelias API, [configure the pelias config f
 
 ---
 
-## tests
+## Tests
 
 ### run the test suite
 
@@ -237,7 +259,7 @@ To connect Placeholder service to the Pelias API, [configure the pelias config f
 $ npm test
 ```
 
-### run the functional cases
+### Run the functional cases
 
 there are more exhaustive test cases included in `test/cases/`.
 
@@ -247,7 +269,7 @@ to run all the test cases:
 $ npm run funcs
 ```
 
-### generate a ~500,000 line test file
+### Generate a ~500,000 line test file
 
 this command requires the `data/wof.extract` file mentioned below in the 'building the database' section.
 
@@ -259,15 +281,15 @@ once complete you can find the generated test cases in `test/cases/generated.txt
 
 ---
 
-## docker
+## Docker
 
-### build the service image
+### Build the service image
 
 ```bash
 $ docker-compose build
 ```
 
-### run the service in the background
+### Run the service in the background
 
 ```bash
 $ docker-compose up -d
@@ -275,16 +297,16 @@ $ docker-compose up -d
 
 ---
 
-## building the database
+## Building the database
 
-### prerequisites
+### Prerequisites
 - jq 1.5+ must be installed
     - on ubuntu: `sudo apt-get install jq`
     - on mac: `brew install jq`
 - Who's on First data download
     - use the download script in [pelias/whosonfirst](https://github.com/pelias/whosonfirst#downloading-the-data)
 
-### steps
+### Steps
 the database is created from geographic data sourced from the [whosonfirst](https://whosonfirst.org/) project.
 
 the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
@@ -309,7 +331,7 @@ $ npm run build
 
 ## Using the Docker image
 
-### rebuild the image
+### Rebuild the image
 
 you can rebuild the image on any system with the following command:
 
@@ -317,7 +339,7 @@ you can rebuild the image on any system with the following command:
 $ docker build -t pelias/placeholder .
 ```
 
-### download pre-built image
+### Download pre-built image
 
 Up to date Docker images are built and automatically pushed to Docker Hub from our continuous integration pipeline
 
@@ -327,7 +349,7 @@ You can pull the latest stable image with
 $ docker pull pelias/placeholder
 ```
 
-### download custom image tags
+### Download custom image tags
 
 We publish each commit and the latest of each branch to separate tags
 
