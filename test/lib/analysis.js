@@ -61,6 +61,10 @@ module.exports.normalize = function(test, common) {
   assert( 'City of the Sun', [ 'city of the sun' ] );
   assert( 'City of Sun', [ 'city of sun', 'sun' ] );
 
+  // https://en.wikipedia.org/wiki/Charter_township
+  assert( 'Word Charter Township', [ 'word charter township', 'word township' ] );
+  assert( 'Two Words Charter Township', [ 'two words charter township', 'two words township' ] );
+
   // remove 'disambiguation' tokens from name suffix
   // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/885
   assert( 'St Kilda (Vic.)', [ 'st kilda' ] );
