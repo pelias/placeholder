@@ -101,6 +101,16 @@ took: 3ms
 $ PORT=6100 npm start;
 ```
 
+#### Configuration via Environment Variables
+
+The service supports additional environment variables that affect its operation:
+
+| Environment Variable | Default | Description |
+| -------------------- | ------- | ----------- |
+| `HOST` | `undefined` | The network address that the placeholder service will bind to. Defaults to whatever the current Node.js default is, which is currently to listen on `0.0.0.0` (all interfaces). See the [Node.js Net documentation](https://nodejs.org/api/net.html#net_server_listen_port_host_backlog_callback) for more information. |
+| `PORT` | `3000` | The TCP port that the placeholder service will use for incoming network connections |
+| `PLACEHOLDER_DATA` | `../data/` | Path to the directory where the placeholder service will find the `store.sqlite3` database file. |
+
 ### Open browser
 
 the server should now be running and you should be able to access the http API:
