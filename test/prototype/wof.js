@@ -297,10 +297,10 @@ module.exports.store_geom = function(test, util) {
   test( 'geom: bbox prefer label', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'lbl:bbox': 'ABC',
-      'geom:bbox': 'DEF'
+      'lbl:bbox': '1,1,1,1',
+      'geom:bbox': '2,2,2,2'
     }), function(){
-      t.deepEqual( mock._calls.set[0][1].geom.bbox, 'ABC');
+      t.deepEqual( mock._calls.set[0][1].geom.bbox, '1,1,1,1');
       t.end();
     });
   });
@@ -308,9 +308,9 @@ module.exports.store_geom = function(test, util) {
   test( 'geom: bbox no label', function(t) {
     var mock = new Mock();
     mock.insertWofRecord(params({
-      'geom:bbox': 'DEF'
+      'geom:bbox': '2,2,2,2'
     }), function(){
-      t.deepEqual( mock._calls.set[0][1].geom.bbox, 'DEF');
+      t.deepEqual( mock._calls.set[0][1].geom.bbox, '2,2,2,2');
       t.end();
     });
   });
@@ -616,6 +616,52 @@ module.exports.isValidWofRecord = function(test, util) {
     t.true( wof.isValidWofRecord( 1, params({}) ) );
     t.end();
   });
+};
+
+module.exports.validBoundingBox = function (test, util) {
+
+  test('valid bbox', function (t) {
+    t.true(wof.validBoundingBox('-75.38769,40.044,-75.38769,40.044'));
+    t.true(wof.validBoundingBox('0,0,0,0'));
+    t.true(wof.validBoundingBox('1,2,3,4'));
+    t.true(wof.validBoundingBox('1.1,2.2,3.3,4.4'));
+    t.true(wof.validBoundingBox(' 1.1 ,2.2, 3.3, 4.4 '));
+    t.end();
+  });
+
+  test('invalid bbox - invalid type', function (t) {
+    t.false(wof.validBoundingBox());
+    t.false(wof.validBoundingBox([]));
+    t.false(wof.validBoundingBox({}));
+    t.false(wof.validBoundingBox(null));
+    t.false(wof.validBoundingBox(1));
+    t.end();
+  });
+
+  test('invalid bbox - requires 4 coords', function (t) {
+    t.false(wof.validBoundingBox('1'));
+    t.false(wof.validBoundingBox('1,1'));
+    t.false(wof.validBoundingBox('1,1,1'));
+    t.false(wof.validBoundingBox('1,1,1,1,1'));
+    t.end();
+  });
+
+  test('invalid bbox - coords must be floats', function (t) {
+    t.false(wof.validBoundingBox('1,2,a,4'));
+    t.false(wof.validBoundingBox('1,2,,4'));
+    t.end();
+  });
+
+  test('invalid bbox - minx must be less than maxx', function (t) {
+    t.false(wof.validBoundingBox('1,0,0,0'));
+    t.end();
+  });
+
+  test('invalid bbox - miny must be less than maxy', function (t) {
+    t.false(wof.validBoundingBox('0,1,0,0'));
+    t.end();
+  });
+
 };
 
 module.exports.add_token = function(test, util) {

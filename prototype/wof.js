@@ -1,11 +1,11 @@
 
 // plugin for whosonfirst
-const _ = require('lodash'),
-    dir = require('require-dir'),
-    util = require('util'),
-    blacklist = require('pelias-blacklist-stream/loader')(),
-    analysis = require('../lib/analysis'),
-    language = dir('../config/language');
+const _ = require('lodash');
+const dir = require('require-dir');
+const util = require('util');
+const blacklist = require('pelias-blacklist-stream/loader')();
+const analysis = require('../lib/analysis');
+const language = dir('../config/language');
 
 // list of languages / tags we favour in cases of deduplication
 const LANG_PREFS = ['eng','und'];
@@ -37,7 +37,7 @@ function insertWofRecord( wof, next ){
     lineage: wof['wof:hierarchy'],
     geom: {
       area: wof['geom:area'],
-      bbox: wof['lbl:bbox'] || wof['geom:bbox'],
+      bbox: validBoundingBox(wof['lbl:bbox']) || validBoundingBox(wof['geom:bbox']),
       lat: wof['lbl:latitude'] || wof['geom:latitude'],
       lon: wof['lbl:longitude'] ||wof['geom:longitude']
     },
@@ -313,7 +313,22 @@ function getRank( placetype ){
   };
 }
 
+// this function validates and returns the bbox property verbatim, else undefined
+// see: https://github.com/pelias/placeholder/issues/183
+// format: minx, miny, maxx, maxy
+function validBoundingBox(bbox) {
+  if (!_.isString(bbox)) { return; }
+  const coords = bbox.split(',');
+  if (coords.length !== 4) { return; }
+  const floats = coords.map(c => parseFloat(c));
+  if (floats.some(isNaN)) { return; }
+  if (floats[0] > floats[2]) { return; }
+  if (floats[1] > floats[3]) { return; }
+  return bbox;
+}
+
 module.exports.insertWofRecord = insertWofRecord;
 module.exports.isValidWofRecord = isValidWofRecord;
 module.exports.getPopulation = getPopulation;
 module.exports.getAbbreviation = getAbbreviation;
+module.exports.validBoundingBox = validBoundingBox;
