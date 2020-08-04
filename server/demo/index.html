@@ -70,11 +70,10 @@
           results = results || [];
 
           // load token groups
-          tokenize( args, function( groups ){
-            groups = groups || [];
-
+          tokenize( args, function( response ){
+            console.log(response);
             // render results
-            render( results, groups );
+            render( results, response.groups || [] );
           });
         });
       }
@@ -129,6 +128,7 @@
       }
 
       function render( results, groups ){
+        console.log(groups);
 
         $('#results').empty();
         $('#tokens').empty();
@@ -136,8 +136,12 @@
 
         // display token groups
         groups.forEach( function( win ){
-          var buttons = win.map( function( token ){
-            return '<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token + '</span></li>';
+          let buttons = [];
+          if (win && win.length > 0 && win[0].remainder.before) {
+            buttons.push('<li type="button" class="btn btn-disabled" style="margin-top: 5px;"><span>' + win[0].remainder.before + '</span></li>');
+          }
+          win.forEach( function( token ){
+            buttons.push('<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token.phrase + '</span></li>');
           });
           $("#tokens").html('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
         });
@@ -189,7 +193,7 @@
 
       function tokenize( args, cb ){
         console.info( 'tokenize', args );
-        request( '/parser/tokenize', args, cb );
+        request( '/parser/tokenize2', args, cb );
       }
 
       function clearMap(){
