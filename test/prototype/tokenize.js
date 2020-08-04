@@ -80,7 +80,11 @@ module.exports._eachSynonym = function(test, common) {
   test('_eachSynonym', function(t) {
 
     const synonym = ['hello', 'big', 'bright', 'new', 'world'];
-    const expected = [ 'hello big', 'bright', 'new world' ];
+    const expected = [ 
+      { phrase: 'hello big', remainder: { before: '', after: 'bright new world' } }, 
+      { phrase: 'bright', remainder: { before: 'hello big', after: 'new world' } }, 
+      { phrase: 'new world', remainder: { before: 'hello big bright', after: '' } } 
+    ];
 
     var mock = tokenize._eachSynonym.bind({
       index: { hasSubject: ( phrase, cb ) => {
@@ -172,7 +176,11 @@ module.exports._groups = function(test, common) {
       'south wales','new south wales', 'wales', 'north', 'sydney',
       'north sydney', 'south', 'au'
     ];
-    const expected = ['north sydney', 'new south wales', 'au'];
+    const expected =   [ 
+      { phrase: 'north sydney', remainder: { before: '', after: 'new south wales au' } }, 
+      { phrase: 'new south wales', remainder: { before: 'north sydney', after: 'au' } }, 
+      { phrase: 'au', remainder: { before: 'north sydney new south wales', after: '' } } 
+    ];
 
     t.deepEqual(tokenize._groups(tokens, phrases), expected);
     t.end();

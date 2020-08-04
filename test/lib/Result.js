@@ -53,10 +53,18 @@ module.exports.getSubject = function(test, common) {
     const res = new Result();
     t.equal(res.getSubject(), undefined);
 
-    const res2 = new Result(['a','b','c']);
+    const res2 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);
     t.equal(res2.getSubject(), 'b');
 
-    const res3 = new Result(['a','b','c']);
+    const res3 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);
     res3.pos.subject = 0;
     t.equal(res3.getSubject(), 'a');
 
@@ -69,10 +77,18 @@ module.exports.getObject = function(test, common) {
     const res = new Result();
     t.equal(res.getObject(), undefined);
 
-    const res2 = new Result(['a','b','c']);
+    const res2 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);
     t.equal(res2.getObject(), 'c');
 
-    const res3 = new Result(['a','b','c']);
+    const res3 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);
     res3.pos.object = 1;
     t.equal(res3.getObject(), 'b');
 
@@ -85,10 +101,18 @@ module.exports.getPreviousObject = function(test, common) {
     const res = new Result();
     t.equal(res.getPreviousObject(), undefined);
 
-    const res2 = new Result(['a','b','c']);
+    const res2 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);
     t.equal(res2.getPreviousObject(), undefined);
 
-    const res3 = new Result(['a','b','c']);
+    const res3 = new Result([
+      { phrase: 'a' },
+      { phrase: 'b' },
+      { phrase: 'c' }
+    ]);    
     res3.pos.prev_object = 1;
     t.equal(res3.getPreviousObject(), 'b');
 

@@ -113,7 +113,13 @@ function _groups(tokens, phrases) {
       if( !_isArrayRangeIsEqual( tokens, phrase, t ) ){ continue; }
 
       // add the match to the groups array
-      groups.push( phrase.join(' ') );
+      groups.push( {
+        phrase: phrase.join(' '),
+        remainder: {
+          before: tokens.slice(0, t).join(' '),
+          after: tokens.slice(t + phrase.length).join(' ')
+        }
+      });
 
       // advance the iterator to skip any other words in the phrase
       t += phrase.length -1;

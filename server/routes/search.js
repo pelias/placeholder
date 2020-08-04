@@ -62,9 +62,12 @@ module.exports = function( req, res ){
         const parents = rowsToIdMap( parentResults );
 
         // map documents to dict using id as key
-        const docs = documents.map( function( result ){
-          return mapResult( ph, result, parents, lang );
-        });
+        const docs = documents.map( (doc) => ({
+            phrase: result.group.map(g => g.phrase).join(' '),
+            query: result.group[0].remainder.before,
+            ...mapResult( ph, doc, parents, lang ),
+          })
+        );
 
         // sort documents according to sorting rules
         docs.sort( sortingAlgorithm );
