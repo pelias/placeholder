@@ -112,7 +112,6 @@ function _groups(tokens, phrases) {
       // select the longest matching phrase
       if( !_isArrayRangeIsEqual( tokens, phrase, t ) ){ continue; }
 
-      
       const before = tokens.slice(0, t).join(' ');
       const after = tokens.slice(t + phrase.length).join(' ');
 

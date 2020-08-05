@@ -61,10 +61,12 @@ module.exports = function( req, res ){
         // create a map of parents
         const parents = rowsToIdMap( parentResults );
 
+        const firstUsedGroupIndex = result.mask.indexOf(true);
+
         // map documents to dict using id as key
         const docs = documents.map( (doc) => ({
-            phrase: result.group.map(g => g.phrase).join(' '),
-            query: result.group[0].remainder.before,
+            phrase: result.group.slice(firstUsedGroupIndex).map(g => g.phrase).join(' '),
+            query: result.group[firstUsedGroupIndex].remainder.before,
             ...mapResult( ph, doc, parents, lang ),
           })
         );

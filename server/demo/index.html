@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en" ng-app="demo">
   <head>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -123,6 +122,19 @@
           return v;
         })
 
+        const queryBox = [
+            `<ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">`,
+            result.query ? `<li type="button" class="btn btn-disabled" style="margin-top: 5px; padding: 3px 5px;"><span style="font-size: xx-small"> ${result.query} </span></li>` : '',
+          `<li type="button" class="btn btn-default" style="margin-top: 5px; padding: 3px 5px;">
+            <span style="font-size: xx-small"> ${result.phrase} </span>
+            </li>
+          </ul>`].join('');
+
+        view = [
+          queryBox,
+          ...view
+        ]
+
         // console.log( lins[i] );
         $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
       }
@@ -137,9 +149,6 @@
         // display token groups
         groups.forEach( function( win ){
           let buttons = [];
-          if (win && win.length > 0 && win[0].remainder.before) {
-            buttons.push('<li type="button" class="btn btn-disabled" style="margin-top: 5px;"><span>' + win[0].remainder.before + '</span></li>');
-          }
           win.forEach( function( token ){
             buttons.push('<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token.phrase + '</span></li>');
           });
@@ -319,7 +328,9 @@
               </span>
             </div><!-- /input-group -->
 
+            <h3>Possible tokens</h3>
             <ul id="tokens" class="btn-group" role="group" style="margin-top:10px; list-style: none;"></ul>
+            <h3>Search Results</h3>
             <ul id="results" class="list-group" style="margin-top:10px;"></ul>
           </div><!-- /.col-md-6 -->
 
