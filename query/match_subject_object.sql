@@ -12,11 +12,21 @@ WITH l AS (
     WHERE token = $object
   )
 )
-SELECT l.id AS subjectId, l.pid as objectId
+SELECT
+  l.id AS subjectId,
+  l.pid AS objectId
 FROM l
-  JOIN tokens AS t1 USING (id)
-  JOIN tokens AS t2 ON t2.id = l.pid
-WHERE (
+  JOIN tokens AS t1
+    INDEXED BY tokens_cover_idx
+    USING (id)
+  JOIN tokens AS t2
+    INDEXED BY tokens_cover_idx
+    ON t2.id = l.pid
+WHERE
+  t1.token = $subject
+AND
+  t2.token = $object
+AND (
   t1.lang = t2.lang OR
   t1.lang IN ( 'eng', 'und' ) OR
   t2.lang IN ( 'eng', 'und' )
