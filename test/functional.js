@@ -44,6 +44,11 @@ module.exports.functional = function(test, util) {
   assert('Dél-Dunántúl, HU', [404227491]);
   assert('Sardegna, Italy', [404227535]);
   assert('Közép-Magyarország, Hungary', [404227489]);
+
+  // All tokens should be in the same language
+  // Parijs = Paris (nl); Francia = France (it)
+  // see: https://github.com/pelias/placeholder/pull/195
+  assert('Parijs Francia', [1225878855]);
 };
 
 // convenience function for writing quick 'n easy test cases
