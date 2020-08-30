@@ -257,7 +257,7 @@ placeholder > id 85772991
 
 While Placeholder can be used as a stand-alone application or included with other geographic software / search engines, it is designed for the [Pelias geocoder](https://github.com/pelias/pelias).
 
-To connect Placeholder service to the Pelias API, [configure the pelias config file](https://github.com/pelias/api#pelias-config) with the port that placeholder is running on.
+To connect Placeholder service to the Pelias API, [configure the pelias config file](https://github.com/pelias/api#configuration-via-pelias-config) with the port that placeholder is running on.
 
 ---
 
