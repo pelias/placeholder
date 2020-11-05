@@ -76,7 +76,11 @@ module.exports._queryGroup = function(test, common) {
   });
   test('_queryGroup - multiple tokens - no matches', function(t) {
 
-    const group = ['hello world', 'test', 'foo bar'];
+    const group = [
+      {phrase: 'hello world'}, 
+      {phrase: 'test'}, 
+      {phrase: 'foo bar'}
+    ];
     t.plan(10);
 
     const index = {
@@ -110,7 +114,11 @@ module.exports._queryGroup = function(test, common) {
   });
   test('_queryGroup - multiple tokens - matches', function(t) {
 
-    const group = ['hello world', 'test', 'foo bar'];
+    const group = [
+      {phrase: 'hello world'}, 
+      {phrase: 'test'}, 
+      {phrase: 'foo bar'}
+    ];
     t.plan(7);
 
     const index = {

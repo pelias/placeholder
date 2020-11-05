@@ -133,7 +133,7 @@ function _queryManyGroups( index, groups, done ){
 
 function query( text, done ){
   this.tokenize( text, function( err, groups ){
-
+    
     switch( groups.length ){
 
       // in a failure case we didnt find any groups; abort now

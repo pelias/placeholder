@@ -95,6 +95,7 @@ app.get( '/parser/search', require( './routes/search' ) );
 app.get( '/parser/findbyid', require( './routes/findbyid' ) );
 app.get( '/parser/query', require( './routes/query' ) );
 app.get( '/parser/tokenize', require( './routes/tokenize' ) );
+app.get( '/parser/tokenize2', require( './routes/tokenize2' ) );
 
 // demo page
 app.use('/demo', express.static( __dirname + '/demo' ));
