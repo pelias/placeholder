@@ -236,9 +236,9 @@ placeholder > tokenize sydney new south wales
  [ [ 'sydney', 'new south wales' ] ]
 
 placeholder > token kelburn
- [ 85772991 ]
+ [ 1729339019 ]
 
-placeholder > id 85772991
+placeholder > id 1729339019
  { name: 'Kelburn',
    placetype: 'neighbourhood',
    lineage:
@@ -246,7 +246,7 @@ placeholder > id 85772991
       country_id: 85633345,
       county_id: 102079339,
       locality_id: 101915529,
-      neighbourhood_id: 85772991,
+      neighbourhood_id: 1729339019,
       region_id: 85687233 },
    names: { eng: [ 'Kelburn' ] } }
 ```
