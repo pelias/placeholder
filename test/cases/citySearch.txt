@@ -331,7 +331,7 @@
 85923645 Diamond Bar
 85632319 Djibouti
 101752861 Dnipropetrovsk
-890441607 Doha
+421190363 Doha
 85904051 Dombivli
 102027633 Dongguan
 101751841 Dordrecht
@@ -663,7 +663,7 @@
 85923517 Los Angeles
 85929677 Loveland
 85950327 Lowell
-101914319 Lower Hutt
+1729238533 Lower Hutt
 101750443 Lowestoft
 85667669 Luanda
 101725261 Lubbock
@@ -692,7 +692,7 @@
 85950349 Malden
 85675495 Managua
 102050371 Manaus
-101913963 Manchester, England
+101750525 Manchester, England
 85975081 Manchester, NH
 85674559 Mandalay
 421205771 Manhattan
@@ -1112,7 +1112,7 @@
 102018911 Surabaya
 85917473 Surprise
 102027777 Suzhou
-85771099 Sydney
+101932003 Sydney
 85977785 Syracuse
 101752779 Szczecin
 101751681 Szeged

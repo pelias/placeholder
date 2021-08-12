@@ -9,7 +9,7 @@ module.exports.functional = function(test, util) {
 
   var assert = runner.bind(null, test, ph);
 
-  assert('Kelburn Wellington New Zealand', [85772991]);
+  assert('Kelburn Wellington New Zealand', [1729339019]);
   assert('North Sydney', [85784821, 101931469, 102048877, 404225393, 1310698409]);
   assert('Sydney New South Wales Australia', [101932003, 102049151, 404226357, 1376953385, 1377004395]);
   assert('ケープタウン 南アフリカ', [101928027]);
@@ -32,7 +32,7 @@ module.exports.functional = function(test, util) {
   assert('30 w 26th st ny nyc 10117 ny usa', [ 85977539 ]);
 
   // should not include county: 102081377, or localadmin: 404482867
-  assert('lancaster lancaster pa', [ 101718643, 404487183, 404487185 ]);
+  assert('lancaster lancaster pa', [ 101718643, 404487183, 404487185, 1729458067, 1729466275 ]);
 
   // assertions from pelias acceptance-test suite
   assert('灣仔, 香港', [85671779, 1243098523]);
