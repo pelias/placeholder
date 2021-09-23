@@ -20,7 +20,7 @@ jobs:
       - name: Run unit tests
         run: |
           npm install
-          npm run travis
+          npm run ci
   npm-publish:
     needs: unit-tests
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
