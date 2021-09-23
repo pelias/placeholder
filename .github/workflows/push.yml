@@ -8,6 +8,7 @@ jobs:
         os:
           - ubuntu-20.04
         node-version:
+          - 12.x
           - 14.x
           - 16.x
     steps:
@@ -16,17 +17,6 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: '${{ matrix.node-version }}'
-      - name: Download database
-        shell: bash
-        env:
-          BUCKET: https://data.geocode.earth/placeholder
-        run: |
-          export AGENT="github/${GITHUB_ACTOR}"
-          export REFERER="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-          mkdir data
-          curl -A ${AGENT} -e ${REFERER} -sfo data/store.sqlite3.gz ${BUCKET}/archive/$(date +%Y-%m-%d)/store.sqlite3.gz || true
-          [ -e data/store.sqlite3.gz ] || curl -A ${AGENT} -e ${REFERER} -so data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz
-          gunzip data/store.sqlite3.gz
       - name: Run unit tests
         run: |
           npm install
@@ -34,13 +24,13 @@ jobs:
   npm-publish:
     needs: unit-tests
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Install node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2-beta
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Run semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_SEMANTIC_RELEASE_TOKEN }}
@@ -57,10 +47,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Dump needs context
-        env:
-          NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: echo "$NEEDS_CONTEXT"
       - name: Build Docker images
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
