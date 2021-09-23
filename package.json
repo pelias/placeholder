@@ -21,7 +21,7 @@
     "cli": "node cmd/cli.js",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run all"
+    "ci": "./cmd/ci.sh"
   },
   "repository": {
     "type": "git",
