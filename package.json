@@ -43,7 +43,7 @@
     "pelias-logger": "^1.2.1",
     "pelias-whosonfirst": "^5.0.0",
     "regenerate": "^1.4.2",
-    "remove-accents": "^0.4.0",
+    "remove-accents-diacritics": "^1.0.2",
     "require-dir": "^1.0.0",
     "sorted-intersect": "^0.1.4",
     "split2": "^3.0.0",

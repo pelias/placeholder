@@ -15,14 +15,18 @@ module.exports.normalize = function(test, common) {
   // Punctuation substitutions
   assert( 'Straße', [ 'strasse' ] );
   assert( 'Jǿ œ̆', [ 'jo oe' ] );
+  assert( 'orilẹ́ede manamari', [ 'orileede manamari' ] );
+  assert( 'z︠h︡ovkva', [ 'zhovkva' ] );
+  assert( 'Žovkva', [ 'zovkva' ] );
+  assert( 'Żółkiew', [ 'zolkiew' ] );
   assert( 'Trinidad & Tobago', [ 'trinidad and tobago' ] );
 
   // Tests to confirm the order of function execution
   // see: https://github.com/pelias/placeholder/pull/12#issuecomment-302437570
-  test( 'order of execution', function(t) {
-    t.deepEqual( analysis.normalize( 'İnceyol' ), [ 'i̇nceyol' ] );
-    t.equal( analysis.normalize( 'İnceyol' )[0].length, 8 );
-    t.equal( analysis.normalize( 'İ' )[0].length, 2 );
+  test('order of execution', function(t) {
+    t.deepEqual( analysis.normalize( 'İnceyol' ), [ 'inceyol' ] );
+    t.equal( analysis.normalize( 'İnceyol' )[0].length, 7 );
+    t.equal( analysis.normalize( 'İ' )[0].length, 1 );
     t.end();
   });
 

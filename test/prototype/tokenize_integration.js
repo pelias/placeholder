@@ -11,7 +11,7 @@ module.exports.tokenize = function(test, util) {
 
   assert('Kelburn Wellington New Zealand', [['kelburn', 'wellington', 'new zealand']]);
   assert('Sydney New South Wales Australia', [['sydney', 'new south wales', 'australia']]);
-  assert('ケープタウン 南アフリカ', [['ケープタウン', '南アフリカ']]);
+  assert('ケープタウン 南アフリカ', [['ケーフタウン', '南アフリカ']]);
 
   // duplicates
   assert('lancaster lancaster pa', [['lancaster', 'lancaster', 'pa']]);

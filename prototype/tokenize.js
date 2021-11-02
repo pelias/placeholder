@@ -1,9 +1,9 @@
 
 // plugin for tokenize
-const _ = require('lodash'),
-    async = require('async'),
-    analysis = require('../lib/analysis'),
-    permutations = require('../lib/permutations');
+const _ = require('lodash');
+const async = require('async');
+const analysis = require('../lib/analysis');
+const permutations = require('../lib/permutations');
 
 function tokenize(input, cb){
 
