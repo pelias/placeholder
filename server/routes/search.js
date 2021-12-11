@@ -1,7 +1,39 @@
 
 const _ = require('lodash');
 const util = require('./_util');
+const analysis = require('../../lib/analysis');
 const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
+
+const max_combinations = parseInt(process.env.MAX_COMBINATIONS, 10) || 1e9;
+
+function removeExpensiveTokens(ph, text) {
+  const tokens = analysis.tokenize(text).flat();
+
+  const stmt = ph.store.db.prepare('SELECT count(*) from fulltext where fulltext.fulltext = ?');
+
+  const counts = tokens.map(function(token) {
+    return stmt.get(token)['count(*)'];
+  });
+
+  // tokens that do not exceed the combination limit will be pushed here
+  let final_tokens = [];
+
+  var combinations = 1;
+  let limit_reached = false;
+
+  for (let idx = 0; idx < tokens.length; idx++) {
+    const token = tokens[idx];
+    const count = Math.max(counts[idx], 1);
+
+    combinations *= count;
+
+    if (combinations <= max_combinations) {
+      final_tokens.push(token);
+    }
+  }
+
+  return final_tokens.join(' ');
+}
 
 module.exports = function( req, res ){
 
@@ -25,9 +57,11 @@ module.exports = function( req, res ){
     }
   }
 
+  const queryText = removeExpensiveTokens( ph, text);
+
   // perform query
   console.time('took');
-  ph.query( text, ( err, result ) => {
+  ph.query( queryText, ( err, result ) => {
     console.timeEnd('took');
 
     // language property
