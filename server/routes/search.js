@@ -4,7 +4,7 @@ const util = require('./_util');
 const analysis = require('../../lib/analysis');
 const PARTIAL_TOKEN_SUFFIX = require('../../lib/analysis').PARTIAL_TOKEN_SUFFIX;
 
-const max_combinations = parseInt(process.env.MAX_COMBINATIONS, 10) || 1e9;
+const max_combinations = 5 * 1e6;
 
 function removeExpensiveTokens(ph, text) {
   const tokens = analysis.tokenize(text).flat();
