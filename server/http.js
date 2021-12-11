@@ -120,6 +120,8 @@ function handler() {
 process.on('SIGINT', handler);
 process.on('SIGTERM', handler);
 
+let con_count = 0;
+
 // start multi-threaded server
 if( cpus > 1 ){
   if( cluster.isMaster ){
@@ -155,5 +157,16 @@ else {
 
   server = app.listen( PORT, HOST, () => {
     logger.info('[master] listening on %s:%s', HOST||'0.0.0.0', PORT);
+  });
+
+  server.on('connection', function(socket) {
+    const con = con_count;
+    con_count++;
+    console.log(`CONNECTION ${con}!`);
+    const listener = function() {
+      console.log(`CLOSE ${con}`);
+      socket.removeListener('close', listener);
+    };
+    socket.on('close', listener);
   });
 }
