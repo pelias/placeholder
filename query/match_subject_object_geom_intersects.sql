@@ -11,7 +11,7 @@ FROM fulltext f1
         (r1.minY - $threshold) < r2.maxY AND
         (r1.maxY + $threshold) > r2.minY
       )
-        JOIN fulltext AS f2 ON f2.fulltext MATCH $object
+        JOIN fulltext AS f2 ON f2.fulltext MATCH $object_quoted
           JOIN tokens t2 ON (
             f2.rowid = t2.rowid
             AND r2.id = t2.id
@@ -22,7 +22,7 @@ FROM fulltext f1
               t2.lang IN ('eng', 'und')
             )
           )
-WHERE f1.fulltext MATCH $subject
+WHERE f1.fulltext MATCH $subject_quoted
 AND t1.token = $subject
 GROUP BY t1.id, t2.id
 ORDER BY t1.id ASC, t2.id ASC
