@@ -2,7 +2,11 @@ SELECT
   t1.id AS subjectId,
   t2.id as objectId
 FROM fulltext f1
-  JOIN tokens t1 ON f1.rowid = t1.rowid
+  JOIN tokens t1 ON (
+    f1.rowid = t1.rowid
+    AND f1.fulltext MATCH $subject_quoted
+    AND LIKELY(t1.token = $subject)
+  )
     JOIN rtree AS r1 ON t1.id = r1.id
       JOIN rtree AS r2 ON (
         r1.maxZ < r2.minZ AND
@@ -22,8 +26,6 @@ FROM fulltext f1
               t2.lang IN ('eng', 'und')
             )
           )
-WHERE f1.fulltext MATCH $subject_quoted
-AND LIKELY(t1.token = $subject)
 GROUP BY t1.id, t2.id
 ORDER BY t1.id ASC, t2.id ASC
 LIMIT $limit
