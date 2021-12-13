@@ -11,11 +11,11 @@ FROM fulltext f1
         (r1.minY - $threshold) < r2.maxY AND
         (r1.maxY + $threshold) > r2.minY
       )
-        JOIN fulltext AS f2 ON f2.fulltext MATCH $object_quoted
+        JOIN fulltext AS f2 ON f2.fulltext MATCH $object_quoted OR $object_quoted*
           JOIN tokens t2 ON (
             f2.rowid = t2.rowid
             AND r2.id = t2.id
-            AND t2.token = $object
+            AND (t2.token = $object OR t2.token LIKE ($object || '%'))
             AND (
               t1.lang = t2.lang OR
               t1.lang IN ('eng', 'und') OR
