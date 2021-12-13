@@ -14,6 +14,7 @@ FROM fulltext f1
         JOIN fulltext AS f2 ON f2.fulltext MATCH $object
           JOIN tokens t2 ON (
             f2.rowid = t2.rowid
+            AND t2.token = TRIM($object, '"')
             AND r2.id = t2.id
             AND (
               t1.lang = t2.lang OR
@@ -22,6 +23,7 @@ FROM fulltext f1
             )
           )
 WHERE f1.fulltext MATCH $subject
+AND t1.token = TRIM($subject, '"')
 GROUP BY t1.id, t2.id
 ORDER BY t1.id ASC, t2.id ASC
 LIMIT $limit
