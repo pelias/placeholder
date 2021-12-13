@@ -15,7 +15,7 @@ FROM fulltext f1
           JOIN tokens t2 ON (
             f2.rowid = t2.rowid
             AND r2.id = t2.id
-            AND t2.token = $object
+            AND LIKELY(t2.token = $object)
             AND (
               t1.lang = t2.lang OR
               t1.lang IN ('eng', 'und') OR
@@ -23,7 +23,7 @@ FROM fulltext f1
             )
           )
 WHERE f1.fulltext MATCH $subject_quoted
-AND t1.token = $subject
+AND LIKELY(t1.token = $subject)
 GROUP BY t1.id, t2.id
 ORDER BY t1.id ASC, t2.id ASC
 LIMIT $limit
