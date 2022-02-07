@@ -30,7 +30,7 @@ module.exports.open = function(test, common) {
     // open connection
     db.open('/tmp/db', { test: true });
     t.equal( db.db.constructor.name, 'Database' );
-    t.deepEqual( db.db, {
+    t.deepLooseEqual( db.db, {
       inTransaction: false,
       open: true,
       memory: true,
