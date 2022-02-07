@@ -8,6 +8,8 @@ curl -A ${AGENT} -e ${REFERER} -sfo data/store.sqlite3.gz ${BUCKET}/$(date +%Y-%
 [ -e data/store.sqlite3.gz ] || curl -A ${AGENT} -e ${REFERER} -so data/store.sqlite3.gz ${BUCKET}/store.sqlite3.gz
 gunzip data/store.sqlite3.gz
 
+sqlite3 --version
+
 npm install
 
 npm run all
