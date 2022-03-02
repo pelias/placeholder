@@ -10,7 +10,7 @@ const LOW_POPULATION_THRESHOLD = 2000;
 
 // list of languages / tags we favour in cases of deduplication
 const LANG_PREFS = ['eng','und'];
-const TAG_PREFS = ['preferred','abbr','label','variant','colloquial'];
+const TAG_PREFS = ['preferred','abbr','label','colloquial'];
 
 // insert a wof record in to index
 function insertWofRecord( wof, next ){
@@ -113,8 +113,8 @@ function insertWofRecord( wof, next ){
       // add 'name:*' fields
       for( var attr in wof ){
         // https://github.com/whosonfirst/whosonfirst-names
-        // names: preferred|colloquial|variant|unknown
-        const match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial|variant)$/);
+        // names: preferred|colloquial|unknown
+        const match = attr.match(/^name:([a-z]{3})_x_(preferred|colloquial)$/);
         if (!match) { continue; }
 
         // Fix for https://github.com/pelias/placeholder/pull/126

@@ -808,7 +808,6 @@ module.exports.add_token = function(test, util) {
       t.deepEqual( mock._calls.setTokens[0][1], [
         { lang: 'eng', tag: 'preferred', body: 'a' },
         { lang: 'eng', tag: 'preferred', body: 'b' },
-        { lang: 'eng', tag: 'variant', body: 'd' },
         { lang: 'ita', tag: 'preferred', body: 'c' }
       ]);
       t.end();
@@ -838,8 +837,6 @@ module.exports.add_names = function(test, util) {
       t.deepEqual( mock._calls.setTokens[0][1], [
         { lang: 'eng', tag: 'preferred', body: 'a' },
         { lang: 'eng', tag: 'preferred', body: 'b' },
-        { lang: 'eng', tag: 'variant', body: 'e' },
-        { lang: 'eng', tag: 'variant', body: 'f' },
         { lang: 'eng', tag: 'colloquial', body: 'c' },
         { lang: 'eng', tag: 'colloquial', body: 'd' }
       ]);
