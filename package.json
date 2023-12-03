@@ -6,7 +6,7 @@
   },
   "author": "mapzen",
   "license": "MIT",
-  "main": "server.js",
+  "main": "server/http.js",
   "scripts": {
     "test": "npm run units",
     "units": "./cmd/units",

@@ -112,8 +112,17 @@ function _groups(tokens, phrases) {
       // select the longest matching phrase
       if( !_isArrayRangeIsEqual( tokens, phrase, t ) ){ continue; }
 
+      const before = tokens.slice(0, t).join(' ');
+      const after = tokens.slice(t + phrase.length).join(' ');
+
       // add the match to the groups array
-      groups.push( phrase.join(' ') );
+      groups.push( {
+        phrase: phrase.join(' '),
+        remainder: {
+          before: before ? before : undefined,
+          after: after ? after : undefined,
+        }
+      });
 
       // advance the iterator to skip any other words in the phrase
       t += phrase.length -1;

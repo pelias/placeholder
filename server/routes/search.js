@@ -61,10 +61,15 @@ module.exports = function( req, res ){
         // create a map of parents
         const parents = rowsToIdMap( parentResults );
 
+        const firstUsedGroupIndex = result.mask.indexOf(true);
+
         // map documents to dict using id as key
-        const docs = documents.map( function( result ){
-          return mapResult( ph, result, parents, lang );
-        });
+        const docs = documents.map( (doc) => ({
+            phrase: result.group.slice(firstUsedGroupIndex).map(g => g.phrase).join(' '),
+            query: result.group[firstUsedGroupIndex].remainder.before,
+            ...mapResult( ph, doc, parents, lang ),
+          })
+        );
 
         // sort documents according to sorting rules
         docs.sort( sortingAlgorithm );

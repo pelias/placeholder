@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en" ng-app="demo">
   <head>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -70,11 +69,10 @@
           results = results || [];
 
           // load token groups
-          tokenize( args, function( groups ){
-            groups = groups || [];
-
+          tokenize( args, function( response ){
+            console.log(response);
             // render results
-            render( results, groups );
+            render( results, response.groups || [] );
           });
         });
       }
@@ -124,11 +122,25 @@
           return v;
         })
 
+        const queryBox = [
+            `<ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">`,
+            result.query ? `<li type="button" class="btn btn-disabled" style="margin-top: 5px; padding: 3px 5px;"><span style="font-size: xx-small"> ${result.query} </span></li>` : '',
+          `<li type="button" class="btn btn-default" style="margin-top: 5px; padding: 3px 5px;">
+            <span style="font-size: xx-small"> ${result.phrase} </span>
+            </li>
+          </ul>`].join('');
+
+        view = [
+          queryBox,
+          ...view
+        ]
+
         // console.log( lins[i] );
         $("#results").append('<li class="list-group-item"><span>' + view.join('<br />') + '</span></li>');
       }
 
       function render( results, groups ){
+        console.log(groups);
 
         $('#results').empty();
         $('#tokens').empty();
@@ -136,8 +148,9 @@
 
         // display token groups
         groups.forEach( function( win ){
-          var buttons = win.map( function( token ){
-            return '<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token + '</span></li>';
+          let buttons = [];
+          win.forEach( function( token ){
+            buttons.push('<li type="button" class="btn btn-default" style="margin-top: 5px;"><span>' + token.phrase + '</span></li>');
           });
           $("#tokens").html('<li><ul style="margin: 0; padding: 5px; padding-top: 0; list-style: none; background-color: #efefef; margin-bottom: 5px;">' + buttons.join('\n') + '</ul></li>' );
         });
@@ -189,7 +202,7 @@
 
       function tokenize( args, cb ){
         console.info( 'tokenize', args );
-        request( '/parser/tokenize', args, cb );
+        request( '/parser/tokenize2', args, cb );
       }
 
       function clearMap(){
@@ -315,7 +328,9 @@
               </span>
             </div><!-- /input-group -->
 
+            <h3>Possible tokens</h3>
             <ul id="tokens" class="btn-group" role="group" style="margin-top:10px; list-style: none;"></ul>
+            <h3>Search Results</h3>
             <ul id="results" class="list-group" style="margin-top:10px;"></ul>
           </div><!-- /.col-md-6 -->
 
