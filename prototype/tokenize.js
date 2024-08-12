@@ -84,11 +84,11 @@ function _groups(tokens, phrases) {
   // key is a single word token (the first word in
   // the phrase) and the values is an array of
   // phrases which contain that word.
-  const index = {};
+  const index = Object.create(null);
   phrases.forEach( phrase => {
     const words = phrase.split(/\s+/);
     const firstWord = words[0];
-    if( !index.hasOwnProperty( firstWord ) ){
+    if( !index[ firstWord ] ){
       index[ firstWord ] = [];
     }
     index[ firstWord ].push( words );

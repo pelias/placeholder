@@ -177,6 +177,17 @@ module.exports._groups = function(test, common) {
     t.deepEqual(tokenize._groups(tokens, phrases), expected);
     t.end();
   });
+
+  // https://github.com/pelias/placeholder/issues/231
+  test('_groups "constructor"', function(t) {
+
+    const tokens = ['constructor'];
+    const phrases = [];
+    const expected = [];
+
+    t.deepEqual(tokenize._groups(tokens, phrases), expected);
+    t.end();
+  });
 };
 
 // 
