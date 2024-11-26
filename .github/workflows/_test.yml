@@ -8,9 +8,6 @@ jobs:
         os:
           - ubuntu-22.04
         node-version:
-          - 12.x
-          - 14.x
-          - 16.x
           - 18.x
     steps:
       - uses: actions/checkout@v4
