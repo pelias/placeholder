@@ -16,5 +16,6 @@ jobs:
           node-version: '${{ matrix.node-version }}'
       - name: Run unit tests
         run: |
+          [[ -f ./bin/ci-setup ]] && ./bin/ci-setup
           npm install
           npm run ci
