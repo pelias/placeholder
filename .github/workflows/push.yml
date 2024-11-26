@@ -6,7 +6,7 @@ jobs:
   npm-publish:
     needs: unit-tests
     if: github.ref == 'refs/heads/master' && needs.unit-tests.result == 'success'
-    runs-on: ${{ vars.UBUNTU_VERSION }}
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js
@@ -26,7 +26,7 @@ jobs:
     # note: github actions won't run a job if you don't call one of the status check functions, so `always()` is called since it evalutes to `true`
     if: ${{ always() && needs.unit-tests.result == 'success' && (needs.npm-publish.result == 'success' || needs.npm-publish.result == 'skipped') }}
     needs: [unit-tests, npm-publish]
-    runs-on: ${{ vars.UBUNTU_VERSION }}
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker images
