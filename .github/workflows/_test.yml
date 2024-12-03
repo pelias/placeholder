@@ -6,12 +6,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - ${{ vars.UBUNTU_VERSION }}
-        node-version:
-          - 12.x
-          - 14.x
-          - 16.x
-          - 18.x
+          - ubuntu-22.04
+        node-version: [ 18.x, 20.x ]
     steps:
       - uses: actions/checkout@v4
       - name: 'Install node.js ${{ matrix.node-version }}'
@@ -20,5 +16,6 @@ jobs:
           node-version: '${{ matrix.node-version }}'
       - name: Run unit tests
         run: |
+          [[ -f ./bin/ci-setup ]] && ./bin/ci-setup
           npm install
           npm run ci
