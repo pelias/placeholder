@@ -33,7 +33,7 @@
   "homepage": "https://github.com/pelias/placeholder#readme",
   "dependencies": {
     "async": "^3.0.1",
-    "better-sqlite3": "^8.5.0",
+    "better-sqlite3": "^11.5.0",
     "express": "^4.15.2",
     "lodash": "^4.17.21",
     "lower-case": "^2.0.0",
@@ -41,7 +41,7 @@
     "pelias-blacklist-stream": "^1.1.0",
     "pelias-config": "^4.5.0",
     "pelias-logger": "^1.2.1",
-    "pelias-whosonfirst": "^5.0.0",
+    "pelias-whosonfirst": "^7.2.0",
     "regenerate": "^1.4.2",
     "remove-accents-diacritics": "^1.0.2",
     "require-dir": "^1.0.0",
