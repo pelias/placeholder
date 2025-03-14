@@ -321,12 +321,16 @@ the database is created from geographic data sourced from the [whosonfirst](http
 
 the whosonfirst project is distributed as geojson files, so in order to speed up development we first extract the relevant data in to a file: `data/wof.extract`.
 
-the following command will iterate over all the `geojson` files under the `WOF_DIR` path, extracting the relevant properties in to the file `data/wof.extract`.
+the following command will iterate over all the `geojson` files downloaded by the Pelias whosonfirst importer, extracting the relevant properties in to the file `data/wof.extract`.
 
 this process can take 30-60 minutes to run and consumes ~350MB of disk space, you will only need to run this command once, or when your local `whosonfirst-data` files are updated.
 
 ```bash
-$ WOF_DIR=/data/whosonfirst-data/data npm run extract
+$ npm run extract
+
+# alternative if you do not have a `pelias.json` file specifying where WOF data should be
+$ WOF_DIR=/path/to/your/whosonfirst/data npm run extract
+
 ```
 
 now you can rebuild the `data/store.json` file with the following command:

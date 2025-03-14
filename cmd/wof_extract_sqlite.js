@@ -9,7 +9,8 @@ const combinedStream = require('combined-stream');
 
 const SQLITE_REGEX = /whosonfirst-data-[a-z0-9-]+\.db$/;
 
-const WOF_DIR = process.env.WOF_DIR || '/data/whosonfirst-data/sqlite';
+// Use WOF_DIR env variable when available, otherwise use the location specified in pelias.json
+const WOF_DIR = process.env.WOF_DIR || path.join(config.datapath, 'sqlite');
 
 const layers = fs.readFileSync(path.join(__dirname, 'placetype.filter'), 'utf-8')
                   .replace(/^.*\(/, '') // Removes all characters before the first parenthesis
