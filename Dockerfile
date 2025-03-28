@@ -16,7 +16,6 @@ RUN npm install
 # copy code from local checkout
 ADD . ${WORKDIR}
 
-ENV WOF_DIR '/data/whosonfirst/sqlite'
 ENV PLACEHOLDER_DATA '/data/placeholder'
 
 USER pelias
