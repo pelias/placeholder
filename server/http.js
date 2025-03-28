@@ -109,6 +109,7 @@ function handler() {
     logger.info('Placeholder service shutting down');
     for (const id in cluster.workers) {
       cluster.workers[id].kill('SIGINT');
+      cluster.workers[id].disconnect();
     }
   }
 
