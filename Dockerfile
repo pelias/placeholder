@@ -1,5 +1,5 @@
 # base image
-FROM pelias/baseimage
+FROM pelias/baseimage:ubuntu-24-noble
 
 # downloader apt dependencies
 # note: this is done in one command in order to keep down the size of intermediate containers
