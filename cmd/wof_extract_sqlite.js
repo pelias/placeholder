@@ -10,7 +10,7 @@ const combinedStream = require('combined-stream');
 const SQLITE_REGEX = /whosonfirst-data-[a-z0-9-]+\.db$/;
 
 // Use WOF_DIR env variable when available, otherwise use the location specified in pelias.json
-const WOF_DIR = process.env.WOF_DIR || path.join(config.datapath, 'sqlite');
+const WOF_DIR = process.env.WOF_DIR ? [process.env.WOF_DIR] : [path.join(config.datapath), path.join(config.datapath, 'sqlite')];
 
 const layers = fs.readFileSync(path.join(__dirname, 'placetype.filter'), 'utf-8')
                   .replace(/^.*\(/, '') // Removes all characters before the first parenthesis
@@ -45,19 +45,28 @@ const output = () => {
 };
 
 const sqliteStream = combinedStream.create();
-fs.readdirSync(WOF_DIR)
-  .filter(file => SQLITE_REGEX.test(file))
-  .map(file => path.join(WOF_DIR, file))
-  .forEach(dbPath => {
-    sqliteStream.append(next => {
-      next(new SQLiteStream(
-        dbPath,
-        config.importPlace ?
-        SQLiteStream.findGeoJSONByPlacetypeAndWOFId(layers, config.importPlace) :
-        SQLiteStream.findGeoJSONByPlacetype(layers)
-      ));
-    });
-  });
+WOF_DIR.forEach(dir => {
+  fs.readdirSync(dir)
+    .filter(file => SQLITE_REGEX.test(file))
+    .map(file => {
+      if (fs.existsSync(path.join(config.datapath, 'sqlite', file))) {
+        return path.join(config.datapath, 'sqlite', file);
+      }
+      else {
+        return path.join(config.datapath, file);
+      }
+    })
+    .forEach(dbPath => {
+      sqliteStream.append(next => {
+        next(new SQLiteStream(
+          dbPath,
+          config.importPlace ?
+            SQLiteStream.findGeoJSONByPlacetypeAndWOFId(layers, config.importPlace) :
+            SQLiteStream.findGeoJSONByPlacetype(layers)
+        ));
+      });
+    })
+});
 
 sqliteStream
   .pipe(whosonfirst.toJSONStream())
