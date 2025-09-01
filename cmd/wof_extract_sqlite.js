@@ -65,7 +65,7 @@ WOF_DIR.forEach(dir => {
             SQLiteStream.findGeoJSONByPlacetype(layers)
         ));
       });
-    })
+    });
 });
 
 sqliteStream
