@@ -45,7 +45,6 @@ const output = () => {
 };
 
 const sqliteStream = combinedStream.create();
-//TODO: If "sqlite" does not exists extract 
 WOF_DIR.forEach(dir => {
   if (fs.existsSync(dir)) {
     fs.readdirSync(dir)
