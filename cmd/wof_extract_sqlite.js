@@ -16,10 +16,12 @@ const layers = fs.readFileSync(path.join(__dirname, 'placetype.filter'), 'utf-8'
                   .replace(/^.*\(/, '') // Removes all characters before the first parenthesis
                   .match(/[a-z]+/g); // Get the layer list
 
-const jq_filter = fs.readFileSync(path.join(__dirname, 'jq.filter'), 'utf-8')
-                    .match(/test\("(.*)"\)/g) // Get all tests
-                    .map(s => s.replace(/^[^"]+"/, '').replace(/"[^"]+$/, '')) // Get only regex part
-                    .map(s => new RegExp(s)); // Transform it into JS RegExp
+const jq_filter = new RegExp(
+  fs.readFileSync(path.join(__dirname, 'jq.filter'), 'utf-8')
+    .replace(/\n\s*/g, '') // Normalize multi-line
+    .match(/test\(\s*"([^"]+(?:"\s*\+\s*"[^"]+)*)"\s*\)/)[1] // Extract pattern
+    .replace(/"\s*\+\s*"/g, '') // Remove string concatenation
+);
 
 const output = () => {
   if (process.argv.length > 2 && process.argv[2] === 'build') {
@@ -63,7 +65,7 @@ sqliteStream
   .pipe(whosonfirst.toJSONStream())
   .pipe(through.obj((row, _, next) => {
     Object.keys(row.properties)
-          .filter(key => !jq_filter.some(regex => regex.test(key)))
+          .filter(key => !jq_filter.test(key))
           .forEach(key => delete row.properties[key]);
     next(null, row.properties);
   }))
