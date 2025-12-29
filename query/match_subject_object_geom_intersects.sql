@@ -4,7 +4,7 @@ SELECT
 FROM fulltext f1
   JOIN tokens t1 ON (
     f1.rowid = t1.rowid
-    AND f1.fulltext MATCH $subject_quoted
+    AND f1.fulltext MATCH $subject_fts
     AND LIKELY(t1.token = $subject)
   )
     JOIN rtree AS r1 ON t1.id = r1.id
@@ -15,7 +15,7 @@ FROM fulltext f1
         (r1.minY - $threshold) < r2.maxY AND
         (r1.maxY + $threshold) > r2.minY
       )
-        JOIN fulltext AS f2 ON f2.fulltext MATCH $object_quoted
+        JOIN fulltext AS f2 ON f2.fulltext MATCH $object_fts
           JOIN tokens t2 ON (
             f2.rowid = t2.rowid
             AND r2.id = t2.id
