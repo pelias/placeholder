@@ -23,6 +23,13 @@ function _indexContainsPhrase(phrase, cb){
   });
 }
 
+// find all matching phrases at once
+function _indexFindMatchingPhrases(phrases, cb) {
+  this.index.matchingSubjects(phrases, (err, matchedPhrases) => {
+    return cb(err, matchedPhrases || []);
+  });
+}
+
 // expand each synonym in to its permutations and check them against the database.
 function _eachSynonym(synonym, cb){
 
@@ -30,7 +37,7 @@ function _eachSynonym(synonym, cb){
   const phrases = _permutations(synonym);
 
   // filter out permutations which do not match phrases in the index
-  async.filterSeries( phrases, _indexContainsPhrase.bind(this), (err, matchedPhrases) => {
+  _indexFindMatchingPhrases.bind(this)(phrases, (err, matchedPhrases) => {  
     return cb( null, _groups(synonym, matchedPhrases) );
   });
 }
