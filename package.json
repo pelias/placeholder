@@ -41,7 +41,7 @@
     "pelias-blacklist-stream": "^2.0.0",
     "pelias-config": "^7.0.0",
     "pelias-logger": "^2.0.0",
-    "pelias-whosonfirst": "^8.5.0",
+    "pelias-whosonfirst": "^9.0.0",
     "regenerate": "^1.4.2",
     "remove-accents-diacritics": "^1.0.2",
     "require-dir": "^1.0.0",
