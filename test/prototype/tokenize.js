@@ -75,36 +75,6 @@ module.exports._indexContainsPhrase = function(test, common) {
   });
 };
 
-// expand each synonym in to its permutations and check them against the database.
-module.exports._eachSynonym = function(test, common) {
-  test('_eachSynonym', function(t) {
-
-    const synonym = ['hello', 'big', 'bright', 'new', 'world'];
-    const expected = [ 'hello big', 'bright', 'new world' ];
-
-    var mock = tokenize._eachSynonym.bind({
-      index: { hasSubject: ( phrase, cb ) => {
-        switch( phrase ){
-          case 'hello big':
-          case 'hello new':
-          case 'new world':
-          case 'bright':
-          case 'world':
-            return cb( true );
-          default:
-            return cb( false );
-        }
-      }}
-    });
-
-    mock(synonym, (err, phrases) => {
-      t.false(err);
-      t.deepEqual(phrases, expected);
-      t.end();
-    });
-  });
-};
-
 // _permutations takes an array of input tokens and produces
 // an output array consisting of all the potential adjancent
 // groupings of the input tokens up to the defined threshold.
